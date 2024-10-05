@@ -1,7 +1,12 @@
+import LayoutComponent from "../layout/LayoutComponent";
+import "../styles/index.css";
+
 function Home() {
   return (
     <>
-      <h1 className="text-9xl">Home page</h1>
+      <LayoutComponent>
+        <div>Layout child</div>
+      </LayoutComponent>
     </>
   );
 }
