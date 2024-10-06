@@ -22,7 +22,8 @@ import {
   FiChevronDown,
   FiPhone,
   FiPlayCircle,
-} from "react-icons/fi"; // Feather icons
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -70,16 +71,21 @@ function Header() {
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
-        <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              alt="Company Logo"
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
-            />
-          </a>
-        </div>
+        <Link to="/">
+          <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
+            <div className="flex flex-col">
+              <span className="text-xl">SunRise</span>
+              <span className="text-xs text-center">TRAVEL</span>
+            </div>
+            <div>
+              <img
+                alt="Company Logo"
+                src="../public/logo.png"
+                className="h-10 w-auto"
+              />
+            </div>
+          </div>
+        </Link>
         <div className="flex lg:hidden">
           <button
             type="button"

@@ -12,7 +12,7 @@ function LayoutComponent({ children }: LayoutComponentProps) {
     <>
       <div className="min-h-screen w-full flex flex-col p-0 m-0">
         <Header />
-        <main className="flex-grow flex flex-col items-center bg-black ">
+        <main className="bg-white flex-grow flex flex-col items-center bg-blend-lighten ">
           {children}
         </main>
         <Footer />
