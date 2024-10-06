@@ -24,6 +24,7 @@ import {
   FiPlayCircle,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import Login from "../../components/Modals/Login";
 
 const products = [
   {
@@ -64,6 +65,12 @@ const callsToAction = [
 ];
 
 function Header() {
+  const [open, setOpen] = useState(false);
+  const handleOpenLoginModal = () => {
+    setOpen(true);
+  };
+  const handleOpen = () => setOpen(!open);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="bg-white">
@@ -165,9 +172,14 @@ function Header() {
           </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <button
+            onClick={handleOpenLoginModal}
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
             Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          </button>
+          {/* Modal Dialog */}
+          <Login open={open} handleOpen={handleOpen} />
         </div>
       </nav>
 
@@ -239,13 +251,15 @@ function Header() {
                 </a>
               </div>
               <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                <button
+                  onClick={handleOpenLoginModal}
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 cursor-pointer"
                 >
                   Log in
-                </a>
+                </button>
               </div>
+              {/* Modal Dialog */}
+              <Login open={open} handleOpen={handleOpen} />
             </div>
           </div>
         </DialogPanel>

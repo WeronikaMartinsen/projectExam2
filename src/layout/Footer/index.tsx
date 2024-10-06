@@ -3,7 +3,7 @@ import "../../styles/index.css";
 function Footer() {
   return (
     <>
-      <footer className="bg-white dark:bg-gray-900">
+      <footer className="bg-white">
         <div className="mx-auto w-full max-w-7xl">
           <div className="grid grid-cols-2 gap-8 ml-4 px-4 py-6 lg:py-8 md:grid-cols-4">
             <div>
