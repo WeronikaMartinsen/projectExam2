@@ -71,21 +71,25 @@ function Header() {
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
-        <Link to="/">
-          <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
+        <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
+          <Link to="/">
             <div className="flex flex-col">
-              <span className="text-xl">SunRise</span>
+              <span className="text-md font-semibold">SunRise</span>
               <span className="text-xs text-center">TRAVEL</span>
             </div>
-            <div>
+          </Link>
+
+          <div>
+            <Link to="/">
               <img
                 alt="Company Logo"
                 src="../public/logo.png"
                 className="h-10 w-auto"
               />
-            </div>
+            </Link>
           </div>
-        </Link>
+        </div>
+
         <div className="flex lg:hidden">
           <button
             type="button"
@@ -175,14 +179,13 @@ function Header() {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+            <Link to="/">
               <img
                 alt="Company Logo"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
+                src="../public/logo.png"
+                className="h-10 w-auto"
               />
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
