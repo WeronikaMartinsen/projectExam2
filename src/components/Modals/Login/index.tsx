@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ButtonPrimary from "../../Buttons/ButtonPrimary";
+import LoginForm from "../../Forms/LoginForm";
 
 interface ModalDialogProps {
   open: boolean;
@@ -28,6 +29,7 @@ const Login: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
                 >
                   Login
                 </h3>
+
                 <button
                   type="button"
                   className="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
@@ -55,9 +57,7 @@ const Login: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
 
               {/* Modal Body */}
               <div className="p-4 overflow-y-auto">
-                <p className="mt-4 text-gray-800 dark:text-neutral-400 text-center">
-                  You have successfully added the product to your cart!
-                </p>
+                <LoginForm />
               </div>
 
               {/* Modal Footer */}
