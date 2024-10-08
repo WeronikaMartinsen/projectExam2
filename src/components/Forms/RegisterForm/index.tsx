@@ -6,15 +6,21 @@ import ButtonPrimary from "../../Buttons/ButtonPrimary";
 
 const schema = yup
   .object({
+    fullName: yup
+      .string()
+      .min(3, "Your first name should be at least 3 characters.")
+      .matches(/^[A-Za-z\s]+$/, "Full name should only contain letters.")
+      .required("Required"),
     email: yup
       .string()
       .email("Please enter a valid email")
       .required("Required"),
-    password: yup.string().min(3).required("Password is required."),
+    subject: yup.string().min(3).required("Subject is required."),
+    body: yup.string().min(3).required("Body is required."),
   })
   .required();
 
-function LoginForm() {
+function RegisterForm() {
   const {
     register,
     handleSubmit,
@@ -32,12 +38,31 @@ function LoginForm() {
     navigate("/");
   }
   return (
-    <div className="w-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
-      <h1 className="mt-12 mb-6 text-3xl text-center">Login</h1>
+    <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
+      <h1 className="mt-12 mb-6 text-3xl text-center">Register</h1>
       <form
         className="flex flex-wrap justify-center w-100 items-center m-1"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {/* Full name Field */}
+        <div className="w-full flex flex-col mb-6">
+          <label
+            className="text-gray-700 text-md mb-2 text-left"
+            htmlFor="fullName"
+          >
+            Full Name*
+          </label>
+          <input
+            {...register("fullName")}
+            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+            type="text"
+            placeholder="Enter your name, e.g.: Maria Matinsen"
+          />
+          <p className="text-red-500 text-xs italic">
+            {errors.fullName?.message}
+          </p>
+        </div>
+
         {/* Email Field */}
         <div className="w-full flex flex-col mb-6">
           <label className="text-gray-700 text-md mb-2 text-left">
@@ -52,19 +77,31 @@ function LoginForm() {
           <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
         </div>
 
-        {/* Password */}
+        {/* Subject Field */}
         <div className="w-full flex flex-col mb-6">
           <label className="text-gray-700 text-md mb-2 text-left">
-            Password*
+            Subject*
           </label>
-          <textarea
-            {...register("password")}
+          <input
+            {...register("subject")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            placeholder="Password"
+            type="text"
+            placeholder="Enter subject, e.g.: Shipment"
           />
           <p className="text-red-500 text-xs italic">
-            {errors.password?.message}
+            {errors.subject?.message}
           </p>
+        </div>
+
+        {/* Body Field */}
+        <div className="w-full flex flex-col mb-6">
+          <label className="text-gray-700 text-md mb-2 text-left">Body*</label>
+          <textarea
+            {...register("body")}
+            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+            placeholder="Enter description..."
+          />
+          <p className="text-red-500 text-xs italic">{errors.body?.message}</p>
         </div>
 
         {/* Submit Button */}
@@ -74,7 +111,7 @@ function LoginForm() {
               type="button"
               className="text-white w-full bg-secondary"
             >
-              Login
+              Register
             </ButtonPrimary>
           </Link>
         </div>
@@ -83,4 +120,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;

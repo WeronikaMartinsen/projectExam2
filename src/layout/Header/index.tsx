@@ -1,5 +1,5 @@
 import "../../styles/index.css";
-import Logo from "../../../public/logo.png";
+import Logo from "../../assets/logo.png";
 import { useState } from "react";
 import {
   Dialog,
@@ -25,7 +25,7 @@ import {
   FiPlayCircle,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import Login from "../../components/Modals/Login";
+import AuthModal from "../../components/Modals/AuthModal";
 
 const products = [
   {
@@ -180,7 +180,7 @@ function Header() {
             Log in <span aria-hidden="true">&rarr;</span>
           </button>
           {/* Modal Dialog */}
-          <Login open={open} handleOpen={handleOpen} />
+          <AuthModal open={open} handleOpen={handleOpen} />
         </div>
       </nav>
 
@@ -256,7 +256,7 @@ function Header() {
                 </button>
               </div>
               {/* Modal Dialog */}
-              <Login open={open} handleOpen={handleOpen} />
+              <AuthModal open={open} handleOpen={handleOpen} />
             </div>
           </div>
         </DialogPanel>
