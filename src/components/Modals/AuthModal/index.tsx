@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ButtonPrimary from "../../Buttons/ButtonPrimary";
 import LoginForm from "../../Forms/LoginForm";
 import RegisterForm from "../../Forms/RegisterForm";
 
