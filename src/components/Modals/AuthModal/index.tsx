@@ -30,7 +30,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
           aria-labelledby="hs-scale-animation-modal-label"
           tabIndex={-1}
         >
-          <div className="hs-overlay-animation-target opacity-100 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+          <div className="hs-overlay-animation-target opacity-100 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full sm:mx-auto">
             <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
               {/* Modal Header */}
               <div className="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-700">
@@ -78,7 +78,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
                     : "Don't have an account yet?"}
                 </p>
                 <span
-                  className="cursor-pointer text-blue-500 underline"
+                  className="cursor-pointer text-secondary"
                   onClick={isRegister ? handleOpenLogin : handleOpenRegister}
                 >
                   {isRegister ? "Login" : "Register"}

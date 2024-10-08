@@ -47,7 +47,7 @@ function LoginForm() {
             {...register("email")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             type="text"
-            placeholder="Enter your email, e.g.: email@gmail.com"
+            placeholder="Email address"
           />
           <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
         </div>
@@ -57,7 +57,7 @@ function LoginForm() {
           <label className="text-gray-700 text-md mb-2 text-left">
             Password*
           </label>
-          <textarea
+          <input
             {...register("password")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             placeholder="Password"
@@ -68,7 +68,7 @@ function LoginForm() {
         </div>
 
         {/* Submit Button */}
-        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mb-12 mt-4">
+        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
           <Link to="/">
             <ButtonPrimary
               type="button"

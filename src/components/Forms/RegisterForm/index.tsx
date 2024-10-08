@@ -15,8 +15,14 @@ const schema = yup
       .string()
       .email("Please enter a valid email")
       .required("Required"),
-    subject: yup.string().min(3).required("Subject is required."),
-    body: yup.string().min(3).required("Body is required."),
+    password: yup.string().min(3).required("Password is required."),
+    avatar: yup
+      .string() // Ensure it's a string
+      .url("Please enter a valid URL.") // Validate it's a proper URL
+      .min(3, "The URL must be at least 3 characters long.") // Minimum length of 3
+      .required("URL is required."), // URL is required
+
+    bio: yup.string().min(3).required("Body is required."),
   })
   .required();
 
@@ -76,36 +82,48 @@ function RegisterForm() {
           />
           <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
         </div>
-
-        {/* Subject Field */}
+        {/* Password */}
         <div className="w-full flex flex-col mb-6">
           <label className="text-gray-700 text-md mb-2 text-left">
-            Subject*
+            Password*
           </label>
           <input
-            {...register("subject")}
+            {...register("password")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            type="text"
-            placeholder="Enter subject, e.g.: Shipment"
+            placeholder="Password"
           />
           <p className="text-red-500 text-xs italic">
-            {errors.subject?.message}
+            {errors.password?.message}
           </p>
         </div>
 
-        {/* Body Field */}
+        {/* Avatar Field */}
         <div className="w-full flex flex-col mb-6">
-          <label className="text-gray-700 text-md mb-2 text-left">Body*</label>
-          <textarea
-            {...register("body")}
+          <label className="text-gray-700 text-md mb-2 text-left">Avatar</label>
+          <input
+            {...register("avatar")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            placeholder="Enter description..."
+            type="url"
+            placeholder="Image url"
           />
-          <p className="text-red-500 text-xs italic">{errors.body?.message}</p>
+          <p className="text-red-500 text-xs italic">
+            {errors.avatar?.message}
+          </p>
+        </div>
+
+        {/* Bio Field */}
+        <div className="w-full flex flex-col mb-6">
+          <label className="text-gray-700 text-md mb-2 text-left">Bio</label>
+          <input
+            {...register("bio")}
+            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+            placeholder="Description yourselv..."
+          />
+          <p className="text-red-500 text-xs italic">{errors.bio?.message}</p>
         </div>
 
         {/* Submit Button */}
-        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mb-12 mt-4">
+        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
           <Link to="/">
             <ButtonPrimary
               type="button"
