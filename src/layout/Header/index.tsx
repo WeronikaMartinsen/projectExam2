@@ -1,5 +1,4 @@
 import "../../styles/index.css";
-import Logo from "../../assets/logo.png";
 import { useState } from "react";
 import {
   Dialog,
@@ -89,11 +88,7 @@ function Header() {
 
           <div>
             <Link to="/">
-              <img
-                alt="Company Logo"
-                src="../public/logo.png"
-                className="h-10 w-auto"
-              />
+              <img alt="Logo" src="/assets/logo.png" className="h-10 w-auto" />
             </Link>
           </div>
         </div>
@@ -193,7 +188,7 @@ function Header() {
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link to="/">
-              <img src={Logo} alt="Company Logo" className="h-10 w-auto" />
+              <img alt="Logo" src="/assets/logo.png" className="h-10 w-auto" />
             </Link>
             <button
               type="button"
