@@ -45,7 +45,7 @@ function RegisterForm() {
   }
   return (
     <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
-      <h1 className="mt-12 mb-6 text-3xl text-center">Register</h1>
+      <h1 className="mt-4 mb-4 text-3xl text-center">Register</h1>
       <form
         className="flex flex-wrap justify-center w-100 items-center m-1"
         onSubmit={handleSubmit(onSubmit)}
@@ -123,7 +123,7 @@ function RegisterForm() {
         </div>
 
         {/* Submit Button */}
-        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
+        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2">
           <Link to="/">
             <ButtonPrimary
               type="button"
