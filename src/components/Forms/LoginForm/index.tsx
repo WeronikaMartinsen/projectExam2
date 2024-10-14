@@ -17,14 +17,13 @@ const schema = yup
   .required();
 
 function LoginForm() {
-  // Initialize form methods from react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset, // reset() function to "set" or clear form value     // use getValues to manually get current field values
+    reset,
   } = useForm({
-    resolver: yupResolver(schema), // Attach the validation schema
+    resolver: yupResolver(schema),
   });
 
   const navigate = useNavigate();
@@ -81,12 +80,12 @@ function LoginForm() {
 
         {/* Submit Button */}
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
-            <button
-              type="button"
-              className="text-white w-full bg-secondary"
-            >
-              Login
-            </button>
+          <button
+            type="submit"
+            className="w-full border bg-secondary text-white p-2"
+          >
+            Login
+          </button>
         </div>
       </form>
     </div>

@@ -34,10 +34,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
             <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
               {/* Modal Header */}
               <div className="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-700">
-                <h3
-                  id="hs-scale-animation-modal-label"
-                  className="font-bold text-gray-800 dark:text-white"
-                >
+                <h3 id="hs-scale-animation-modal-label" className="font-bold">
                   {isRegister ? "Register" : "Login"}
                 </h3>
                 <button
