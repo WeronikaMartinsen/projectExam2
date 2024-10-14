@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import ButtonPrimary from "../../Buttons/ButtonPrimary";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../../service/ApiCalls/Auth/register";
+import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData";
 
+//validation schema
 const schema = yup
   .object({
-    fullName: yup
+    name: yup
       .string()
       .min(3, "Your first name should be at least 3 characters.")
       .matches(/^[A-Za-z\s]+$/, "Full name should only contain letters.")
@@ -26,6 +28,8 @@ const schema = yup
   })
   .required();
 
+type FormData = yup.InferType<typeof schema>;
+
 function RegisterForm() {
   const {
     register,
@@ -38,11 +42,33 @@ function RegisterForm() {
 
   const navigate = useNavigate();
 
-  function onSubmit(data: unknown) {
-    console.log(data);
-    reset();
-    navigate("/");
-  }
+  const onSubmit = async (formData: FormData) => {
+    const data: RegisterUserData = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      bio: formData.bio,
+      avatar: {
+        url: formData.avatar,
+        alt: "User avatar",
+      },
+    };
+
+    try {
+      const response = await registerUser(data);
+      if (response.status === 200) {
+        const responseData = await response.json();
+        console.log("User registered successfully", responseData);
+        reset();
+        navigate("/");
+      } else {
+        console.error("Failed to register user:", response);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
       <h1 className="mt-4 mb-4 text-3xl text-center">Register</h1>
@@ -54,19 +80,17 @@ function RegisterForm() {
         <div className="w-full flex flex-col mb-6">
           <label
             className="text-gray-700 text-md mb-2 text-left"
-            htmlFor="fullName"
+            htmlFor="name"
           >
             Full Name*
           </label>
           <input
-            {...register("fullName")}
+            {...register("name")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             type="text"
             placeholder="Enter your name, e.g.: Maria Matinsen"
           />
-          <p className="text-red-500 text-xs italic">
-            {errors.fullName?.message}
-          </p>
+          <p className="text-red-500 text-xs italic">{errors.name?.message}</p>
         </div>
 
         {/* Email Field */}
@@ -124,14 +148,9 @@ function RegisterForm() {
 
         {/* Submit Button */}
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2">
-          <Link to="/">
-            <ButtonPrimary
-              type="button"
-              className="text-white w-full bg-secondary"
-            >
-              Register
-            </ButtonPrimary>
-          </Link>
+          <button type="button" className="w-full bg-primary">
+            Register
+          </button>
         </div>
       </form>
     </div>

@@ -1,9 +1,11 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import ButtonPrimary from "../../Buttons/ButtonPrimary";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../../service/ApiCalls/Auth/login";
+import { LoginRequest } from "../../../service/ApiCalls/Interfaces/loginResponse";
 
+//validation schema
 const schema = yup
   .object({
     email: yup
@@ -15,22 +17,32 @@ const schema = yup
   .required();
 
 function LoginForm() {
+  // Initialize form methods from react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    reset, // reset() function to "set" or clear form value     // use getValues to manually get current field values
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema), // Attach the validation schema
   });
 
   const navigate = useNavigate();
 
-  function onSubmit(data: unknown) {
-    console.log(data);
-    reset();
-    navigate("/");
+  // Handle form submission
+  async function onSubmit(data: LoginRequest) {
+    console.log("Form Data (GET):", data);
+    try {
+      // Call loginUser function with the form data
+      const response = await loginUser(data);
+      console.log("Login Response:", response);
+      reset(); // Reset the form after submission (This "sets" the form to empty state)
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   }
+
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
       <h1 className="mt-12 mb-6 text-3xl text-center">Login</h1>
@@ -69,14 +81,12 @@ function LoginForm() {
 
         {/* Submit Button */}
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
-          <Link to="/">
-            <ButtonPrimary
+            <button
               type="button"
               className="text-white w-full bg-secondary"
             >
               Login
-            </ButtonPrimary>
-          </Link>
+            </button>
         </div>
       </form>
     </div>
