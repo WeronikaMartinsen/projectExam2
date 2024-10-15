@@ -68,7 +68,7 @@ function RegisterForm() {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      bio: formData.bio || undefined, // Convert null to undefined
+      bio: formData.bio || undefined,
       avatar: formData.avatar?.url
         ? {
             url: formData.avatar.url,
@@ -92,12 +92,10 @@ function RegisterForm() {
         reset();
         navigate("/");
       } else if (response.status === 400) {
-        // Handle the specific 400 error (e.g., user already exists)
         const errorData = await response.json();
         console.error("User already exists:", errorData);
         alert("User already exists! Please use a different email.");
       } else {
-        // Handle other types of unsuccessful responses
         console.error("Failed to register user:", response);
         alert("Failed to register user. Please try again.");
       }

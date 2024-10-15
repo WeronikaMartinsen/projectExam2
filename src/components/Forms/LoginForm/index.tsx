@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../service/ApiCalls/Auth/login";
 import { LoginRequest } from "../../../service/ApiCalls/Interfaces/loginResponse";
+import "../../../styles/index.css";
 
 //validation schema
 const schema = yup
