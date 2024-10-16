@@ -1,18 +1,14 @@
-import { postRequest } from "../baseApiCallPost";
-import { baseUrl, registerUrl } from "../Endpoints";
+import { apiRequest, ApiResponse } from "../baseApiCallPost";
 import { RegisterUserData } from "../Interfaces/userData";
+import { registerUrl } from "../Endpoints";
 
-export async function registerUser(
-  userData: RegisterUserData
-): Promise<Response> {
-  try {
-    const response = await postRequest<RegisterUserData>(
-      baseUrl + registerUrl,
-      userData
-    );
-    return response;
-  } catch (error) {
-    console.error("Registration failed:", error);
-    throw error;
-  }
-}
+// POST (Register User)
+export const registerUser = async (
+  registerData: RegisterUserData
+): Promise<ApiResponse<RegisterUserData>> => {
+  return apiRequest<RegisterUserData, RegisterUserData>(
+    registerUrl,
+    "POST",
+    registerData
+  );
+};

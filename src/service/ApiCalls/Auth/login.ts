@@ -1,17 +1,18 @@
-import { postRequest } from "../baseApiCallPost";
+import { apiRequest } from "../baseApiCallPost";
 import { LoginRequest, LoginResponse } from "../Interfaces/loginResponse";
-import { baseUrl, loginUrl } from "../Endpoints";
+import { loginUrl } from "../Endpoints";
 
 export async function loginUser(
   loginData: LoginRequest
 ): Promise<LoginResponse> {
   try {
-    const response = await postRequest<LoginRequest>(
-      baseUrl + loginUrl,
+    const response = await apiRequest<LoginRequest, LoginResponse>(
+      loginUrl,
+      "POST",
       loginData
     );
-    const data: LoginResponse = await response.json();
-    return data;
+
+    return response.data;
   } catch (error) {
     console.error("Login failed:", error);
     throw error;

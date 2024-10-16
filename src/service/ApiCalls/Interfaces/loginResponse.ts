@@ -14,13 +14,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  data: {
-    name: string;
-    email: string;
-    avatar?: Avatar;
-    banner?: Banner;
-    accessToken: string;
-    venueManager?: boolean;
-  };
-  meta: object;
+  name: string;
+  email: string;
+  bio: string | null;
+  avatar: Avatar;
+  banner: Banner;
+  accessToken: string; // Add accessToken directly at the top level
+  venueManager: boolean;
 }

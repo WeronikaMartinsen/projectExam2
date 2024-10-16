@@ -1,16 +1,38 @@
-export async function postRequest<T>(url: string, body: T): Promise<Response> {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+import { baseUrl } from "./Endpoints";
 
-  if (!response.ok) {
-    const message = `Error: ${response.statusText}`;
-    throw new Error(message);
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+}
+
+export async function apiRequest<T, R>(
+  endpoint: string,
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  body?: T,
+  token?: string
+): Promise<ApiResponse<R>> {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }), // Include token if available
+  };
+
+  const options: RequestInit = {
+    method,
+    headers,
+    ...(body && { body: JSON.stringify(body) }), // Include body if method is POST or PUT
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}${endpoint}`, options);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data: ApiResponse<R> = await response.json();
+    return data;
+  } catch (error) {
+    console.error("API Request Error:", error);
+    throw error;
   }
-
-  return response;
 }

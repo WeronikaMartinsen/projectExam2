@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../../service/ApiCalls/Auth/register";
 import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData";
 import "../../../styles/index.css";
+import { setUser } from "../../../service/Utils/userUtils";
 
 // Validation schema
 const schema = yup
@@ -57,22 +58,23 @@ function RegisterForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
-    resolver: yupResolver(schema),
+  } = useForm<FormData>({
+    resolver: yupResolver(schema), // Yup schema resolver for form validation
   });
 
   const navigate = useNavigate();
 
   const onSubmit = async (formData: FormData) => {
+    // Prepare the form data to match the RegisterUserData structure
     const data: RegisterUserData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      bio: formData.bio || undefined,
+      bio: formData.bio || undefined, // Handle optional fields correctly
       avatar: formData.avatar?.url
         ? {
             url: formData.avatar.url,
-            alt: formData.avatar.alt || "User avatar",
+            alt: formData.avatar.alt || "User avatar", // Fallback to default alt if not provided
           }
         : undefined,
       banner: formData.banner?.url
@@ -86,17 +88,13 @@ function RegisterForm() {
     try {
       const response = await registerUser(data);
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("User registered successfully", responseData);
+      if (response.data) {
+        console.log("User registered successfully", response.data);
+        setUser(response.data);
         reset();
         navigate("/");
-      } else if (response.status === 400) {
-        const errorData = await response.json();
-        console.error("User already exists:", errorData);
-        alert("User already exists! Please use a different email.");
       } else {
-        console.error("Failed to register user:", response);
+        console.error("Failed to register user:", response.message);
         alert("Failed to register user. Please try again.");
       }
     } catch (error) {
@@ -112,42 +110,37 @@ function RegisterForm() {
         className="flex flex-wrap justify-center w-100 items-center m-1"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex">
-          {/* Full Name Field */}
-          <div className="w-full flex flex-col mb-4">
-            <label
-              className="text-gray-700 text-md mb-2 text-left"
-              htmlFor="name"
-            >
-              Name*
-            </label>
-            <input
-              {...register("name")}
-              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-              type="text"
-              placeholder="Enter your name"
-            />
-            <p className="text-red-500 text-xs italic">
-              {errors.name?.message}
-            </p>
-          </div>
-
-          {/* Email Field */}
-          <div className="w-full flex flex-col mb-4">
-            <label className="text-gray-700 text-md mb-2 text-left">
-              Email address*
-            </label>
-            <input
-              {...register("email")}
-              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-              type="text"
-              placeholder="Enter your email"
-            />
-            <p className="text-red-500 text-xs italic">
-              {errors.email?.message}
-            </p>
-          </div>
+        {/* Full Name Field */}
+        <div className="w-full flex flex-col mb-4">
+          <label
+            className="text-gray-700 text-md mb-2 text-left"
+            htmlFor="name"
+          >
+            Name*
+          </label>
+          <input
+            {...register("name")}
+            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+            type="text"
+            placeholder="Enter your name"
+          />
+          <p className="text-red-500 text-xs italic">{errors.name?.message}</p>
         </div>
+
+        {/* Email Field */}
+        <div className="w-full flex flex-col mb-4">
+          <label className="text-gray-700 text-md mb-2 text-left">
+            Email address*
+          </label>
+          <input
+            {...register("email")}
+            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+            type="text"
+            placeholder="Enter your email"
+          />
+          <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
+        </div>
+
         {/* Password Field */}
         <div className="w-full flex flex-col mb-4">
           <label className="text-gray-700 text-md mb-2 text-left">
@@ -179,6 +172,7 @@ function RegisterForm() {
             {errors.avatar?.url?.message}
           </p>
         </div>
+
         {/* Banner URL Field */}
         <div className="w-full flex flex-col mb-4">
           <label className="text-gray-700 text-md mb-2 text-left">
@@ -194,6 +188,7 @@ function RegisterForm() {
             {errors.banner?.url?.message}
           </p>
         </div>
+
         {/* Bio Field */}
         <div className="w-full flex flex-col mb-4">
           <label className="text-gray-700 text-md mb-2 text-left">Bio</label>
