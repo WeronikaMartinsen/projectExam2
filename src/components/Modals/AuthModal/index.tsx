@@ -64,7 +64,11 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
 
               {/* Modal Body */}
               <div className="p-4 overflow-y-auto">
-                {isRegister ? <RegisterForm /> : <LoginForm />}
+                {isRegister ? (
+                  <RegisterForm switchToLogin={handleOpenLogin} />
+                ) : (
+                  <LoginForm handleOpen={handleOpen} />
+                )}
               </div>
 
               {/* Modal Footer */}

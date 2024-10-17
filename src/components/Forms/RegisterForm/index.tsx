@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../../service/ApiCalls/Auth/register";
 import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData";
 import "../../../styles/index.css";
@@ -52,7 +51,11 @@ const schema = yup
 
 type FormData = yup.InferType<typeof schema>;
 
-function RegisterForm() {
+interface RegisterFormProps {
+  switchToLogin: () => void; // Add this to the props
+}
+
+function RegisterForm({ switchToLogin }: RegisterFormProps) {
   const {
     register,
     handleSubmit,
@@ -61,8 +64,6 @@ function RegisterForm() {
   } = useForm<FormData>({
     resolver: yupResolver(schema), // Yup schema resolver for form validation
   });
-
-  const navigate = useNavigate();
 
   const onSubmit = async (formData: FormData) => {
     // Prepare the form data to match the RegisterUserData structure
@@ -92,7 +93,7 @@ function RegisterForm() {
         console.log("User registered successfully", response.data);
         setUser(response.data);
         reset();
-        navigate("/");
+        switchToLogin();
       } else {
         console.error("Failed to register user:", response.message);
         alert("Failed to register user. Please try again.");

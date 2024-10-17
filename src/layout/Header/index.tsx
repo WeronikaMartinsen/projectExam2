@@ -1,5 +1,7 @@
 import "../../styles/index.css";
 import { useState } from "react";
+import Avatar from "../../components/Profile/Avatar";
+import { isLoggedIn } from "../../service/Utils/userUtils";
 import {
   Dialog,
   DialogPanel,
@@ -164,17 +166,20 @@ function Header() {
             Marketplace
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Company
+            About
           </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button
-            onClick={handleOpenLoginModal}
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </button>
-          {/* Modal Dialog */}
+          {isLoggedIn() ? (
+            <Avatar />
+          ) : (
+            <button
+              onClick={handleOpenLoginModal}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Log in <span aria-hidden="true">&rarr;</span>
+            </button>
+          )}
           <AuthModal open={open} handleOpen={handleOpen} />
         </div>
       </nav>
@@ -239,23 +244,27 @@ function Header() {
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Company
+                  About
                 </a>
               </div>
               <div className="py-6">
-                <button
-                  onClick={handleOpenLoginModal}
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 cursor-pointer"
-                >
-                  Log in
-                </button>
+                {isLoggedIn() ? (
+                  <Avatar />
+                ) : (
+                  <button
+                    onClick={handleOpenLoginModal}
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    Log in <span aria-hidden="true">&rarr;</span>
+                  </button>
+                )}
               </div>
-              {/* Modal Dialog */}
-              <AuthModal open={open} handleOpen={handleOpen} />
             </div>
           </div>
         </DialogPanel>
       </Dialog>
+      {/* Modal should be outside of mobile dialog/menu */}
+      <AuthModal open={open} handleOpen={handleOpen} />
     </header>
   );
 }

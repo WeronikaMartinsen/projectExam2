@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../service/ApiCalls/Auth/login";
 import {
   LoginRequest,
@@ -24,7 +24,11 @@ const schema = yup
   })
   .required();
 
-function LoginForm() {
+interface LoginFormProps {
+  handleOpen: () => void; // Close modal function
+}
+
+function LoginForm({ handleOpen }: LoginFormProps) {
   const {
     register,
     handleSubmit,
@@ -33,7 +37,7 @@ function LoginForm() {
     resolver: yupResolver(schema),
   });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const onSubmit = async (loginData: LoginRequest) => {
     try {
       const response: LoginResponse = await loginUser(loginData); // Call the login function
@@ -46,7 +50,7 @@ function LoginForm() {
       }
       setUser(response);
       localStorage.setItem("accessToken", accessToken);
-      navigate("/");
+      handleOpen();
       console.log("Login successful, token:", accessToken);
     } catch (error) {
       console.error("Login error:", error);
