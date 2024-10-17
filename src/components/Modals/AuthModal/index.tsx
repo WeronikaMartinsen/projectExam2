@@ -25,7 +25,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
       {open && (
         <div
           id="hs-scale-animation-modal"
-          className="hs-overlay fixed inset-0 z-[80] flex items-center justify-center bg-black bg-opacity-50 overflow-x-hidden overflow-y-auto pointer-events-auto"
+          className="hs-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 overflow-x-hidden overflow-y-auto pointer-events-auto"
           role="dialog"
           aria-labelledby="hs-scale-animation-modal-label"
           tabIndex={-1}
@@ -72,7 +72,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex justify-center items-center gap-x-2 py-3 px-4 mt-4 dark:border-neutral-700">
+              <div className="flex justify-center items-center gap-x-2 py-3 px-4 dark:border-neutral-700">
                 <p>
                   {isRegister
                     ? "Already have an account?"

@@ -103,55 +103,59 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
       alert("An unexpected error occurred. Please try again later.");
     }
   };
-
   return (
     <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
-      <h1 className="mt-4 mb-4 text-3xl text-center">Register</h1>
+      <h1 className="mt-4 mb-6 text-3xl text-center">Register</h1>
       <form
         className="flex flex-wrap justify-center w-100 items-center m-1"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* Full Name Field */}
-        <div className="w-full flex flex-col mb-4">
-          <label
-            className="text-gray-700 text-md mb-2 text-left"
-            htmlFor="name"
-          >
-            Name*
-          </label>
-          <input
-            {...register("name")}
-            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            type="text"
-            placeholder="Enter your name"
-          />
-          <p className="text-red-500 text-xs italic">{errors.name?.message}</p>
-        </div>
+        {/* Full Name and Email Fields in one row */}
+        <div className="w-full flex flex-row mb-4 justify-between space-x-2">
+          <div className="flex flex-col w-1/2">
+            <label
+              className="text-gray-700 text-md mb-2 text-left hidden"
+              htmlFor="name"
+            >
+              Name*
+            </label>
+            <input
+              {...register("name")}
+              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+              type="text"
+              placeholder="Name*"
+            />
+            <p className="text-red-500 text-xs italic">
+              {errors.name?.message}
+            </p>
+          </div>
 
-        {/* Email Field */}
-        <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left">
-            Email address*
-          </label>
-          <input
-            {...register("email")}
-            className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            type="text"
-            placeholder="Enter your email"
-          />
-          <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
+          <div className="flex flex-col w-1/2">
+            <label className="text-gray-700 text-md mb-2 text-left  hidden">
+              Email address*
+            </label>
+            <input
+              {...register("email")}
+              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
+              type="text"
+              placeholder="Email address*"
+            />
+            <p className="text-red-500 text-xs italic">
+              {errors.email?.message}
+            </p>
+          </div>
         </div>
 
         {/* Password Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left">
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
             Password*
           </label>
           <input
             {...register("password")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             type="password"
-            placeholder="Password"
+            placeholder="Password*"
           />
           <p className="text-red-500 text-xs italic">
             {errors.password?.message}
@@ -160,7 +164,7 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Avatar URL Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left">
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
             Avatar URL
           </label>
           <input
@@ -176,7 +180,7 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Banner URL Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left">
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
             Banner URL
           </label>
           <input
@@ -192,7 +196,9 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Bio Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left">Bio</label>
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
+            Bio
+          </label>
           <input
             {...register("bio")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"

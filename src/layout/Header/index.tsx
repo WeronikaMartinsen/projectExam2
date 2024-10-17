@@ -159,7 +159,10 @@ function Header() {
             </PopoverPanel>
           </Popover>
 
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a
+            href="#"
+            className="text-sm font-semibold leading-6 text-gray-900 hover:g-100"
+          >
             Features
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
@@ -209,7 +212,7 @@ function Header() {
               <div className="space-y-2 py-6">
                 <Disclosure as="div" className="-mx-3">
                   <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Product
+                    Venues
                     <FiChevronDown
                       aria-hidden="true"
                       className="h-5 w-5 flex-none group-data-[open]:rotate-180"

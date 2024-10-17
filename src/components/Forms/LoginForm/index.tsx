@@ -66,27 +66,27 @@ function LoginForm({ handleOpen }: LoginFormProps) {
       >
         {/* Email Field */}
         <div className="w-full flex flex-col mb-6">
-          <label className="text-gray-700 text-md mb-2 text-left">
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
             Email address*
           </label>
           <input
             {...register("email")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             type="text"
-            placeholder="Email address"
+            placeholder="Email address*"
           />
           <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
         </div>
 
         {/* Password Field */}
         <div className="w-full flex flex-col mb-6">
-          <label className="text-gray-700 text-md mb-2 text-left">
+          <label className="text-gray-700 text-md mb-2 text-left hidden">
             Password*
           </label>
           <input
             {...register("password")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            placeholder="Password"
+            placeholder="Password*"
             type="password"
           />
           <p className="text-red-500 text-xs italic">
