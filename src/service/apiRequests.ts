@@ -1,13 +1,10 @@
 import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
-import { Venue } from "./ApiCalls/Interfaces/venue";
+import { VenueResponse, Venue } from "./ApiCalls/Interfaces/venue";
 import { baseUrl } from "./ApiCalls/Endpoints";
 import { apiKeyUrl } from "./ApiCalls/Endpoints";
 
-export const getVenues = async (
-  accessToken: string
-): Promise<ApiResponse<Venue[]>> => {
+export const getVenues = async (): Promise<VenueResponse[]> => {
   const headers = {
-    Authorization: `Bearer ${accessToken}`, // User's access token
     "X-Noroff-API-Key": apiKeyUrl, // API Key from .env
     "Content-Type": "application/json",
   };

@@ -61,3 +61,15 @@ export interface Venue {
   owner?: Owner; // Optional based on query parameters
   bookings?: Booking[]; // Optional based on query parameters
 }
+
+export interface VenueResponse {
+  data: Venue[]; // Array of Venue objects
+  meta: {
+    isFirstPage: boolean;
+    isLastPage: boolean;
+    currentPage: number;
+    previousPage: number | null;
+    nextPage: number | null;
+    // Add other pagination details if necessary
+  };
+}
