@@ -9,7 +9,7 @@ export const getVenues = async (): Promise<ApiResponse<Venue[]>> => {
 };
 
 // GET Venue by ID
-export const getVenueById = async (id: number): Promise<ApiResponse<Venue>> => {
+export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
   return apiRequest<null, Venue>(`/venues/${id}`, "GET");
 };
 
@@ -23,7 +23,7 @@ export const createVenue = async (
 
 // PUT (Update) a Venue
 export const updateVenue = async (
-  id: number,
+  id: string,
   venue: Venue,
   token: string
 ): Promise<ApiResponse<Venue>> => {
@@ -32,7 +32,7 @@ export const updateVenue = async (
 
 // DELETE a Venue
 export const deleteVenue = async (
-  id: number,
+  id: string,
   token: string
 ): Promise<ApiResponse<null>> => {
   return apiRequest<null, null>(`/venues/${id}`, "DELETE", undefined, token);

@@ -199,10 +199,9 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
           <label className="text-gray-700 text-md mb-2 text-left hidden">
             Bio
           </label>
-          <input
+          <textarea
             {...register("bio")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
-            type="text"
             placeholder="Tell us about yourself..."
           />
           <p className="text-red-500 text-xs italic">{errors.bio?.message}</p>
