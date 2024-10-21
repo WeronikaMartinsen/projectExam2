@@ -1,11 +1,33 @@
 import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
 import { Venue } from "./ApiCalls/Interfaces/venue";
+import { baseUrl } from "./ApiCalls/Endpoints";
+import { apiKeyUrl } from "./ApiCalls/Endpoints";
 
-// API Calls Using the New apiRequest Function
+export const getVenues = async (
+  accessToken: string
+): Promise<ApiResponse<Venue[]>> => {
+  const headers = {
+    Authorization: `Bearer ${accessToken}`, // User's access token
+    "X-Noroff-API-Key": apiKeyUrl, // API Key from .env
+    "Content-Type": "application/json",
+  };
 
-// GET Venues
-export const getVenues = async (): Promise<ApiResponse<Venue[]>> => {
-  return apiRequest<null, Venue[]>("/venues", "GET");
+  try {
+    const response = await fetch(`${baseUrl}/holidaze/venues`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data; // return the venues data
+  } catch (error) {
+    console.error("API Request Error:", error);
+    throw error;
+  }
 };
 
 // GET Venue by ID
