@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getVenues } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
-import VenueCard from "../VenueCard"; // Ensure you import the VenueCard
+import VenueCard from "../VenueCard";
 import Sidebar from "../../../layout/Sidebar";
 
 interface Filters {

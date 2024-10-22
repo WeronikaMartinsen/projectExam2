@@ -12,28 +12,27 @@ import Rating from "../Rating";
 
 interface VenueCardProps {
   venue: Venue;
-  onClick: (id: string) => void; // Function to handle click
+  onClick: (id: string) => void;
 }
 
 const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
   return (
     <li
-      key={venue.id} // Make sure each venue has a unique id
+      key={venue.id}
       className="grid grid-cols-1 md:grid-cols-3 gap-6 shadow-md hover:shadow-lg transition-transform transform"
-      onClick={() => onClick(venue.id)} // Handle click event
+      onClick={() => onClick(venue.id)}
     >
       <div className="venue-image-container w-full h-48 md:h-64 overflow-hidden">
         <img
           className="w-full h-full object-cover"
-          src={venue.media[0]?.url} // Ensure media[0] exists
-          alt={venue.media[0]?.alt || venue.name} // Fallback to venue name if alt text is not available
+          src={venue.media[0]?.url}
+          alt={venue.media[0]?.alt || venue.name}
         />
       </div>
       <div className="venue-details flex flex-col justify-center">
         <h2 className="text-xl font-semibold">{venue.name}</h2>
-        <Rating rating={venue.rating} /> {/* Pass the venue's rating */}
+        <Rating rating={venue.rating} />
         <IoLocation />
-        {/* Display Meta Properties */}
         <div className="flex flex-col gap-3 mt-6 text-primary text-sm">
           {venue.meta.breakfast && (
             <div className="flex items-center">
