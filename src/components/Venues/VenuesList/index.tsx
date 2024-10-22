@@ -32,12 +32,11 @@ const VenuesList = () => {
       try {
         const venuesArray = await getVenues();
         console.log("Fetched Venues:", venuesArray);
-
         setVenues(venuesArray);
         setLoading(false);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Unknown error occurred";
+          error instanceof Error ? error.message : "Fails in useEffect";
         setError(errorMessage);
         setLoading(false);
       }
