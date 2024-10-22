@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getVenues } from "../../../service/apiRequests"; // Adjust the import path as necessary
-import { Venue } from "../../../service/ApiCalls/Interfaces/venue"; // Adjust the import path as necessary
+import { getVenues } from "../../../service/apiRequests";
+import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
+import VenueCard from "../VenueCard"; // Ensure you import the VenueCard
+import Sidebar from "../../../layout/Sidebar";
+
+interface Filters {
+  wifi: boolean;
+  breakfast: boolean;
+  parking: boolean;
+  pets: boolean;
+}
 
 const VenuesList = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -9,30 +18,47 @@ const VenuesList = () => {
   const [error, setError] = useState<string | null>(null);
   const [visibleVenuesCount, setVisibleVenuesCount] = useState(10);
 
+  const [filters, setFilters] = useState<Filters>({
+    wifi: false,
+    breakfast: false,
+    parking: false,
+    pets: false,
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await getVenues();
-        console.log("Fetched Venues:", response); // Log fetched data
-        if (Array.isArray(response.data)) {
-          setVenues(response.data);
-        } else {
-          setVenues([]); // Handle unexpected response
-        }
+        const venuesArray = await getVenues();
+        console.log("Fetched Venues:", venuesArray);
+
+        setVenues(venuesArray);
         setLoading(false);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error occurred";
         setError(errorMessage);
         setLoading(false);
-        console.error("Fetch Venues Error:", error); // Log the error object
       }
     };
 
     fetchVenues();
   }, []);
+
+  const handleFilterChange = (newFilters: Filters) => {
+    setFilters(newFilters);
+  };
+
+  const filteredVenues = venues.filter((venue) => {
+    const { wifi, breakfast, parking, pets } = filters;
+    return (
+      (!wifi || venue.meta.wifi) &&
+      (!breakfast || venue.meta.breakfast) &&
+      (!parking || venue.meta.parking) &&
+      (!pets || venue.meta.pets)
+    );
+  });
 
   const handleVenueClick = (id: string) => {
     navigate(`/venue/${id}`);
@@ -46,44 +72,30 @@ const VenuesList = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4">
-      <ul className="space-y-8">
-        {venues.slice(0, visibleVenuesCount).map((venue) => (
-          <li
-            key={venue.id}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
-            onClick={() => handleVenueClick(venue.id)}
-          >
-            <div className="venue-image-container w-full h-48 md:h-64 overflow-hidden rounded-lg">
-              <img
-                className="w-full h-full object-cover"
-                src={venue.media[0]?.url}
-                alt={venue.media[0]?.alt || venue.name}
-              />
-            </div>
-            <div className="venue-details flex flex-col justify-center">
-              <h2 className="text-xl font-semibold">{venue.name}</h2>
-              <p className="text-gray-700 mt-2">{venue.description}</p>
-            </div>
-            <div className="venue-price flex items-center justify-center">
-              <p className="text-lg font-bold text-blue-600">
-                Price: ${venue.price}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="flex mt-6">
+      <Sidebar filters={filters} onFilterChange={handleFilterChange} />
+      <div className="container mx-auto px-4">
+        <ul className="space-y-8">
+          {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              onClick={handleVenueClick}
+            />
+          ))}
+        </ul>
 
-      {visibleVenuesCount < venues.length && (
-        <div className="text-center mt-8">
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            onClick={showMoreVenues}
-          >
-            Show More
-          </button>
-        </div>
-      )}
+        {visibleVenuesCount < filteredVenues.length && (
+          <div className="text-center mt-8">
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              onClick={showMoreVenues}
+            >
+              Show More
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

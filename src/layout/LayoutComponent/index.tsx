@@ -10,13 +10,9 @@ interface LayoutComponentProps {
 function LayoutComponent({ children }: LayoutComponentProps) {
   return (
     <>
-      <div className="min-h-screen w-full flex flex-col p-0 m-0">
-        <Header />
-        <main className="bg-white flex-grow flex flex-col items-center bg-blend-lighten ">
-          {children}
-        </main>
-        <Footer />
-      </div>
+      <Header />
+      <main>{children}</main>
+      <Footer />
     </>
   );
 }

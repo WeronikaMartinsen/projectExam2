@@ -70,6 +70,5 @@ export interface VenueResponse {
     currentPage: number;
     previousPage: number | null;
     nextPage: number | null;
-    // Add other pagination details if necessary
   };
 }

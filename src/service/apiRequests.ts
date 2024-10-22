@@ -1,11 +1,11 @@
 import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
-import { VenueResponse, Venue } from "./ApiCalls/Interfaces/venue";
+import { Venue, VenueResponse } from "./ApiCalls/Interfaces/venue";
 import { baseUrl } from "./ApiCalls/Endpoints";
 import { apiKeyUrl } from "./ApiCalls/Endpoints";
 
-export const getVenues = async (): Promise<VenueResponse[]> => {
+export const getVenues = async (): Promise<Venue[]> => {
   const headers = {
-    "X-Noroff-API-Key": apiKeyUrl, // API Key from .env
+    "X-Noroff-API-Key": apiKeyUrl,
     "Content-Type": "application/json",
   };
 
@@ -19,8 +19,8 @@ export const getVenues = async (): Promise<VenueResponse[]> => {
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    return data; // return the venues data
+    const data: VenueResponse = await response.json();
+    return data.data;
   } catch (error) {
     console.error("API Request Error:", error);
     throw error;
