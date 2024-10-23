@@ -9,22 +9,22 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   --color-primary: #242d40; /* Primary color */
-  --color-secondary: #208c8c; /* Secondary color */
-  --color-tertiary: #1ed9c6; /* Tertiary color */
+  --color-secondary: #0468bf; /* Secondary color */
+  --color-tertiary: #fffae9; /* Tertiary color */
 
   /* Accent Colors */
-  --color-accent: #1df2dd; /* Accent color */
-  --color-success: #168c77; /* Success (green) */
+  --color-accent: #f2bf27; /* Accent color */
+  --color-success: #088c29; /* Success (green) */
   --color-warning: #ffc107; /* Warning (yellow) */
   --color-danger: #dc3545; /* Danger (red) */
   --color-info: #0dcaf0; /* Info (light blue) */
 
   /* Neutral Colors */
-  --color-light: #f8f9fa; /* Light gray */
+  --color-light: #f2f2f2; /* Light gray */
   --color-dark: #212529; /* Dark gray/black */
 
   /* Text Colors */
-  --color-text-light: #ffffff; /* Light text (white) */
+  --color-text-light: #f2f2f2; /* Light text (white) */
   --color-text-dark: #343a40; /* Dark text */
 }
 html,

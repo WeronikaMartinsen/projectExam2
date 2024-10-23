@@ -4,7 +4,7 @@ import FilterHomeForm from "../../Forms/FilterHomeForm";
 function FilterHomePage() {
   return (
     <>
-      <section className="bg-secondary h-20 w-full">
+      <section className="bg-secondary h-21 w-full">
         <FilterHomeForm />
       </section>
     </>

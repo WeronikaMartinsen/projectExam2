@@ -24,7 +24,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
   return (
     <li
       key={venue.id}
-      className="grid grid-cols-1 md:grid-cols-3 gap-6 shadow-md hover:shadow-lg transition-transform transform"
+      className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-tertiary border border-accent shadow-sm hover:shadow-md transition-transform transform"
       onClick={() => onClick(venue.id)}
     >
       <div className="w-full h-48 md:h-64 overflow-hidden cursor-pointer">
@@ -84,8 +84,11 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
           )}
         </div>
       </div>
-      <div className="venue-price flex items-center justify-center">
-        <p className="text-lg font-bold text-blue-600">Price: ${venue.price}</p>
+
+      <div className="venue-price flex items-center justify-center border border-tertiary">
+        <p className="text-lg font-bold text-secondary">
+          Price: ${venue.price}
+        </p>
       </div>
     </li>
   );
