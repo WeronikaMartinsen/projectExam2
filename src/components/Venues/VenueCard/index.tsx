@@ -6,7 +6,7 @@ import {
   MdWifi,
   MdDirectionsCar,
   MdPets,
-  MdGroups,
+  MdPerson,
 } from "react-icons/md";
 import Rating from "../Rating";
 
@@ -24,17 +24,17 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
   return (
     <li
       key={venue.id}
-      className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-tertiary border border-accent shadow-sm hover:shadow-md transition-transform transform"
+      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform"
       onClick={() => onClick(venue.id)}
     >
-      <div className="w-full h-48 md:h-64 overflow-hidden cursor-pointer">
+      <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded-tl-lg rounded-bl-lg">
         <img
           className="w-full h-full object-cover"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />
       </div>
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col items-center md:items-start md:border-r border-accent md:pr-4">
         <div className="flex items-center gap-2 mb-2">
           <IoLocation />
           {/* Link the location to Google Maps */}
@@ -78,17 +78,18 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
           )}
           {venue.maxGuests && (
             <div className="flex items-center">
-              <MdGroups title="Max guests" />
+              <MdPerson title="Max guests" />
               <span className="ml-1">Max guests: {venue.maxGuests}</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className="venue-price flex items-center justify-center border border-tertiary">
-        <p className="text-lg font-bold text-secondary">
-          Price: ${venue.price}
-        </p>
+      <div className="flex flex-col items-end justify-end align-bottom p-4">
+        <p className="text-2xl text-primary pl-8">{venue.price} nok</p>
+        <button className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
+          CHECK PRICE
+        </button>
       </div>
     </li>
   );

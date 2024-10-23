@@ -17,21 +17,22 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
-    onFilterChange({ ...filters, [name]: checked }); // Now TypeScript knows the type of newFilters
+    onFilterChange({ ...filters, [name]: checked });
   };
 
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"} md:sticky md:top-0`}>
       <button
-        className="md:hidden mb-4 px-4 py-2 bg-blue-500 text-white rounded"
+        className="sm:hidden mb-4 px-4 py-2 bg-blue-500 text-white rounded"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         {isOpen ? "Close" : "Filters"}
       </button>
       <h3 className="text-lg font-semibold">Filters</h3>
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col mt-6 gap-4">
         <label>
           <input
+            className="mr-2"
             type="checkbox"
             name="wifi"
             checked={filters.wifi}
@@ -41,6 +42,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
         </label>
         <label>
           <input
+            className="mr-2"
             type="checkbox"
             name="breakfast"
             checked={filters.breakfast}
@@ -50,6 +52,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
         </label>
         <label>
           <input
+            className="mr-2"
             type="checkbox"
             name="parking"
             checked={filters.parking}
@@ -59,6 +62,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
         </label>
         <label>
           <input
+            className="mr-2"
             type="checkbox"
             name="pets"
             checked={filters.pets}
