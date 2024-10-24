@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
 import Home from "../src/pages/Home";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
@@ -9,8 +8,6 @@ import { AuthProvider } from "../src/context/AuthContext";
 function App() {
   return (
     <AuthProvider>
-      {" "}
-      {/* Wrap the AuthProvider around BrowserRouter */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

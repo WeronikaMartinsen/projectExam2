@@ -25,6 +25,7 @@ import {
   FiPhone,
   FiPlayCircle,
 } from "react-icons/fi";
+import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import AuthModal from "../../components/Modals/AuthModal";
 
@@ -81,18 +82,18 @@ function Header() {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
-          <Link to="/">
-            <div className="flex flex-col">
-              <span className="text-md font-semibold">SunRise</span>
-              <span className="text-xs text-center">TRAVEL</span>
-            </div>
-          </Link>
-
           <div>
             <Link to="/">
-              <img alt="Logo" src="/assets/logo.png" className="h-10 w-auto" />
+              <IoSunnyOutline className="text-accent h-8 w-8" />
             </Link>
           </div>
+          <Link to="/">
+            <div className="flex flex-col">
+              <span className="text-2xl text-secondary font-bold">
+                holidaze
+              </span>
+            </div>
+          </Link>
         </div>
 
         <div className="flex lg:hidden">
