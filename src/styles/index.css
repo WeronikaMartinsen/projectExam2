@@ -39,6 +39,15 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
 p,
 span {
   word-break: break-all;
