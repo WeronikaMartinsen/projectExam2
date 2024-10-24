@@ -16,8 +16,8 @@ import {
 import {
   FiMenu,
   FiX,
-  FiPieChart,
-  FiCpu,
+  FiPlus,
+  FiEdit,
   FiShield,
   FiLayers,
   FiRepeat,
@@ -31,28 +31,28 @@ import AuthModal from "../../components/Modals/AuthModal";
 
 const products = [
   {
-    name: "Analytics",
-    description: "Get a better understanding of your traffic",
+    name: "Add Venue",
+    description: "Create you own venue and publish it!",
     href: "#",
-    icon: FiPieChart, // Replacing ChartPieIcon
+    icon: FiPlus,
   },
   {
-    name: "Engagement",
+    name: "Update Venue",
     description: "Speak directly to your customers",
     href: "#",
-    icon: FiCpu, // Replacing CursorArrowRaysIcon
+    icon: FiEdit,
   },
   {
     name: "Security",
     description: "Your customers’ data will be safe and secure",
     href: "#",
-    icon: FiShield, // Replacing FingerPrintIcon
+    icon: FiShield,
   },
   {
     name: "Integrations",
     description: "Connect with third-party tools",
     href: "#",
-    icon: FiLayers, // Replacing SquaresPlusIcon
+    icon: FiLayers,
   },
   {
     name: "Automations",
@@ -63,8 +63,8 @@ const products = [
 ];
 
 const callsToAction = [
-  { name: "Watch demo", href: "#", icon: FiPlayCircle }, // Replacing PlayCircleIcon
-  { name: "Contact sales", href: "#", icon: FiPhone }, // Replacing PhoneIcon
+  { name: "Watch demo", href: "#", icon: FiPlayCircle },
+  { name: "Contact sales", href: "#", icon: FiPhone },
 ];
 
 function Header() {
@@ -102,14 +102,14 @@ function Header() {
             onClick={() => setMobileMenuOpen(true)}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only"></span>
             <FiMenu aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-              Product
+              Venues
               <FiChevronDown
                 aria-hidden="true"
                 className="h-5 w-5 flex-none text-gray-400"
@@ -164,10 +164,10 @@ function Header() {
             href="#"
             className="text-sm font-semibold leading-6 text-gray-900 hover:g-100"
           >
-            Features
+            Filters
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Marketplace
+            Contact
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             About

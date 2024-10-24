@@ -51,35 +51,37 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
         <h2 className="text-xl font-semibold">{venue.name}</h2>
         <Rating rating={venue.rating} />
 
-        <div className="flex flex-col gap-3 mt-4 text-primary text-sm">
+        <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
           {venue.meta.breakfast && (
             <div className="flex items-center">
               <MdFreeBreakfast title="Breakfast included" />
-              <span className="ml-1">Breakfast included</span>
+              <span className="ml-1 text-sm leading-6">Breakfast included</span>
             </div>
           )}
           {venue.meta.wifi && (
             <div className="flex items-center">
               <MdWifi title="Wi-Fi available" />
-              <span className="ml-1">Wi-Fi available</span>
+              <span className="ml-1 text-sm leading-6">Wi-Fi available</span>
             </div>
           )}
           {venue.meta.parking && (
             <div className="flex items-center">
               <MdDirectionsCar title="Parking available" />
-              <span className="ml-1">Parking available</span>
+              <span className="ml-1 text-sm leading-6">Parking available</span>
             </div>
           )}
           {venue.meta.pets && (
             <div className="flex items-center">
               <MdPets title="Pets allowed" />
-              <span className="ml-1">Pets allowed</span>
+              <span className="ml-1 text-sm leading-6">Pets allowed</span>
             </div>
           )}
           {venue.maxGuests && (
             <div className="flex items-center">
               <MdPerson title="Max guests" />
-              <span className="ml-1">Max guests: {venue.maxGuests}</span>
+              <span className="ml-1 text-sm leading-6">
+                Max guests: {venue.maxGuests}
+              </span>
             </div>
           )}
         </div>

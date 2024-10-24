@@ -5,6 +5,7 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+// This remains the same
 export async function apiRequest<T, R>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE",

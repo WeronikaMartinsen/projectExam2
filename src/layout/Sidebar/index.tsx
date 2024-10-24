@@ -28,9 +28,9 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
       >
         {isOpen ? "Close" : "Filters"}
       </button>
-      <h3 className="text-lg font-semibold">Filters</h3>
+      <h3 className="text-md font-semibold leading-6">Filters</h3>
       <div className="flex flex-col mt-6 gap-4">
-        <label>
+        <label className="text-sm leading-6">
           <input
             className="mr-2"
             type="checkbox"
@@ -40,7 +40,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
           />
           Wi-Fi
         </label>
-        <label>
+        <label className="text-sm leading-6">
           <input
             className="mr-2"
             type="checkbox"
@@ -50,7 +50,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
           />
           Breakfast
         </label>
-        <label>
+        <label className="text-sm leading-6">
           <input
             className="mr-2"
             type="checkbox"
@@ -60,7 +60,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
           />
           Parking
         </label>
-        <label>
+        <label className="text-sm leading-6">
           <input
             className="mr-2"
             type="checkbox"
