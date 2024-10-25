@@ -1,13 +1,13 @@
 import LayoutComponent from "../layout/LayoutComponent";
 import "../styles/index.css";
-import HeroSection from "../components/Profile/HeroSection";
 import SingleVenueCard from "../components/Venues/SingleVenueCard";
+import HeaderSingleVenue from "../components/Venues/HeaderSingleVenue";
 
 function SingleVenues() {
   return (
     <>
       <LayoutComponent>
-        <HeroSection />
+        <HeaderSingleVenue/>
         <SingleVenueCard />
       </LayoutComponent>
     </>
