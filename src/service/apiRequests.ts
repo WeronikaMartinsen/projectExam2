@@ -29,7 +29,7 @@ export const getVenues = async (): Promise<Venue[]> => {
 
 // GET Venue by ID
 export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
-  return apiRequest<null, Venue>(`/holidaze/venues/${id}`, "GET");
+  return apiRequest<null, Venue>(`/holidaze/venues/${id}?_owner=true`, "GET");
 };
 
 // POST (Create) a New Venue

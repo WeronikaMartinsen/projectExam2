@@ -15,7 +15,6 @@ import {
 } from "@headlessui/react";
 import {
   FiMenu,
-  FiX,
   FiPlus,
   FiEdit,
   FiShield,
@@ -195,20 +194,20 @@ function Header() {
       >
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-        <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
-          <div>
+          <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
+            <div>
+              <Link to="/">
+                <IoSunnyOutline className="text-accent h-8 w-8" />
+              </Link>
+            </div>
             <Link to="/">
-              <IoSunnyOutline className="text-accent h-8 w-8" />
+              <div className="flex flex-col">
+                <span className="text-2xl text-secondary font-bold">
+                  holidaze
+                </span>
+              </div>
             </Link>
           </div>
-          <Link to="/">
-            <div className="flex flex-col">
-              <span className="text-2xl text-secondary font-bold">
-                holidaze
-              </span>
-            </div>
-          </Link>
-        </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">

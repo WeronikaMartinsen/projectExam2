@@ -9,16 +9,14 @@ import {
 function Avatar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = getUser();
-  const dropdownRef = useRef<HTMLDivElement>(null); // Reference to the dropdown
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const avatarUrl = user?.avatar?.url || "/default-avatar.png";
 
-  // Toggles the dropdown visibility
   const handleToggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Handle logout and refresh the page after logout
   const handleLogout = () => {
     deleteUser();
     window.location.reload();

@@ -11,8 +11,7 @@ import {
   MdPerson,
 } from "react-icons/md";
 import Rating from "../Rating";
-
-
+import VenueOwner from "../VenueOwner";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>(); // Get the venue ID from the URL
@@ -27,6 +26,7 @@ function SingleVenueCard() {
         if (id) {
           const venueById = await getVenueById(id);
           setVenue(venueById.data); // Set the venue data
+          console.log(venueById);
         }
       } catch (err) {
         setError(
@@ -52,10 +52,10 @@ function SingleVenueCard() {
   return (
     <div className="container max-w-6lg grid">
       <div className="w-full max-h-64 overflow-hidden mt-6">
-      <div className="flex gap-4 pl-8">
-      <h2 className="text-3xl font-semibold mb-4">{venue.name}</h2>
-      <Rating rating={venue.rating} />
-      </div>
+        <div className="flex gap-4 pl-8">
+          <h2 className="text-3xl font-semibold mb-4">{venue.name}</h2>
+          <Rating rating={venue.rating} />
+        </div>
         <img
           className="w-full h-full object-cover"
           src={venue.media[0]?.url}
@@ -63,7 +63,7 @@ function SingleVenueCard() {
         />
       </div>
       <div className="w-full h-full pl-6">
-      <div className="flex items-center p-4">
+        <div className="flex items-center p-4">
           <IoLocation className="text-lg" />
           <a
             href={googleMapsUrl}
@@ -78,8 +78,8 @@ function SingleVenueCard() {
         <div>
           <p>{venue.description}</p>
         </div>
-      
-      <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
+
+        <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
           {venue.meta.breakfast && (
             <div className="flex items-center">
               <MdFreeBreakfast title="Breakfast included" />
@@ -113,7 +113,7 @@ function SingleVenueCard() {
             </div>
           )}
         </div>
-
+        <VenueOwner owner={venue.owner} />
       </div>
     </div>
   );
