@@ -1,4 +1,4 @@
-import "../../../styles/index.css";
+import { Link } from "react-router-dom";
 import { Owner } from "../../../service/ApiCalls/Interfaces/venue";
 
 interface VenueOwnerProps {
@@ -16,11 +16,13 @@ function VenueOwner({ owner }: VenueOwnerProps) {
       }}
     >
       <div className="flex justify-start bg-opacity-70 mt-6">
-        <img
-          className="flex w-10 h-10 rounded-full border shadow"
-          src={owner.avatar.url}
-          alt={owner.avatar.alt || "Owner avatar"}
-        />
+        <Link to={`/profiles/${owner.name}`}>
+          <img
+            className="flex w-10 h-10 rounded-full border shadow"
+            src={owner.avatar.url}
+            alt={owner.avatar.alt || "Owner avatar"}
+          />
+        </Link>
         <h1 className="text-center text-sm font-semibold leading-6 p-4">
           {owner.name}
         </h1>

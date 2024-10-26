@@ -56,3 +56,27 @@ export const deleteVenue = async (
 ): Promise<ApiResponse<null>> => {
   return apiRequest<null, null>(`/venues/${id}`, "DELETE", undefined, token);
 };
+
+// GET Venues by Profile Name
+export const getProfile = async (name: string): Promise<Venue[]> => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/holidaze/profiles/${name}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data: VenueResponse = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("API Request Error:", error);
+    throw error;
+  }
+};

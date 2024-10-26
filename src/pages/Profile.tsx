@@ -1,12 +1,12 @@
 import LayoutComponent from "../layout/LayoutComponent";
 import "../styles/index.css";
-import HeroSection from "../components/Profile/HeroSection";
+import ProfilePage from "../components/Profile/ProfilePage";
 
 function Profile() {
   return (
     <>
       <LayoutComponent>
-        <HeroSection />
+        <ProfilePage />
       </LayoutComponent>
     </>
   );
