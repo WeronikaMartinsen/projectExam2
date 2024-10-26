@@ -5,7 +5,7 @@ function FilterHomeForm() {
     <form className="flex justify-around items-center gap-4 mx-auto w-full max-w-7xl p-6">
       <div className="w-full flex flex-col">
         <label className="text-white text-sm font-semibold leading-6">
-          Where?
+          From?
         </label>
         <input
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -15,7 +15,7 @@ function FilterHomeForm() {
       </div>
       <div className="w-full flex flex-col">
         <label className="text-sm font-semibold leading-6 text-white">
-          When?
+          To?
         </label>
         <input
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"

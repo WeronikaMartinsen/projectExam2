@@ -8,6 +8,7 @@ export interface Booking {
   guests: number;
   created: string;
   updated: string;
+  customer?: Profile;
 }
 
 export interface BookingWithDetails extends Booking {

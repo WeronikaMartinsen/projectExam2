@@ -12,12 +12,15 @@ import {
 } from "react-icons/md";
 import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
+import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
+import Calender from "../../Bookings/Calender";
 
 function SingleVenueCard() {
-  const { id } = useParams<{ id: string }>(); // Get the venue ID from the URL
+  const { id } = useParams<{ id: string }>();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [bookings, setBookings] = useState<Booking[]>([]); // State for bookings
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -25,7 +28,8 @@ function SingleVenueCard() {
         setLoading(true);
         if (id) {
           const venueById = await getVenueById(id);
-          setVenue(venueById.data); // Set the venue data
+          setVenue(venueById.data);
+          setBookings(venueById.data.bookings || []); // Set bookings
           console.log(venueById);
         }
       } catch (err) {
@@ -85,8 +89,10 @@ function SingleVenueCard() {
             </div>
             <div className="flex gap-2 justify-center items-center">
               <span>Bookings:</span>
-              <span className=" font-semibold">{venue._count.bookings}</span>
+              <span className="font-semibold">{venue._count.bookings}</span>
             </div>
+            {/* Render the Calendar */}
+            <Calender bookings={bookings} />
           </div>
           <div className="flex flex-col w-full h-full">
             {venue.meta.breakfast && (

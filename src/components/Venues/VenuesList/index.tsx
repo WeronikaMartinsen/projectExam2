@@ -71,30 +71,26 @@ const VenuesList = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex mt-6">
+    <div className="container mx-auto px-4 mt-6">
+      {/* Sidebar moved to the top */}
       <Sidebar filters={filters} onFilterChange={handleFilterChange} />
-      <div className="container mx-auto px-4">
-        <ul className="space-y-8">
-          {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
-            <VenueCard
-              key={venue.id}
-              venue={venue}
-              onClick={handleVenueClick}
-            />
-          ))}
-        </ul>
 
-        {visibleVenuesCount < filteredVenues.length && (
-          <div className="text-center mt-8">
-            <button
-              className="bg-primary text-white font-bold py-2 px-4 rounded"
-              onClick={showMoreVenues}
-            >
-              Show More
-            </button>
-          </div>
-        )}
-      </div>
+      <ul className="space-y-8 mt-4">
+        {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
+          <VenueCard key={venue.id} venue={venue} onClick={handleVenueClick} />
+        ))}
+      </ul>
+
+      {visibleVenuesCount < filteredVenues.length && (
+        <div className="text-center mt-8">
+          <button
+            className="bg-primary text-white font-bold py-2 px-4 rounded"
+            onClick={showMoreVenues}
+          >
+            Show More
+          </button>
+        </div>
+      )}
     </div>
   );
 };
