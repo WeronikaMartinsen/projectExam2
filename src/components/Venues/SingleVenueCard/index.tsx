@@ -52,17 +52,17 @@ function SingleVenueCard() {
   return (
     <div className="container max-w-6lg grid">
       <div className="w-full max-h-64 overflow-hidden mt-6">
-        <div className="flex gap-4 pl-8">
+        <div className="flex gap-2 pl-2">
           <h2 className="text-3xl font-semibold mb-4">{venue.name}</h2>
           <Rating rating={venue.rating} />
         </div>
         <img
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-lg shadow"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />
       </div>
-      <div className="w-full h-full pl-6">
+      <div className="w-full h-full bg-tertiary">
         <div className="flex items-center p-4">
           <IoLocation className="text-lg" />
           <a
@@ -75,45 +75,65 @@ function SingleVenueCard() {
             <span>{venue.location.country}</span>
           </a>
         </div>
-        <div>
-          <p>{venue.description}</p>
-        </div>
 
-        <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
-          {venue.meta.breakfast && (
-            <div className="flex items-center">
-              <MdFreeBreakfast title="Breakfast included" />
-              <span className="ml-1 text-sm leading-6">Breakfast included</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-start p-3 gap-8 xs:gap-0 text-primary text-sm">
+          <div className="flex flex-col justify-start items-start gap-4">
+            <p>{venue.description}</p>
+            <div className="flex gap-2 justify-center items-center">
+              <span>Price:</span>
+              <span className="text-2xl font-semibold">{venue.price} nok</span>
             </div>
-          )}
-          {venue.meta.wifi && (
-            <div className="flex items-center">
-              <MdWifi title="Wi-Fi available" />
-              <span className="ml-1 text-sm leading-6">Wi-Fi available</span>
+            <div className="flex gap-2 justify-center items-center">
+              <span>Bookings:</span>
+              <span className=" font-semibold">{venue._count.bookings}</span>
             </div>
-          )}
-          {venue.meta.parking && (
-            <div className="flex items-center">
-              <MdDirectionsCar title="Parking available" />
-              <span className="ml-1 text-sm leading-6">Parking available</span>
+          </div>
+          <div className="flex flex-col w-full h-full">
+            {venue.meta.breakfast && (
+              <div className="flex items-center">
+                <MdFreeBreakfast title="Breakfast included" />
+                <span className="ml-1 text-sm leading-6">
+                  Breakfast included
+                </span>
+              </div>
+            )}
+            {venue.meta.wifi && (
+              <div className="flex items-center">
+                <MdWifi title="Wi-Fi available" />
+                <span className="ml-1 text-sm leading-6">Wi-Fi available</span>
+              </div>
+            )}
+            {venue.meta.parking && (
+              <div className="flex items-center">
+                <MdDirectionsCar title="Parking available" />
+                <span className="ml-1 text-sm leading-6">
+                  Parking available
+                </span>
+              </div>
+            )}
+            {venue.meta.pets && (
+              <div className="flex items-center">
+                <MdPets title="Pets allowed" />
+                <span className="ml-1 text-sm leading-6">Pets allowed</span>
+              </div>
+            )}
+            {venue.maxGuests && (
+              <div className="flex items-center">
+                <MdPerson title="Max guests" />
+                <span className="ml-1 text-sm leading-6">
+                  Max guests: {venue.maxGuests}
+                </span>
+              </div>
+            )}
+            <div className="mt-4 flex flex-col align-top justify-start">
+              <span>Contact the owner:</span>
+              <VenueOwner owner={venue.owner} />
             </div>
-          )}
-          {venue.meta.pets && (
-            <div className="flex items-center">
-              <MdPets title="Pets allowed" />
-              <span className="ml-1 text-sm leading-6">Pets allowed</span>
-            </div>
-          )}
-          {venue.maxGuests && (
-            <div className="flex items-center">
-              <MdPerson title="Max guests" />
-              <span className="ml-1 text-sm leading-6">
-                Max guests: {venue.maxGuests}
-              </span>
-            </div>
-          )}
+          </div>
         </div>
-        <VenueOwner owner={venue.owner} />
+        <button className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
+          BOOK
+        </button>
       </div>
     </div>
   );

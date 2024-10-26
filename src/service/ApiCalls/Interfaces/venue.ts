@@ -46,7 +46,12 @@ export interface Booking {
   };
 }
 
+export interface _Count {
+  bookings: number;
+}
+
 export interface Venue {
+  _count: _Count;
   id: string;
   name: string;
   description: string;

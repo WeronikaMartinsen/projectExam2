@@ -11,6 +11,7 @@ interface Banner {
 }
 
 export interface Profile {
+  bookings: never[];
   name: string;
   email: string;
   bio?: string | null;
