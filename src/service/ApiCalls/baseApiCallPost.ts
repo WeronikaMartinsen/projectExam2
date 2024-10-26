@@ -1,11 +1,10 @@
-import { baseUrl } from "./Endpoints";
+import { baseUrl, apiKeyUrl } from "./Endpoints";
 
 export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
 
-// This remains the same
 export async function apiRequest<T, R>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE",
@@ -14,8 +13,10 @@ export async function apiRequest<T, R>(
 ): Promise<ApiResponse<R>> {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    "X-Noroff-API-Key": apiKeyUrl,
     ...(token && { Authorization: `Bearer ${token}` }), // Include token if available
   };
+  console.log("Request headers:", headers);
 
   const options: RequestInit = {
     method,

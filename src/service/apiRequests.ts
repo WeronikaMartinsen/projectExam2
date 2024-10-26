@@ -2,6 +2,7 @@ import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
 import { Venue, VenueResponse } from "./ApiCalls/Interfaces/venue";
 import { baseUrl } from "./ApiCalls/Endpoints";
 import { apiKeyUrl } from "./ApiCalls/Endpoints";
+import { Profile } from "./ApiCalls/Interfaces/profile";
 
 export const getVenues = async (): Promise<Venue[]> => {
   const headers = {
@@ -57,26 +58,15 @@ export const deleteVenue = async (
   return apiRequest<null, null>(`/venues/${id}`, "DELETE", undefined, token);
 };
 
-// GET Venues by Profile Name
-export const getProfile = async (name: string): Promise<Venue[]> => {
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  try {
-    const response = await fetch(`${baseUrl}/holidaze/profiles/${name}`, {
-      method: "GET",
-      headers: headers,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-
-    const data: VenueResponse = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error("API Request Error:", error);
-    throw error;
-  }
+// GET Profile
+export const getProfile = async (
+  name: string,
+  accessToken: string
+): Promise<ApiResponse<Profile>> => {
+  return apiRequest<null, Profile>(
+    `/holidaze/profiles/${name}`,
+    "GET",
+    undefined,
+    accessToken
+  );
 };
