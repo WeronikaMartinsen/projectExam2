@@ -3,15 +3,8 @@ import { getVenues } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
 import VenueCard from "../VenueCard";
-// import Sidebar from "../../../layout/Sidebar";
 import SearchVenues from "../../Search/SearchVenues";
-
-// interface Filters {
-//   wifi: boolean;
-//   breakfast: boolean;
-//   parking: boolean;
-//   pets: boolean;
-// }
+import LoadingSkeleton from "../../Skeleton";
 
 const VenuesList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -19,13 +12,6 @@ const VenuesList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [visibleVenuesCount, setVisibleVenuesCount] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // const [filters, setFilters] = useState<Filters>({
-  //   wifi: false,
-  //   breakfast: false,
-  //   parking: false,
-  //   pets: false,
-  // });
 
   const navigate = useNavigate();
 
@@ -46,10 +32,6 @@ const VenuesList: React.FC = () => {
 
     fetchVenues();
   }, []);
-
-  // const handleFilterChange = (newFilters: Filters) => {
-  //   setFilters(newFilters);
-  // };
 
   // Filtering venues based on search query
   const filteredVenues = venues.filter((venue) => {
@@ -76,7 +58,7 @@ const VenuesList: React.FC = () => {
     setVisibleVenuesCount((prevCount) => prevCount + 10);
   };
 
-  if (loading) return <div>Loading venues...</div>;
+  if (loading) return <LoadingSkeleton />;
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -107,7 +89,7 @@ const VenuesList: React.FC = () => {
             </button>
           </div>
         )}
-      </div>{" "}
+      </div>
     </div>
   );
 };
