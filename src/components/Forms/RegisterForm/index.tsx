@@ -32,6 +32,10 @@ const schema = yup
       .string()
       .max(160, "Bio must be less than 160 characters.")
       .nullable(),
+    role: yup
+      .string()
+      .oneOf(["customer", "venue_manager"], "Please select a role.")
+      .required(),
     avatar: yup.object().shape({
       url: yup.string().url("Please enter a valid URL.").nullable(),
       alt: yup
@@ -52,7 +56,7 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 interface RegisterFormProps {
-  switchToLogin: () => void; // Add this to the props
+  switchToLogin: () => void;
 }
 
 function RegisterForm({ switchToLogin }: RegisterFormProps) {
@@ -62,20 +66,19 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
     formState: { errors },
     reset,
   } = useForm<FormData>({
-    resolver: yupResolver(schema), // Yup schema resolver for form validation
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = async (formData: FormData) => {
-    // Prepare the form data to match the RegisterUserData structure
     const data: RegisterUserData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      bio: formData.bio || undefined, // Handle optional fields correctly
+      bio: formData.bio || undefined,
       avatar: formData.avatar?.url
         ? {
             url: formData.avatar.url,
-            alt: formData.avatar.alt || "User avatar", // Fallback to default alt if not provided
+            alt: formData.avatar.alt || "User avatar",
           }
         : undefined,
       banner: formData.banner?.url
@@ -84,11 +87,11 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
             alt: formData.banner.alt || "User banner",
           }
         : undefined,
+      venueManager: formData.role === "venue_manager",
     };
 
     try {
       const response = await registerUser(data);
-
       if (response.data) {
         console.log("User registered successfully", response.data);
         setUser(response.data);
@@ -103,9 +106,36 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
       alert("An unexpected error occurred. Please try again later.");
     }
   };
+
   return (
     <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
       <h1 className="mt-4 mb-6 text-3xl text-center">Register</h1>
+
+      {/* Role Selection */}
+      <div className="mb-4 flex justify-center">
+        <label className="flex items-center mr-4">
+          <input
+            type="radio"
+            value="customer"
+            {...register("role")}
+            className="mr-2"
+          />
+          <span className="text-gray-700">Customer</span>
+        </label>
+        <label className="flex items-center">
+          <input
+            type="radio"
+            value="venue_manager"
+            {...register("role")}
+            className="mr-2"
+          />
+          <span className="text-gray-700">Venue Manager</span>
+        </label>
+      </div>
+      {errors.role && (
+        <p className="text-red-500 text-xs italic">{errors.role.message}</p>
+      )}
+
       <form
         className="flex flex-wrap justify-center w-100 items-center m-1"
         onSubmit={handleSubmit(onSubmit)}
@@ -113,12 +143,6 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
         {/* Full Name and Email Fields in one row */}
         <div className="w-full flex flex-row mb-4 justify-between space-x-2">
           <div className="flex flex-col w-1/2">
-            <label
-              className="text-gray-700 text-md mb-2 text-left hidden"
-              htmlFor="name"
-            >
-              Name*
-            </label>
             <input
               {...register("name")}
               className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -131,9 +155,6 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
           </div>
 
           <div className="flex flex-col w-1/2">
-            <label className="text-gray-700 text-md mb-2 text-left  hidden">
-              Email address*
-            </label>
             <input
               {...register("email")}
               className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -148,9 +169,6 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Password Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left hidden">
-            Password*
-          </label>
           <input
             {...register("password")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -164,14 +182,11 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Avatar URL Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left hidden">
-            Avatar URL
-          </label>
           <input
             {...register("avatar.url")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
             type="url"
-            placeholder="Image URL"
+            placeholder="Avatar URL"
           />
           <p className="text-red-500 text-xs italic">
             {errors.avatar?.url?.message}
@@ -180,9 +195,6 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Banner URL Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left hidden">
-            Banner URL
-          </label>
           <input
             {...register("banner.url")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -196,9 +208,6 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
 
         {/* Bio Field */}
         <div className="w-full flex flex-col mb-4">
-          <label className="text-gray-700 text-md mb-2 text-left hidden">
-            Bio
-          </label>
           <textarea
             {...register("bio")}
             className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
@@ -211,7 +220,7 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2">
           <button
             type="submit"
-            className="w-full border bg-secondary text-white p-2"
+            className="w-full border bg-secondary text-white p-2 rounded hover:bg-accent transition"
           >
             Register
           </button>

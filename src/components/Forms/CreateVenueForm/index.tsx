@@ -8,49 +8,47 @@ import { useState } from "react";
 import { useAuth } from "../../../context/useAuth";
 
 // Validation schema
-const schema = yup
-  .object({
-    name: yup.string().required("Venue name is required."),
-    description: yup.string().required("Description is required."),
-    price: yup
-      .number()
-      .required("Price is required.")
-      .positive("Price must be positive."),
-    maxGuests: yup
-      .number()
-      .required("Maximum guests is required.")
-      .positive("Must be at least 1."),
-    rating: yup.number().min(0).max(5).optional(), // Make rating optional
-    media: yup
-      .array()
-      .of(
-        yup.object().shape({
-          url: yup
-            .string()
-            .url("Must be a valid URL")
-            .required("URL is required."),
-          alt: yup.string().required("Alt text is required."),
-        })
-      )
-      .optional(), // Make media optional
-    location: yup
-      .object()
-      .shape({
-        address: yup.string().optional(),
-        city: yup.string().optional(),
-        zip: yup.string().optional(),
-        country: yup.string().optional(),
-        continent: yup.string().optional(),
-        lat: yup.number().optional(),
-        lng: yup.number().optional(),
+const schema = yup.object({
+  name: yup.string().required("Venue name is required."),
+  description: yup.string().required("Description is required."),
+  price: yup
+    .number()
+    .required("Price is required.")
+    .positive("Price must be positive."),
+  maxGuests: yup
+    .number()
+    .required("Maximum guests is required.")
+    .positive("Must be at least 1."),
+  rating: yup.number().min(0).max(5).optional(),
+  media: yup
+    .array()
+    .of(
+      yup.object().shape({
+        url: yup
+          .string()
+          .url("Must be a valid URL")
+          .required("URL is required."),
+        alt: yup.string().required("Alt text is required."),
       })
-      .optional(), // Make location optional
-  })
-  .required();
+    )
+    .optional(),
+  location: yup
+    .object()
+    .shape({
+      address: yup.string().optional(),
+      city: yup.string().optional(),
+      zip: yup.string().optional(),
+      country: yup.string().optional(),
+      continent: yup.string().optional(),
+      lat: yup.number().optional(),
+      lng: yup.number().optional(),
+    })
+    .optional(),
+});
 
 const CreateVenueForm = () => {
-  const { user } = useAuth(); // Get user from context
-  const token = user?.accessToken; // Extract the token
+  const { user, isLoggedIn } = useAuth(); // Get user and login status from context
+  const token = user?.accessToken;
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -74,10 +72,6 @@ const CreateVenueForm = () => {
     setSuccessMessage(null);
     setErrorMessage(null);
 
-    // Log the venue data and token
-    console.log("Venue Data:", venueData);
-    console.log("Token being used:", token);
-
     try {
       const response: ApiResponse<VenueCreate> = await createVenue(
         venueData,
@@ -86,31 +80,20 @@ const CreateVenueForm = () => {
       console.log("Venue created successfully:", response);
       setSuccessMessage("Venue created successfully!");
     } catch (error) {
-      // Log a generic error message
       console.error("Error creating venue:", error);
-
-      // Handle different error types
-      if (error instanceof Response) {
-        console.error("Response Status:", error.status);
-        console.error("Response Status Text:", error.statusText);
-
-        error
-          .json()
-          .then((errorData) => {
-            console.error("Error Response Data:", errorData);
-          })
-          .catch((parseError) => {
-            console.error("Error parsing response data:", parseError);
-          });
-      } else {
-        console.error("Error Details:", error);
-      }
-
       setErrorMessage("Failed to create venue. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-red-500">You must be logged in to create a venue.</p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -177,6 +160,32 @@ const CreateVenueForm = () => {
           placeholder="Rating (0-5)"
         />
         <p className="text-red-500 text-xs italic">{errors.rating?.message}</p>
+      </div>
+
+      {/* Media Input Section */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Media</label>
+        <textarea
+          {...register("media")}
+          className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
+          placeholder='{"url": "http://example.com/image.jpg", "alt": "Image description"}'
+        />
+        <p className="text-red-500 text-xs italic">{errors.media?.message}</p>
+      </div>
+
+      {/* Location Input Section */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Location
+        </label>
+        <textarea
+          {...register("location")}
+          className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
+          placeholder='{"address": "123 Venue St", "city": "Venue City"}'
+        />
+        <p className="text-red-500 text-xs italic">
+          {errors.location?.message}
+        </p>
       </div>
 
       {loading ? (

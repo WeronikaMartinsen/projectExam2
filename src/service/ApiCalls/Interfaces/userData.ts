@@ -15,5 +15,5 @@ export interface RegisterUserData {
   bio?: string;
   avatar?: Avatar;
   banner?: Banner;
-  venueManager?: boolean;
+  venueManager: boolean;
 }
