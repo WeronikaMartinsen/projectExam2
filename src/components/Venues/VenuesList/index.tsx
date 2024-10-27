@@ -3,27 +3,29 @@ import { getVenues } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
 import VenueCard from "../VenueCard";
-import Sidebar from "../../../layout/Sidebar";
+// import Sidebar from "../../../layout/Sidebar";
+import SearchVenues from "../../Search/SearchVenues";
 
-interface Filters {
-  wifi: boolean;
-  breakfast: boolean;
-  parking: boolean;
-  pets: boolean;
-}
+// interface Filters {
+//   wifi: boolean;
+//   breakfast: boolean;
+//   parking: boolean;
+//   pets: boolean;
+// }
 
-const VenuesList = () => {
+const VenuesList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visibleVenuesCount, setVisibleVenuesCount] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [filters, setFilters] = useState<Filters>({
-    wifi: false,
-    breakfast: false,
-    parking: false,
-    pets: false,
-  });
+  // const [filters, setFilters] = useState<Filters>({
+  //   wifi: false,
+  //   breakfast: false,
+  //   parking: false,
+  //   pets: false,
+  // });
 
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ const VenuesList = () => {
         setLoading(false);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Fails in useEffect";
+          error instanceof Error ? error.message : "Failed in useEffect";
         setError(errorMessage);
         setLoading(false);
       }
@@ -45,22 +47,29 @@ const VenuesList = () => {
     fetchVenues();
   }, []);
 
-  const handleFilterChange = (newFilters: Filters) => {
-    setFilters(newFilters);
-  };
+  // const handleFilterChange = (newFilters: Filters) => {
+  //   setFilters(newFilters);
+  // };
 
+  // Filtering venues based on search query
   const filteredVenues = venues.filter((venue) => {
-    const { wifi, breakfast, parking, pets } = filters;
+    const name = venue.name?.toLowerCase() || "";
+    const city = venue.location?.city?.toLowerCase() || "";
+    const country = venue.location?.country?.toLowerCase() || "";
+
     return (
-      (!wifi || venue.meta.wifi) &&
-      (!breakfast || venue.meta.breakfast) &&
-      (!parking || venue.meta.parking) &&
-      (!pets || venue.meta.pets)
+      name.includes(searchQuery.toLowerCase()) ||
+      city.includes(searchQuery.toLowerCase()) ||
+      country.includes(searchQuery.toLowerCase())
     );
   });
 
-  const handleVenueClick = (id: string) => {
+  const handleVenueSelect = (id: string) => {
     navigate(`/venue/${id}`);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   const showMoreVenues = () => {
@@ -71,26 +80,34 @@ const VenuesList = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4 mt-6">
-      {/* Sidebar moved to the top */}
-      <Sidebar filters={filters} onFilterChange={handleFilterChange} />
+    <div className="w-full flex flex-col align-middle items-center justify-center">
+      <SearchVenues
+        onSearch={handleSearch}
+        filteredVenues={filteredVenues}
+        onVenueSelect={handleVenueSelect}
+      />
+      <div className="max-w-7xl">
+        <ul className="space-y-8 mt-4">
+          {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              onClick={() => handleVenueSelect(venue.id)}
+            />
+          ))}
+        </ul>
 
-      <ul className="space-y-8 mt-4">
-        {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
-          <VenueCard key={venue.id} venue={venue} onClick={handleVenueClick} />
-        ))}
-      </ul>
-
-      {visibleVenuesCount < filteredVenues.length && (
-        <div className="text-center mt-8">
-          <button
-            className="bg-primary text-white font-bold py-2 px-4 rounded"
-            onClick={showMoreVenues}
-          >
-            Show More
-          </button>
-        </div>
-      )}
+        {visibleVenuesCount < filteredVenues.length && (
+          <div className="text-center mt-8">
+            <button
+              className="bg-primary text-white font-bold py-2 px-4 rounded"
+              onClick={showMoreVenues}
+            >
+              Show More
+            </button>
+          </div>
+        )}
+      </div>{" "}
     </div>
   );
 };
