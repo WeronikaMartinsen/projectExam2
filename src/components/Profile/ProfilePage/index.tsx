@@ -53,7 +53,7 @@ function ProfilePage() {
     <div className="w-full">
       <div className="flex flex-col justify-center items-center">
         {profile && (
-          <div className="container max-w-8xl shadowp-4 rounded-lg shadow-lg">
+          <div className="container max-w-7xl shadow-lg">
             {/* Banner as background image */}
             <div
               className="w-full h-48 bg-cover bg-center rounded-t-lg"

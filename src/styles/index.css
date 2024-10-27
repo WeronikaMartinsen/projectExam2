@@ -70,3 +70,43 @@ span {
     display: block;
   }
 }
+
+.calendar-container {
+  width: 100%;
+  min-width: 400px; /* Limit max width for larger screens */
+  margin: auto; /* Center the calendar */
+}
+
+.react-calendar {
+  border: none;
+}
+
+.react-calendar__tile {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.react-calendar__tile--active {
+  background: #007bff; /* Active tile color */
+  color: white;
+}
+
+.react-calendar__tile--disabled {
+  background: #f8d7da; /* Disabled date color */
+  color: #6c757d; /* Text color for disabled dates */
+}
+
+@media (max-width: 600px) {
+  .react-calendar {
+    font-size: 0.9rem; /* Smaller font size for mobile */
+  }
+
+  .react-calendar__tile {
+    height: 40px; /* Smaller tile height */
+    width: 40px; /* Smaller tile width */
+  }
+}

@@ -28,13 +28,16 @@ import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import AuthModal from "../../components/Modals/AuthModal";
 
+
 const products = [
-  {
+  <Link to="/venues">
+{
     name: "Add Venue",
     description: "Create you own venue and publish it!",
-    href: "#",
     icon: FiPlus,
   },
+</Link>
+  
   {
     name: "Update Venue",
     description: "Speak directly to your customers",

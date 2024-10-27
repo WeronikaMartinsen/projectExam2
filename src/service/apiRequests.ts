@@ -1,5 +1,5 @@
 import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
-import { Venue, VenueResponse } from "./ApiCalls/Interfaces/venue";
+import { Venue, VenueCreate, VenueResponse } from "./ApiCalls/Interfaces/venue";
 import { baseUrl } from "./ApiCalls/Endpoints";
 import { apiKeyUrl } from "./ApiCalls/Endpoints";
 import { Profile } from "./ApiCalls/Interfaces/profile";
@@ -40,10 +40,10 @@ export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
 
 // POST (Create) a New Venue
 export const createVenue = async (
-  venue: Venue,
+  venue: VenueCreate,
   token: string
 ): Promise<ApiResponse<Venue>> => {
-  return apiRequest<Venue, Venue>("/venues", "POST", venue, token);
+  return apiRequest<VenueCreate, Venue>("/venues", "POST", venue, token);
 };
 
 // PUT (Update) a Venue

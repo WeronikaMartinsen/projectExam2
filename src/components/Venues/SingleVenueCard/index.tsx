@@ -55,7 +55,7 @@ function SingleVenueCard() {
   )}`;
 
   return (
-    <div className="container max-w-6lg grid">
+    <div className="container max-w-6lg grid mb-8">
       <div className="w-full max-h-64 overflow-hidden mt-6">
         <div className="flex gap-2 pl-2">
           <h2 className="text-3xl font-semibold mb-4">{venue.name}</h2>
@@ -99,29 +99,25 @@ function SingleVenueCard() {
             {venue.meta.breakfast && (
               <div className="flex items-center">
                 <MdFreeBreakfast title="Breakfast included" />
-                <span className="ml-1 text-sm leading-6">
-                  Breakfast included
-                </span>
+                <span className="ml-1 text-sm leading-6">Breakfast</span>
               </div>
             )}
             {venue.meta.wifi && (
               <div className="flex items-center">
                 <MdWifi title="Wi-Fi available" />
-                <span className="ml-1 text-sm leading-6">Wi-Fi available</span>
+                <span className="ml-1 text-sm leading-6">Wi-Fi</span>
               </div>
             )}
             {venue.meta.parking && (
               <div className="flex items-center">
                 <MdDirectionsCar title="Parking available" />
-                <span className="ml-1 text-sm leading-6">
-                  Parking available
-                </span>
+                <span className="ml-1 text-sm leading-6">Parking</span>
               </div>
             )}
             {venue.meta.pets && (
               <div className="flex items-center">
                 <MdPets title="Pets allowed" />
-                <span className="ml-1 text-sm leading-6">Pets allowed</span>
+                <span className="ml-1 text-sm leading-6">Pets</span>
               </div>
             )}
             {venue.maxGuests && (

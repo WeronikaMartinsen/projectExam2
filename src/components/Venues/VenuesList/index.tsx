@@ -59,7 +59,7 @@ const VenuesList: React.FC = () => {
     setVisibleVenuesCount((prevCount) => prevCount + 10);
   };
 
-  if (loading) return <LoadingSkeleton width="400px" height={40} />;
+  if (loading) return <LoadingSkeleton width="800px" height={40} />;
   if (error) return <div>Error: {error}</div>;
 
   return (

@@ -1,20 +1,22 @@
-import { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { addDays } from "date-fns";
-import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
+import React, { useState } from "react";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { addDays, isBefore } from "date-fns";
+
+interface Booking {
+  dateFrom: string;
+  dateTo: string;
+}
 
 interface CalenderProps {
   bookings: Booking[];
 }
 
 const Calender: React.FC<CalenderProps> = ({ bookings }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const today = new Date();
 
-  // Convert booking dates to Date objects and create an array of disabled dates
-  const disabledDates = bookings.flatMap((booking) => {
+  // Convert booking dates to Date objects
+  const bookedDates = bookings.flatMap((booking) => {
     const start = new Date(booking.dateFrom);
     const end = new Date(booking.dateTo);
     return Array.from(
@@ -23,48 +25,50 @@ const Calender: React.FC<CalenderProps> = ({ bookings }) => {
     );
   });
 
-  const handleStartDateChange = (date: Date | null) => {
-    setStartDate(date);
-    if (endDate && date && date > endDate) {
-      setEndDate(null); // Reset end date if start date is after end date
-    }
+  // State for selected dates
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+
+  // Check if selected dates are available
+  const areDatesAvailable = (start: Date | null, end: Date | null) => {
+    if (!start || !end) return true; // Not enough info
+    return !bookedDates.some((date) => date >= start && date <= end);
   };
 
-  const handleEndDateChange = (date: Date | null) => {
-    setEndDate(date);
+  // Disable past dates and booked dates
+  const tileDisabled = ({ date }: { date: Date }) => {
+    return (
+      isBefore(date, today) ||
+      bookedDates.some(
+        (bookedDate) => bookedDate.toDateString() === date.toDateString()
+      )
+    );
+  };
+
+  // Handle date change
+  const handleDateChange = (value: Date | [Date | null, Date | null]) => {
+    if (Array.isArray(value)) {
+      const [start, end] = value;
+      setDateRange([start, end]);
+      if (!areDatesAvailable(start, end)) {
+        alert("Selected dates are not available.");
+      }
+    } else {
+      setDateRange([value, null]);
+    }
   };
 
   return (
     <div>
-      <h3>Select your booking dates:</h3>
-      <div className="flex space-x-4">
-        <DatePicker
-          selected={startDate}
-          onChange={handleStartDateChange}
-          dateFormat="MMMM d, yyyy"
-          placeholderText="From"
-          minDate={today} // Prevent selecting past dates
-          filterDate={(date) =>
-            !disabledDates.some((d) => d.toDateString() === date.toDateString())
-          }
-        />
-        <DatePicker
-          selected={endDate}
-          onChange={handleEndDateChange}
-          dateFormat="MMMM d, yyyy"
-          placeholderText="To"
-          minDate={startDate ? addDays(startDate, 1) : today} // Prevent selecting past dates and ensure end date is after start date
-          filterDate={(date) => {
-            // Ensure that end date is after start date and not a disabled date
-            return (
-              !disabledDates.some(
-                (d) => d.toDateString() === date.toDateString()
-              ) &&
-              (!startDate || date > startDate)
-            );
-          }}
-        />
-      </div>
+      <h3>Check avalible dates:</h3>
+      <Calendar
+        onChange={() => handleDateChange} // Handle only the value
+        tileDisabled={tileDisabled}
+        minDate={today}
+        value={dateRange} // Keep track of selected dates
+      />
     </div>
   );
 };

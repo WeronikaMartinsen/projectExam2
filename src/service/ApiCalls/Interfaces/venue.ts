@@ -6,20 +6,20 @@ export interface Media {
 }
 
 export interface Meta {
-  wifi: boolean;
-  parking: boolean;
-  breakfast: boolean;
-  pets: boolean;
+  wifi?: boolean;
+  parking?: boolean;
+  breakfast?: boolean;
+  pets?: boolean;
 }
 
 export interface Location {
-  address: string;
-  city: string;
-  zip: string;
-  country: string;
-  continent: string;
-  lat: number;
-  lng: number;
+  address?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
+  continent?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface Owner {
@@ -76,4 +76,15 @@ export interface VenueResponse {
     previousPage: number | null;
     nextPage: number | null;
   };
+}
+
+export interface VenueCreate {
+  name: string; // Required
+  description: string; // Required
+  media?: Media[]; // Optional
+  price: number; // Required
+  maxGuests: number; // Required
+  rating?: number; // Optional (default: 0)
+  meta?: Meta; // Optional
+  location?: Location; // Optional
 }
