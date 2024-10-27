@@ -14,6 +14,7 @@ import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
+import LoadingSkeleton from "../../Skeleton";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +45,7 @@ function SingleVenueCard() {
     fetchVenue();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton width="400px" height={40} />;
   if (error) return <div>Error: {error}</div>;
   if (!venue) return <div>Venue not found</div>;
 

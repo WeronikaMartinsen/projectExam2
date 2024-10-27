@@ -18,8 +18,9 @@ const VenuesList: React.FC = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const venuesArray = await getVenues();
-        console.log("Fetched Venues:", venuesArray);
+        const venuesArray = await new Promise<Venue[]>((resolve) =>
+          setTimeout(() => resolve(getVenues()), 2000)
+        );
         setVenues(venuesArray);
         setLoading(false);
       } catch (error) {
@@ -58,7 +59,7 @@ const VenuesList: React.FC = () => {
     setVisibleVenuesCount((prevCount) => prevCount + 10);
   };
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return <LoadingSkeleton width="400px" height={40} />;
   if (error) return <div>Error: {error}</div>;
 
   return (

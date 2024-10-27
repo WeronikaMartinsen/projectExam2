@@ -6,6 +6,7 @@ import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { Profile } from "../../../service/ApiCalls/Interfaces/profile";
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
 import { useAuth } from "../../../context/useAuth";
+import LoadingSkeleton from "../../Skeleton";
 
 function ProfilePage() {
   const { name } = useParams<{ name: string }>();
@@ -45,7 +46,7 @@ function ProfilePage() {
     fetchProfileAndVenues();
   }, [name, accessToken]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton width="800px" height={40} />;
   if (error) return <div>Error: {error}</div>;
 
   return (
