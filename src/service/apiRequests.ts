@@ -38,12 +38,19 @@ export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
   );
 };
 
-// POST (Create) a New Venue
 export const createVenue = async (
   venue: VenueCreate,
   token: string
 ): Promise<ApiResponse<Venue>> => {
-  return apiRequest<VenueCreate, Venue>("/venues", "POST", venue, token);
+  console.log("Creating venue with data:", venue);
+  console.log("Using token:", token);
+
+  return apiRequest<VenueCreate, Venue>(
+    "/holidaze/venues",
+    "POST",
+    venue,
+    token
+  );
 };
 
 // PUT (Update) a Venue

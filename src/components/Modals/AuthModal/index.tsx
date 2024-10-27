@@ -10,54 +10,55 @@ interface ModalDialogProps {
 const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
   const [isRegister, setIsRegister] = useState(false); // State to track if the register form should be shown
 
-  // Handler to switch to Register form
-  const handleOpenRegister = () => {
-    setIsRegister(true);
+  // Close the modal and switch forms
+  const closeModal = () => {
+    handleOpen(); // This will toggle the modal visibility
   };
 
-  // Handler to switch to Login form
-  const handleOpenLogin = () => {
-    setIsRegister(false);
+  // Close modal on outside click
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.currentTarget === e.target) {
+      closeModal();
+    }
   };
 
   return (
     <>
       {open && (
         <div
-          id="hs-scale-animation-modal"
-          className="hs-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 overflow-x-hidden overflow-y-auto pointer-events-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 overflow-x-hidden overflow-y-auto"
           role="dialog"
-          aria-labelledby="hs-scale-animation-modal-label"
+          aria-labelledby="modal-label"
           tabIndex={-1}
+          onClick={handleOutsideClick} // Handle outside click
         >
-          <div className="hs-overlay-animation-target opacity-100 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full sm:mx-auto">
-            <div className="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+          <div className="max-w-lg w-full mx-auto">
+            <div className="bg-white border shadow-sm rounded-xl">
               {/* Modal Header */}
-              <div className="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-700">
-                <h3 id="hs-scale-animation-modal-label" className="font-bold">
+              <div className="flex justify-between items-center py-3 px-4 border-b">
+                <h3 id="modal-label" className="font-bold">
                   {isRegister ? "Register" : "Login"}
                 </h3>
                 <button
                   type="button"
-                  className="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                  className="inline-flex justify-center items-center rounded-full p-2 hover:bg-gray-200 focus:outline-none"
                   aria-label="Close"
-                  onClick={handleOpen} // Close the modal
+                  onClick={closeModal} // Close the modal
                 >
                   <span className="sr-only">Close</span>
                   <svg
-                    className="shrink-0 size-4"
+                    className="h-6 w-6"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
                     fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
-                    <path d="M18 6 6 18"></path>
-                    <path d="m6 6 12 12"></path>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -65,14 +66,14 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
               {/* Modal Body */}
               <div className="p-4 overflow-y-auto">
                 {isRegister ? (
-                  <RegisterForm switchToLogin={handleOpenLogin} />
+                  <RegisterForm switchToLogin={() => setIsRegister(false)} />
                 ) : (
-                  <LoginForm handleOpen={handleOpen} />
+                  <LoginForm handleOpen={closeModal} />
                 )}
               </div>
 
               {/* Modal Footer */}
-              <div className="flex justify-center items-center gap-x-2 py-3 px-4 dark:border-neutral-700">
+              <div className="flex justify-center items-center gap-x-2 py-3 px-4">
                 <p>
                   {isRegister
                     ? "Already have an account?"
@@ -80,7 +81,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
                 </p>
                 <span
                   className="cursor-pointer text-secondary"
-                  onClick={isRegister ? handleOpenLogin : handleOpenRegister}
+                  onClick={() => setIsRegister(!isRegister)} // Toggle form
                 >
                   {isRegister ? "Login" : "Register"}
                 </span>

@@ -5,7 +5,7 @@ import CreateVenueForm from "../components/Forms/CreateVenueForm";
 function CreateVenue() {
   return (
     <LayoutComponent>
-      <CreateVenueForm token={""} />
+      <CreateVenueForm />
     </LayoutComponent>
   );
 }

@@ -14,14 +14,14 @@ export async function apiRequest<T, R>(
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     "X-Noroff-API-Key": apiKeyUrl,
-    ...(token && { Authorization: `Bearer ${token}` }), // Include token if available
+    ...(token && { Authorization: `Bearer ${token}` }),
   };
   console.log("Request headers:", headers);
 
   const options: RequestInit = {
     method,
     headers,
-    ...(body && { body: JSON.stringify(body) }), // Include body if method is POST or PUT
+    ...(body && { body: JSON.stringify(body) }),
   };
 
   try {
