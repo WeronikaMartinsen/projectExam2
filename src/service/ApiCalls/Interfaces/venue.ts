@@ -84,7 +84,7 @@ export interface VenueCreate {
   media?: Media[]; // Optional
   price: number; // Required
   maxGuests: number; // Required
-  rating?: number; // Optional (default: 0)
+  rating?: number | null; // Optional (default: 0)
   meta?: Meta; // Optional
-  location?: Location; // Optional
+  location?: Location | null; // Allow undefined or null
 }

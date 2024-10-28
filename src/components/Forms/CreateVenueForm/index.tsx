@@ -1,54 +1,54 @@
 import { createVenue } from "../../../service/apiRequests";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { ApiResponse } from "../../../service/ApiCalls/baseApiCallPost";
 import { useState } from "react";
 import { useAuth } from "../../../context/useAuth";
-
-// Validation schema
-const schema = yup.object({
-  name: yup.string().required("Venue name is required."),
-  description: yup.string().required("Description is required."),
-  price: yup
-    .number()
-    .required("Price is required.")
-    .positive("Price must be positive."),
-  maxGuests: yup
-    .number()
-    .required("Maximum guests is required.")
-    .positive("Must be at least 1."),
-  rating: yup.number().min(0).max(5).optional(),
-  media: yup
-    .array()
-    .of(
-      yup.object().shape({
-        url: yup
-          .string()
-          .url("Must be a valid URL")
-          .required("URL is required."),
-        alt: yup.string().required("Alt text is required."),
+const schema = yup
+  .object({
+    name: yup.string().required("Venue name is required."),
+    description: yup.string().required("Description is required."),
+    price: yup
+      .number()
+      .required("Price is required.")
+      .positive("Price must be positive."),
+    maxGuests: yup
+      .number()
+      .required("Maximum guests is required.")
+      .positive("Must be at least 1."),
+    rating: yup.number().nullable().min(0).max(5), // Optional rating
+    media: yup
+      .array()
+      .of(
+        yup.object().shape({
+          url: yup
+            .string()
+            .url("Must be a valid URL")
+            .required("URL is required."),
+          alt: yup.string().optional(),
+        })
+      )
+      .nullable(), // This means it can be null or not provided
+    location: yup
+      .object()
+      .shape({
+        address: yup.string().nullable(),
+        city: yup.string().nullable(),
+        zip: yup.string().nullable(),
+        country: yup.string().nullable(),
+        continent: yup.string().nullable(),
+        lat: yup.number().nullable(),
+        lng: yup.number().nullable(),
       })
-    )
-    .optional(),
-  location: yup
-    .object()
-    .shape({
-      address: yup.string().optional(),
-      city: yup.string().optional(),
-      zip: yup.string().optional(),
-      country: yup.string().optional(),
-      continent: yup.string().optional(),
-      lat: yup.number().optional(),
-      lng: yup.number().optional(),
-    })
-    .optional(),
-});
+      .nullable(), // This means it can also be null
+  })
+  .required();
 
 const CreateVenueForm = () => {
-  const { user, isLoggedIn } = useAuth(); // Get user and login status from context
-  const token = user?.accessToken;
+  const { user, isLoggedIn } = useAuth();
+  const token = user?.accessToken || ""; // Ensure token is defined
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -58,15 +58,20 @@ const CreateVenueForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<VenueCreate>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<VenueCreate>,
   });
 
-  const onSubmit = async (venueData: VenueCreate) => {
-    if (!token) {
-      console.error("No access token available");
-      setErrorMessage("You need to be logged in to create a venue.");
-      return;
-    }
+  const onSubmit = async (data: VenueCreate) => {
+    const venueData: VenueCreate = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      maxGuests: data.maxGuests,
+      rating: data.rating ?? undefined, // Optional
+      media: data.media ?? undefined, // Optional
+      location: data.location ?? undefined, // Optional
+      meta: data.meta, // If you have meta in your form, handle it here
+    };
 
     setLoading(true);
     setSuccessMessage(null);
@@ -134,13 +139,13 @@ const CreateVenueForm = () => {
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
-          Max Guests
+          Maximum Guests
         </label>
         <input
           type="number"
           {...register("maxGuests")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
-          placeholder="Maximum Guests"
+          placeholder="Max Guests"
         />
         <p className="text-red-500 text-xs italic">
           {errors.maxGuests?.message}
@@ -154,34 +159,32 @@ const CreateVenueForm = () => {
         <input
           type="number"
           {...register("rating")}
-          min="0"
-          max="5"
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
           placeholder="Rating (0-5)"
+          min="0"
+          max="5"
         />
         <p className="text-red-500 text-xs italic">{errors.rating?.message}</p>
       </div>
 
-      {/* Media Input Section */}
       <div>
         <label className="block text-sm font-medium text-gray-700">Media</label>
         <textarea
           {...register("media")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
-          placeholder='{"url": "http://example.com/image.jpg", "alt": "Image description"}'
+          placeholder="Url"
         />
         <p className="text-red-500 text-xs italic">{errors.media?.message}</p>
       </div>
 
-      {/* Location Input Section */}
       <div>
         <label className="block text-sm font-medium text-gray-700">
           Location
         </label>
-        <textarea
+        <input
           {...register("location")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
-          placeholder='{"address": "123 Venue St", "city": "Venue City"}'
+          placeholder=""
         />
         <p className="text-red-500 text-xs italic">
           {errors.location?.message}
