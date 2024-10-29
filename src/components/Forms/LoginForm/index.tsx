@@ -1,14 +1,13 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../service/ApiCalls/Auth/login";
 import {
   LoginRequest,
   LoginResponse,
 } from "../../../service/ApiCalls/Interfaces/loginResponse";
 import "../../../styles/index.css";
-import { setUser } from "../../../service/Utils/userUtils";
+import { useAuth } from "../../../context/useAuth";
 
 // Validation schema
 const schema = yup
@@ -29,6 +28,7 @@ interface LoginFormProps {
 }
 
 function LoginForm({ handleOpen }: LoginFormProps) {
+  const { login } = useAuth(); // Use the login function from AuthContext
   const {
     register,
     handleSubmit,
@@ -37,7 +37,6 @@ function LoginForm({ handleOpen }: LoginFormProps) {
     resolver: yupResolver(schema),
   });
 
-  // const navigate = useNavigate();
   const onSubmit = async (loginData: LoginRequest) => {
     try {
       const response: LoginResponse = await loginUser(loginData); // Call the login function
@@ -48,7 +47,10 @@ function LoginForm({ handleOpen }: LoginFormProps) {
         console.error("Login failed: No access token found in response.");
         return;
       }
-      setUser(response);
+
+      // Update the Auth context state
+      login(response); // Pass the response to the login function
+
       localStorage.setItem("accessToken", accessToken);
       handleOpen();
       console.log("Login successful, token:", accessToken);

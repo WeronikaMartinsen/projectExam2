@@ -1,13 +1,13 @@
 import LayoutComponent from "../layout/LayoutComponent";
 import "../styles/index.css";
 import SingleVenueCard from "../components/Venues/SingleVenueCard";
-import HeaderSingleVenue from "../components/Venues/HeaderSingleVenue";
+import GlobalSmallHeader from "../components/Venues/GlobalSmallHeader";
 
 function SingleVenues() {
   return (
     <>
       <LayoutComponent>
-        <HeaderSingleVenue/>
+        <GlobalSmallHeader />
         <SingleVenueCard />
       </LayoutComponent>
     </>

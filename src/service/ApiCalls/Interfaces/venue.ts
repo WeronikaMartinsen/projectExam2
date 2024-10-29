@@ -88,3 +88,5 @@ export interface VenueCreate {
   meta?: Meta; // Optional
   location?: Location | null; // Allow undefined or null
 }
+
+export interface VenueCreatedResponse {}

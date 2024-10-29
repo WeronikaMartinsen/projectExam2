@@ -19,6 +19,6 @@ export interface LoginResponse {
   bio: string | null;
   avatar: Avatar;
   banner: Banner;
-  accessToken: string; // Add accessToken directly at the top level
+  accessToken: string;
   venueManager: boolean;
 }

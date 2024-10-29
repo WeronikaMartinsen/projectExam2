@@ -10,44 +10,49 @@ import LoadingSkeleton from "../../Skeleton";
 
 function ProfilePage() {
   const { name } = useParams<{ name: string }>();
+  const { user, isLoggedIn } = useAuth();
   const [venues, setVenues] = useState<Venue[]>([]);
   const [bookings, setBookings] = useState<BookingWithDetails[]>([]); // Updated type
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { user } = useAuth();
   const accessToken = user?.accessToken;
 
-  useEffect(() => {
-    const fetchProfileAndVenues = async () => {
+  const fetchProfileAndVenues = async () => {
+    if (name && accessToken) {
       try {
-        setLoading(true);
-        if (name && accessToken) {
-          // Ensure the profile fetch includes venue details for bookings
-          const profileData = await getProfile(name, accessToken, true);
-          setProfile(profileData.data);
-
-          // Set venues and bookings if they exist within the profile data
-          setVenues(profileData.data.venues || []);
-          setBookings(profileData.data.bookings || []); // This should include venue details if available
-          console.log(profileData);
-        }
+        const profileData = await getProfile(name, accessToken, true);
+        setProfile(profileData.data);
+        setVenues(profileData.data.venues || []);
+        setBookings(profileData.data.bookings || []);
       } catch (err) {
         console.error("Failed to fetch profile data:", err);
         setError(
           err instanceof Error ? err.message : "Failed to fetch profile data"
         );
-      } finally {
-        setLoading(false);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
+    setLoading(true);
     fetchProfileAndVenues();
-  }, [name, accessToken]);
+    setLoading(false);
+  }, [name, accessToken, isLoggedIn]); // React to isLoggedIn changes
 
   if (loading) return <LoadingSkeleton width="800px" height={40} />;
   if (error) return <div>Error: {error}</div>;
+
+  if (!isLoggedIn) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-red-500">
+          You must be logged in to see the profile.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
