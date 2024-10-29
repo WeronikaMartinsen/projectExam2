@@ -7,6 +7,8 @@ import { Profile } from "../../../service/ApiCalls/Interfaces/profile";
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
 import { useAuth } from "../../../context/useAuth";
 import LoadingSkeleton from "../../Skeleton";
+import { useNavigate } from "react-router-dom";
+import VenueCard from "../../Venues/VenueCard";
 
 function ProfilePage() {
   const { name } = useParams<{ name: string }>();
@@ -16,6 +18,11 @@ function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const handleVenueSelect = (id: string) => {
+    navigate(`/venue/${id}`);
+  };
 
   const accessToken = user?.accessToken;
 
@@ -58,7 +65,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="w-full">
+    <div className="container w-full">
       <div className="flex flex-col justify-center items-center">
         {profile && (
           <div className="container max-w-7xl shadow-lg">
@@ -91,21 +98,23 @@ function ProfilePage() {
         )}
 
         {/* Display Venues */}
-        <div className="grid gap-4 mt-8">
-          {venues.length > 0 ? (
-            venues.map((venue) => (
-              <Link
-                key={venue.id}
-                to={`/venue/${venue.id}`}
-                className="p-4 bg-gray-100 rounded shadow"
-              >
-                <h2 className="text-xl font-semibold">{venue.name}</h2>
-                <p>{venue.description}</p>
-              </Link>
-            ))
-          ) : (
-            <div>No venues found for this profile.</div>
-          )}
+        <div className="max-w-7xl w-full mt-6">
+          <h3 className="text-md font-semibold ml-4">
+            {profile?.name}'venues:
+          </h3>
+          <ul className="space-y-8 mt-4">
+            {venues.length > 0 ? (
+              venues.map((venue) => (
+                <VenueCard
+                  key={venue.id}
+                  venue={venue}
+                  onClick={() => handleVenueSelect(venue.id)}
+                />
+              ))
+            ) : (
+              <div>No venues found for this profile.</div>
+            )}{" "}
+          </ul>
         </div>
 
         {/* Display Bookings */}

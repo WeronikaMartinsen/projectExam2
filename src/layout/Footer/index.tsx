@@ -3,7 +3,7 @@ import "../../styles/index.css";
 function Footer() {
   return (
     <>
-      <footer className="bg-white">
+      <footer className="bg-white mt-10 border-y-2 shadow">
         <div className="mx-auto w-full max-w-7xl">
           <div className="grid grid-cols-2 gap-8 ml-4 px-4 py-6 lg:py-8 md:grid-cols-4">
             <div>
@@ -112,7 +112,7 @@ function Footer() {
           </div>
           <div className="px-4 py-6 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
             <span className="text-sm text-gray-500 dark:text-gray-300 sm:text-center">
-              © 2023{" "}
+              © 2024{" "}
               <a href="https://weronikamartinsen.netlify.app/">
                 Weronika Martinsen™
               </a>
