@@ -1,7 +1,7 @@
 import "../../../styles/index.css";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getProfile } from "../../../service/apiRequests";
+import { getProfile, getVenuesByProfile } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { Profile } from "../../../service/ApiCalls/Interfaces/profile";
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
@@ -22,10 +22,13 @@ function ProfilePage() {
   const fetchProfileAndVenues = async () => {
     if (name && accessToken) {
       try {
-        const profileData = await getProfile(name, accessToken, true);
+        // Fetch profile data
+        const profileData = await getProfile(name, accessToken);
         setProfile(profileData.data);
-        setVenues(profileData.data.venues || []);
         setBookings(profileData.data.bookings || []);
+        // Fetch venues
+        const venuesData = await getVenuesByProfile(name, accessToken);
+        setVenues(venuesData.data || []);
       } catch (err) {
         console.error("Failed to fetch profile data:", err);
         setError(
@@ -61,7 +64,7 @@ function ProfilePage() {
           <div className="container max-w-7xl shadow-lg">
             {/* Banner as background image */}
             <div
-              className="w-full h-48 bg-cover bg-center rounded-t-lg"
+              className="w-full h-48 bg-cover bg-center"
               style={{
                 backgroundImage: `url(${profile.banner?.url || ""})`,
               }}
@@ -74,7 +77,10 @@ function ProfilePage() {
                 src={profile.avatar?.url || "/default-avatar.png"}
                 alt={profile.avatar?.alt || "Owner avatar"}
               />
-              <h2 className="text-2xl font-semibold mt-4">{profile.name}</h2>
+              <h1 className="text-2xl font-semibold mt-4">{profile.name}</h1>
+              {profile.venueManager && (
+                <h2 className="text-lg font-bold">Venue Manager</h2>
+              )}
             </div>
 
             <div className="text-center mt-4">
@@ -88,10 +94,14 @@ function ProfilePage() {
         <div className="grid gap-4 mt-8">
           {venues.length > 0 ? (
             venues.map((venue) => (
-              <div key={venue.id} className="p-4 bg-gray-100 rounded shadow">
+              <Link
+                key={venue.id}
+                to={`/venue/${venue.id}`}
+                className="p-4 bg-gray-100 rounded shadow"
+              >
                 <h2 className="text-xl font-semibold">{venue.name}</h2>
                 <p>{venue.description}</p>
-              </div>
+              </Link>
             ))
           ) : (
             <div>No venues found for this profile.</div>

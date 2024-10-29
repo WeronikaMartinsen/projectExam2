@@ -85,6 +85,15 @@ export const getProfile = async (
   );
 };
 
+export const getVenuesByProfile = async (name: string, accessToken: string) => {
+  return apiRequest<null, Venue[]>(
+    `/holidaze/profiles/${name}/venues`,
+    "GET",
+    undefined,
+    accessToken
+  );
+};
+
 // Fetch all bookings
 export const getAllBookings = async (
   token: string,
