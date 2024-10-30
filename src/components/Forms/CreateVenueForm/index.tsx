@@ -51,12 +51,12 @@ const schema = yup.object({
       breakfast: yup.boolean().default(false),
       pets: yup.boolean().default(false),
     })
-    .default({}), // Default to an empty object
+    .default({}), 
 });
 
 const CreateVenueForm = () => {
   const { user, isLoggedIn } = useAuth();
-  const token = user?.accessToken || ""; // Ensure token is defined
+  const token = user?.accessToken || ""; 
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -77,13 +77,13 @@ const CreateVenueForm = () => {
       description: data.description,
       price: data.price,
       maxGuests: data.maxGuests,
-      rating: data.rating ?? null, // Allow null for optional
+      rating: data.rating ?? null, 
       media:
         Array.isArray(data.media) && data.media.length > 0
           ? data.media
           : undefined,
-      location: data.location ?? null, // Include null if no location is provided
-      meta: data.meta, // Handle the meta object
+      location: data.location ?? null, 
+      meta: data.meta,
     };
 
     setLoading(true);
@@ -91,18 +91,13 @@ const CreateVenueForm = () => {
     setErrorMessage(null);
 
     try {
-      // Make the API call to create the venue
       const response: ApiResponse<Venue> = await createVenue(venueData, token);
 
       console.log("Venue created successfully:", response);
-
-      // Assuming the response contains the venue data with an id
-      const id = response.data.id; // Adjust based on your actual API response structure
-
+      const id = response.data.id; 
       setSuccessMessage("Venue created successfully!");
+      navigate(`/venue/${id}`); 
 
-      // Navigate to the created venue's page
-      navigate(`/venue/${id}`); // Use the venueId in the URL
     } catch (error) {
       console.error("Error creating venue:", error);
       setErrorMessage("Failed to create venue. Please try again.");
@@ -196,7 +191,7 @@ const CreateVenueForm = () => {
       <div>
         <label className="invisible">Media Alt Text</label>
         <input
-          {...register("media.0.alt")} // Similarly for alt text
+          {...register("media.0.alt")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
           placeholder="Media Alt Text"
         />

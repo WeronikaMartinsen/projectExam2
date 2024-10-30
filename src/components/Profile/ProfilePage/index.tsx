@@ -24,15 +24,35 @@ function ProfilePage() {
     navigate(`/venue/${id}`);
   };
 
-  const accessToken = user?.accessToken;
+  // const handleOpenModal = () => {
+  //   setIsModalOpen(!isModalOpen);
+  // };
 
+  // const handleUpdateAvatar = (newUrl: string) => {
+  //   // Update the profile avatar with the new URL
+  //   // You would typically call an API to update this in your backend
+  //   setProfile((prev) => ({
+  //     ...prev,
+  //     avatar: { ...prev.avatar, url: newUrl },
+  //   }));
+  // };
+
+  const accessToken = user?.accessToken;
   const fetchProfileAndVenues = async () => {
     if (name && accessToken) {
       try {
-        // Fetch profile data
-        const profileData = await getProfile(name, accessToken);
+        // Fetch profile data, including bookings
+        const profileData = await getProfile(name, accessToken, true);
         setProfile(profileData.data);
-        setBookings(profileData.data.bookings || []);
+
+        // Check if bookings are part of the returned data structure
+        if (profileData.data.bookings) {
+          setBookings(profileData.data.bookings); // Adjust if bookings are nested differently
+        } else {
+          console.warn("No bookings found in profile data.");
+          setBookings([]); // Set to empty if no bookings found
+        }
+
         // Fetch venues
         const venuesData = await getVenuesByProfile(name, accessToken);
         setVenues(venuesData.data || []);
@@ -118,32 +138,45 @@ function ProfilePage() {
         </div>
 
         {/* Display Bookings */}
-
         <div className="grid gap-4 mt-8">
           <h1 className="text-pretty font-semibold">
-            {profile?.name}'bookings:
+            {profile?.name}'s Bookings:
           </h1>
           {bookings.length > 0 ? (
             bookings.map((booking) => (
-              <div key={booking.id} className="p-4 bg-gray-200 rounded shadow">
-                <h3 className="text-lg font-semibold">
-                  Booking ID: {booking.id}
-                </h3>
-                <p>Guests: {booking.guests}</p>
-                <p>From: {new Date(booking.dateFrom).toLocaleDateString()}</p>
-                <p>To: {new Date(booking.dateTo).toLocaleDateString()}</p>
+              <div
+                key={booking.id}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4"
+              >
+                <div className="col-span-1 md:col-span-2">
+                  <h3 className="text-lg font-semibold">
+                    Booking ID: {booking.id}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Guests: {booking.guests}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    From: {new Date(booking.dateFrom).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    To: {new Date(booking.dateTo).toLocaleDateString()}
+                  </p>
+                </div>
                 {booking.venue && (
-                  <Link
-                    to={`/venue/${booking.venue.id}`}
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    <div className="mt-2">
-                      <h4 className="text-md font-semibold">
-                        Venue: {booking.venue.name}
-                      </h4>
-                      <p>{booking.venue.description}</p>
-                    </div>
-                  </Link>
+                  <div className="flex flex-col justify-center items-end">
+                    <h4 className="text-md font-semibold mt-2">
+                      Venue: {booking.venue.name}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      {booking.venue.description}
+                    </p>
+                    <Link
+                      to={`/venue/${booking.venue.id}`}
+                      className="block text-accent p-2 rounded-md font-semibold text-sm mt-2"
+                    >
+                      View Venue
+                    </Link>
+                  </div>
                 )}
               </div>
             ))
