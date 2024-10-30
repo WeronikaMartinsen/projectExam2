@@ -1,50 +1,102 @@
-# React + TypeScript + Vite
+# Holidaze Accommodation Booking App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern front-end application for Holidaze, an accommodation booking platform. This app enables customers to explore and book accommodations, while venue managers can manage their listings and bookings. Built with React, TypeScript, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [User Stories](#user-stories)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Customer-Facing
+- View a list of available venues
+- Search for a specific venue
+- View details of a selected venue
+- View availability on a calendar
+- Register as a customer using a valid email (ending in `@stud.noroff.no`)
+- Create bookings at selected venues
+- View upcoming bookings
 
-- Configure the top-level `parserOptions` property like this:
+### Admin-Facing (Venue Manager)
+- Register as a venue manager with a valid `@stud.noroff.no` email
+- Create, update, and delete venues
+- View bookings made at their venues
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Shared Features
+- User authentication (login, logout)
+- Update user avatar
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Tech Stack
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **Framework**: [React](https://reactjs.org/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Getting Started
+
+To set up and run this project locally:
+
+1. **Clone the repository**
+   ```bash
+   git clone git@github.com:WeronikaMartinsen/projectExam2.git
+   cd projectExam2
+
+2. **Install dependencies**
+ ```bash
+   npm install
+   
+3. **Set up environment variables, see Environment Variables below for details**
+
+
+4. **Run the development server**
+ ```bash
+   npm run dev
+
+5. **Open your browser at http://localhost:3000 to view the app.**   
+
+
+
+## User Stories
+
+### Customer-Facing
+
+- A user may view a list of venues
+- A user may search for a specific venue
+- A user may view a specific venue page by ID
+- A user may view a calendar with available dates for a venue
+- A user with a `stud.noroff.no` email may register as a customer
+- A registered customer may create a booking at a venue
+- A registered customer may view their upcoming bookings
+
+### Admin-Facing (Venue Manager)
+
+- A user with a `stud.noroff.no` email may register as a venue manager
+- A registered venue manager may create, update, and delete a venue
+- A registered venue manager may view bookings for a venue they manage
+
+### General
+
+- A registered user may log in
+- A registered user may update their avatar
+- A registered user may log out
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a new branch with your feature or bugfix.
+3. Commit your changes and push them to your fork.
+4. Open a pull request with a description of your changes.
+
+## License
+
+This project is distributed under the MIT License. See the `LICENSE` file for more information.
