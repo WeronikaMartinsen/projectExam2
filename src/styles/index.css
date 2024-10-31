@@ -78,7 +78,8 @@ span {
 }
 
 .react-calendar {
-  border: none;
+  border: 2px solid var(--color-secondary);
+  border-radius: 1em;
 }
 
 .react-calendar__tile {
@@ -96,13 +97,15 @@ span {
 }
 
 .react-calendar__tile--disabled {
-  background: #f8d7da; /* Disabled date color */
+  background: #f8d7da;
   color: #6c757d; /* Text color for disabled dates */
 }
 
 @media (max-width: 600px) {
   .react-calendar {
-    font-size: 0.9rem; /* Smaller font size for mobile */
+    width: 100%;
+    max-width: 200px;
+    font-size: 0.8rem; /* Smaller font size for mobile */
   }
 
   .react-calendar__tile {
