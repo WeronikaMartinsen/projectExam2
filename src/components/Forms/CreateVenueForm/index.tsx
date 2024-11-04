@@ -1,13 +1,13 @@
-import { createVenue } from "../../../service/apiRequests";
 import { Resolver, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Venue, VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
-import { ApiResponse } from "../../../service/ApiCalls/baseApiCallPost";
-import { useState } from "react";
+import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
+import { createVenue } from "../../../service/apiRequests";
+import { useVenueForm } from "../../Hooks/useVenueForm";
+import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
 
+// Validation schema
 const schema = yup.object({
   name: yup.string().required("Venue name is required."),
   description: yup.string().required("Description is required."),
@@ -28,7 +28,7 @@ const schema = yup.object({
         alt: yup.string().optional(),
       })
     )
-    .nullable() // Allow media to be null
+    .nullable()
     .default([]),
   location: yup
     .object()
@@ -38,11 +38,11 @@ const schema = yup.object({
       zip: yup.string().nullable(),
       country: yup.string().nullable(),
       continent: yup.string().nullable(),
-      lat: yup.number().nullable().default(0), // Optional, default 0
-      lng: yup.number().nullable().default(0), // Optional, default 0
+      lat: yup.number().nullable().default(0),
+      lng: yup.number().nullable().default(0),
     })
-    .nullable() // Allow location to be nullable
-    .default(null), // Default to null
+    .nullable()
+    .default(null),
   meta: yup
     .object()
     .shape({
@@ -51,17 +51,19 @@ const schema = yup.object({
       breakfast: yup.boolean().default(false),
       pets: yup.boolean().default(false),
     })
-    .default({}), 
+    .default({}),
 });
 
 const CreateVenueForm = () => {
   const { user, isLoggedIn } = useAuth();
-  const token = user?.accessToken || ""; 
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const token = user?.accessToken || "";
+  const navigate = useNavigate(); // Moved to the top for better clarity
 
-  const navigate = useNavigate();
+  // Using the custom hook for form submission logic
+  const { loading, successMessage, errorMessage, submit } = useVenueForm(
+    createVenue,
+    token
+  );
 
   const {
     register,
@@ -77,32 +79,18 @@ const CreateVenueForm = () => {
       description: data.description,
       price: data.price,
       maxGuests: data.maxGuests,
-      rating: data.rating ?? null, 
+      rating: data.rating ?? null,
       media:
         Array.isArray(data.media) && data.media.length > 0
           ? data.media
           : undefined,
-      location: data.location ?? null, 
+      location: data.location ?? null,
       meta: data.meta,
     };
 
-    setLoading(true);
-    setSuccessMessage(null);
-    setErrorMessage(null);
-
-    try {
-      const response: ApiResponse<Venue> = await createVenue(venueData, token);
-
-      console.log("Venue created successfully:", response);
-      const id = response.data.id; 
-      setSuccessMessage("Venue created successfully!");
-      navigate(`/venue/${id}`); 
-
-    } catch (error) {
-      console.error("Error creating venue:", error);
-      setErrorMessage("Failed to create venue. Please try again.");
-    } finally {
-      setLoading(false);
+    const id = await submit(venueData);
+    if (id) {
+      navigate(`/venue/${id}`);
     }
   };
 
@@ -117,6 +105,7 @@ const CreateVenueForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl w-full">
       <h1 className="text-center text-2xl m-4">Create a venue</h1>
+
       <div className="mb-">
         <label className="invisible">Name</label>
         <input
@@ -179,7 +168,7 @@ const CreateVenueForm = () => {
       <div>
         <label className="invisible">Media</label>
         <input
-          {...register("media.0.url")} // Adjusted for array syntax
+          {...register("media.0.url")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
           placeholder="Media URL"
         />
@@ -199,6 +188,7 @@ const CreateVenueForm = () => {
           {errors.media?.[0]?.alt?.message}
         </p>
       </div>
+
       <div>
         <label className="invisible">Location</label>
         <input
@@ -217,22 +207,15 @@ const CreateVenueForm = () => {
         </p>
       </div>
 
-      {loading ? (
-        <button
-          type="button"
-          className="mt-4 w-full bg-gray-300 text-white py-2 rounded-md"
-          disabled
-        >
-          Loading...
-        </button>
-      ) : (
-        <button
-          type="submit"
-          className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-500"
-        >
-          Create Venue
-        </button>
-      )}
+      <button
+        type="submit"
+        className={`mt-4 w-full bg-indigo-600 text-white py-2 rounded-md ${
+          loading ? "bg-gray-300" : "hover:bg-indigo-700"
+        }`}
+        disabled={loading}
+      >
+        {loading ? "Creating..." : "Create Venue"}
+      </button>
 
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
