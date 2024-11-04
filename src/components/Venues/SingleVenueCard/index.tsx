@@ -9,19 +9,24 @@ import {
   MdDirectionsCar,
   MdPets,
   MdPerson,
+  MdEdit,
 } from "react-icons/md";
 import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
 import LoadingSkeleton from "../../Skeleton";
+import { getUser } from "../../../service/Utils/userUtils";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [bookings, setBookings] = useState<Booking[]>([]); // State for bookings
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+
+  const user = getUser(); // Get current user
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -30,8 +35,7 @@ function SingleVenueCard() {
         if (id) {
           const venueById = await getVenueById(id);
           setVenue(venueById.data);
-          setBookings(venueById.data.bookings || []); // Set bookings
-          console.log(venueById);
+          setBookings(venueById.data.bookings || []);
         }
       } catch (err) {
         setError(
@@ -45,11 +49,25 @@ function SingleVenueCard() {
     fetchVenue();
   }, [id]);
 
+  const handleToggleDropdown = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent click event from bubbling up
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleEdit = () => {
+    console.log("Edit venue", venue?.id);
+    // Handle edit logic (e.g., navigate to edit page)
+  };
+
+  const handleDelete = () => {
+    console.log("Delete venue", venue?.id);
+    // Handle delete logic (e.g., API call to delete)
+  };
+
   if (loading) return <LoadingSkeleton width="400px" height={40} />;
   if (error) return <div>Error: {error}</div>;
   if (!venue) return <div>Venue not found</div>;
 
-  // Construct Google Maps URL
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city}, ${venue.location.country}`
   )}`;
@@ -92,10 +110,39 @@ function SingleVenueCard() {
               <span>Bookings:</span>
               <span className="font-semibold">{venue._count.bookings}</span>
             </div>
-            {/* Render the Calendar */}
             <Calender bookings={bookings} />
           </div>
           <div className="flex flex-col w-full h-full">
+            <div>
+              {/* Owner Options Dropdown */}
+              {venue.owner?.name === user.name && (
+                <div className="relative text-end">
+                  <button
+                    className="text-gray-600 hover:text-gray-900"
+                    onClick={handleToggleDropdown}
+                  >
+                    <MdEdit className="inline-block mr-1" />
+                    Edit
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
+                      <button
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={handleEdit}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
+                        onClick={handleDelete}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             {venue.meta.breakfast && (
               <div className="flex items-center">
                 <MdFreeBreakfast title="Breakfast included" />
@@ -128,12 +175,14 @@ function SingleVenueCard() {
                 </span>
               </div>
             )}
+
             <div className="mt-4 flex flex-col align-top justify-start">
               <span>Contact the owner:</span>
               <VenueOwner owner={venue.owner} />
             </div>
           </div>
         </div>
+
         <button className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
           BOOK
         </button>

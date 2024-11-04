@@ -63,7 +63,7 @@ export interface Venue {
   updated: string;
   meta: Meta;
   location: Location;
-  owner?: Owner; // Optional based on query parameters
+  owner: Owner; // Optional based on query parameters
   bookings?: Booking[]; // Optional based on query parameters
 }
 

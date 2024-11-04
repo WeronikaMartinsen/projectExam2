@@ -13,10 +13,13 @@ export const getVenues = async (): Promise<Venue[]> => {
   };
 
   try {
-    const response = await fetch(`${baseUrl}/holidaze/venues`, {
-      method: "GET",
-      headers: headers,
-    });
+    const response = await fetch(
+      `${baseUrl}/holidaze/venues?_owner=true&_bookings=true`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
@@ -87,7 +90,7 @@ export const getProfile = async (
 
 export const getVenuesByProfile = async (name: string, accessToken: string) => {
   return apiRequest<null, Venue[]>(
-    `/holidaze/profiles/${name}/venues`,
+    `/holidaze/profiles/${name}/venues?_owner=true&_bookings=true`,
     "GET",
     undefined,
     accessToken

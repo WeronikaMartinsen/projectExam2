@@ -92,24 +92,24 @@ span {
 }
 
 .react-calendar__tile--active {
-  background: #007bff; /* Active tile color */
+  background: #007bff;
   color: white;
 }
 
 .react-calendar__tile--disabled {
   background: #f8d7da;
-  color: #6c757d; /* Text color for disabled dates */
+  color: #6c757d;
 }
 
 @media (max-width: 600px) {
   .react-calendar {
     width: 100%;
     max-width: 200px;
-    font-size: 0.8rem; /* Smaller font size for mobile */
+    font-size: 0.8rem;
   }
 
   .react-calendar__tile {
-    height: 40px; /* Smaller tile height */
-    width: 40px; /* Smaller tile width */
+    height: 40px;
+    width: 40px;
   }
 }

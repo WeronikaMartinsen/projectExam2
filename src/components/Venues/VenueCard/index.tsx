@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
 import {
@@ -7,25 +7,45 @@ import {
   MdDirectionsCar,
   MdPets,
   MdPerson,
+  MdEdit, // Import the MdEdit icon
 } from "react-icons/md";
 import Rating from "../Rating";
+import { getUser } from "../../../service/Utils/userUtils";
 
 interface VenueCardProps {
   venue: Venue;
   onClick: (id: string) => void;
 }
 
+const user = getUser();
 const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   // Construct a Google Maps URL
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city} ${venue.location.country}`
   )}`;
 
+  const handleToggleDropdown = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent click event from bubbling up to the list item
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleEdit = () => {
+    console.log("Edit venue", venue.id);
+    // Handle edit logic (e.g., navigate to edit page)
+  };
+
+  const handleDelete = () => {
+    console.log("Delete venue", venue.id);
+    // Handle delete logic (e.g., API call to delete)
+  };
+
   return (
     <li
       key={venue.id}
       className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform"
-      onClick={() => onClick(venue.id)}
+      onClick={() => onClick(venue.id)} // Navigate to the detail page on li click
     >
       <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded-tl-lg rounded-bl-lg">
         <img
@@ -37,7 +57,6 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
       <div className="flex flex-col items-center md:items-start md:border-r border-accent md:pr-4">
         <div className="flex items-center gap-2 mb-2">
           <IoLocation />
-          {/* Link the location to Google Maps */}
           <a
             href={googleMapsUrl}
             target="_blank"
@@ -87,11 +106,42 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
         </div>
       </div>
 
-      <div className="flex flex-col items-end justify-end align-bottom p-4">
-        <p className="text-2xl text-primary pl-8">{venue.price} nok</p>
-        <button className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
-          CHECK PRICE
-        </button>
+      <div className="h-full w-full flex flex-col justify-around align-middle p-4">
+        {venue.owner?.name === user.name && (
+          <div className="relative text-end">
+            <button
+              className="text-gray-600 hover:text-gray-900"
+              onClick={handleToggleDropdown}
+            >
+              <MdEdit className="inline-block mr-1" /> {/* Add the edit icon */}
+              Edit
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
+                <button
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  onClick={handleEdit}
+                >
+                  Edit
+                </button>
+                <button
+                  className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        <div className=" w-full flex flex-col justify-end align-bottom">
+          <p className="text-2xl text-primary pl-8 text-end">
+            {venue.price} nok
+          </p>
+          <button className="bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
+            View details
+          </button>
+        </div>
       </div>
     </li>
   );
