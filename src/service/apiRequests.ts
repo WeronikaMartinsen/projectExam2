@@ -62,7 +62,12 @@ export const updateVenue = async (
   venue: Venue,
   token: string
 ): Promise<ApiResponse<Venue>> => {
-  return apiRequest<Venue, Venue>(`/venues/${id}`, "PUT", venue, token);
+  return apiRequest<Venue, Venue>(
+    `/holidaze/venues/${id}`,
+    "PUT",
+    venue,
+    token
+  );
 };
 
 // DELETE a Venue

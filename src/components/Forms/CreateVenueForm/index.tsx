@@ -1,8 +1,9 @@
-import { Resolver, useForm } from "react-hook-form";
+import { Resolver, useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
 import { createVenue } from "../../../service/apiRequests";
+import { updateVenue } from "../../../service/apiRequests";
 import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
@@ -54,43 +55,65 @@ const schema = yup.object({
     .default({}),
 });
 
-const CreateVenueForm = () => {
+interface CreateVenueFormProps {
+  venueId?: string; // Optional for updating
+}
+
+const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
   const { user, isLoggedIn } = useAuth();
   const token = user?.accessToken || "";
-  const navigate = useNavigate(); // Moved to the top for better clarity
+  const navigate = useNavigate();
 
-  // Using the custom hook for form submission logic
   const { loading, successMessage, errorMessage, submit } = useVenueForm(
     createVenue,
-    token
+    updateVenue,
+    token,
+    venueId // Pass venueId if updating
   );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<VenueCreate>({
     resolver: yupResolver(schema) as Resolver<VenueCreate>,
+    defaultValues: {
+      media: [{ url: "", alt: "" }],
+      location: {
+        address: "",
+        city: "",
+        zip: "",
+        country: "",
+        continent: "",
+        lat: 0,
+        lng: 0,
+      },
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "media",
   });
 
   const onSubmit = async (data: VenueCreate) => {
     const venueData: VenueCreate = {
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      maxGuests: data.maxGuests,
+      ...data,
+      media: data.media?.length ? data.media : undefined, // Use optional chaining
       rating: data.rating ?? null,
-      media:
-        Array.isArray(data.media) && data.media.length > 0
-          ? data.media
-          : undefined,
       location: data.location ?? null,
       meta: data.meta,
     };
 
-    const id = await submit(venueData);
-    if (id) {
-      navigate(`/venue/${id}`);
+    try {
+      const id = await submit(venueData); // Use 'const' instead of 'let'
+
+      if (id) {
+        navigate(`/venue/${id}`);
+      }
+    } catch (error) {
+      console.log("Error submitting form:", error);
     }
   };
 
@@ -104,9 +127,11 @@ const CreateVenueForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl w-full">
-      <h1 className="text-center text-2xl m-4">Create a venue</h1>
+      <h1 className="text-center text-2xl m-4">
+        {venueId ? "Update" : "Create"} a venue
+      </h1>
 
-      <div className="mb-">
+      <div className="mb-4">
         <label className="invisible">Name</label>
         <input
           {...register("name")}
@@ -116,7 +141,7 @@ const CreateVenueForm = () => {
         <p className="text-red-500 text-xs italic">{errors.name?.message}</p>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label className="invisible">Description</label>
         <textarea
           {...register("description")}
@@ -128,7 +153,7 @@ const CreateVenueForm = () => {
         </p>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label className="invisible">Price</label>
         <input
           type="number"
@@ -139,7 +164,7 @@ const CreateVenueForm = () => {
         <p className="text-red-500 text-xs italic">{errors.price?.message}</p>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label className="invisible">Maximum Guests</label>
         <input
           type="number"
@@ -152,7 +177,7 @@ const CreateVenueForm = () => {
         </p>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label className="invisible">Rating</label>
         <input
           type="number"
@@ -165,31 +190,44 @@ const CreateVenueForm = () => {
         <p className="text-red-500 text-xs italic">{errors.rating?.message}</p>
       </div>
 
-      <div>
+      {/* Media Fields */}
+      <div className="mb-4">
         <label className="invisible">Media</label>
-        <input
-          {...register("media.0.url")}
-          className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
-          placeholder="Media URL"
-        />
+        {fields.map((field, index) => (
+          <div key={field.id} className="mb-2">
+            <input
+              {...register(`media.${index}.url`)}
+              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
+              placeholder="Media URL"
+            />
+            <input
+              {...register(`media.${index}.alt`)}
+              className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
+              placeholder="Media Alt Text"
+            />
+            <button
+              type="button"
+              className="mt-2 text-red-500"
+              onClick={() => remove(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="mt-2 w-full bg-indigo-500 text-white py-2 rounded-md"
+          onClick={() => append({ url: "", alt: "" })}
+        >
+          Add Media
+        </button>
         <p className="text-red-500 text-xs italic">
           {errors.media?.[0]?.url?.message}
         </p>
       </div>
 
-      <div>
-        <label className="invisible">Media Alt Text</label>
-        <input
-          {...register("media.0.alt")}
-          className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
-          placeholder="Media Alt Text"
-        />
-        <p className="text-red-500 text-xs italic">
-          {errors.media?.[0]?.alt?.message}
-        </p>
-      </div>
-
-      <div>
+      {/* Location Fields */}
+      <div className="mb-4">
         <label className="invisible">Location</label>
         <input
           {...register("location.address")}
@@ -214,7 +252,7 @@ const CreateVenueForm = () => {
         }`}
         disabled={loading}
       >
-        {loading ? "Creating..." : "Create Venue"}
+        {loading ? "Creating..." : venueId ? "Update Venue" : "Create Venue"}
       </button>
 
       {successMessage && <p className="text-green-500">{successMessage}</p>}

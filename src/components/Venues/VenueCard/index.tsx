@@ -11,15 +11,17 @@ import {
 } from "react-icons/md";
 import Rating from "../Rating";
 import { getUser } from "../../../service/Utils/userUtils";
+import { useNavigate } from "react-router-dom";
 
 interface VenueCardProps {
   venue: Venue;
-  onClick: (id: string) => void;
+  onClick: (id: string) => void; // If you still want to keep the onClick prop for other purposes
 }
 
 const user = getUser();
-const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
+const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate(); // Get the navigate function
 
   // Construct a Google Maps URL
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -32,8 +34,8 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
   };
 
   const handleEdit = () => {
+    navigate(`/venues/${venue.id}`); // Navigate to the edit page
     console.log("Edit venue", venue.id);
-    // Handle edit logic (e.g., navigate to edit page)
   };
 
   const handleDelete = () => {
@@ -41,17 +43,22 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
     // Handle delete logic (e.g., API call to delete)
   };
 
+  const handleImageClick = () => {
+    navigate(`/venue/${venue.id}`); // Navigate to the venue detail page when image is clicked
+  };
+
   return (
     <li
-      key={venue.id}
       className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform"
-      onClick={() => onClick(venue.id)} // Navigate to the detail page on li click
+      // Navigate to the detail page on li click
     >
       <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded-tl-lg rounded-bl-lg">
         <img
+          key={venue.id}
           className="w-full h-full object-cover"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
+          onClick={handleImageClick} // Use navigate on image click
         />
       </div>
       <div className="flex flex-col items-center md:items-start md:border-r border-accent md:pr-4">
@@ -120,7 +127,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
               <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
                 <button
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={handleEdit}
+                  onClick={handleEdit} // Handle edit click
                 >
                   Edit
                 </button>
@@ -136,7 +143,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, onClick }) => {
         )}
         <div className=" w-full flex flex-col justify-end align-bottom">
           <p className="text-2xl text-primary pl-8 text-end">
-            {venue.price} nok
+            {venue.price} NOK
           </p>
           <button className="bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
             View details
