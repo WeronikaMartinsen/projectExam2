@@ -88,3 +88,14 @@ export interface VenueCreate {
   meta?: Meta; // Optional
   location?: Location | null; // Allow undefined or null
 }
+
+export interface VenueUpdate {
+  name?: string;
+  description?: string;
+  media?: Media[];
+  price?: number;
+  maxGuests?: number;
+  rating?: number | null;
+  meta?: Meta;
+  location?: Location;
+}

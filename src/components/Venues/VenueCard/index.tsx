@@ -34,8 +34,8 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   };
 
   const handleEdit = () => {
+    console.log("Edit venue", venue.id); // Debugging log
     navigate(`/venues/${venue.id}`); // Navigate to the edit page
-    console.log("Edit venue", venue.id);
   };
 
   const handleDelete = () => {

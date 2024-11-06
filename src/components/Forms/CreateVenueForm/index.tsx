@@ -1,14 +1,15 @@
+import { useEffect } from "react";
 import { Resolver, useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
-import { createVenue } from "../../../service/apiRequests";
+import { createVenue, getVenueById } from "../../../service/apiRequests"; // Import getVenueById
 import { updateVenue } from "../../../service/apiRequests";
 import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
 
-// Validation schema
+// Validation schema (same as before)
 const schema = yup.object({
   name: yup.string().required("Venue name is required."),
   description: yup.string().required("Description is required."),
@@ -20,7 +21,7 @@ const schema = yup.object({
     .number()
     .required("Maximum guests is required.")
     .positive("Must be at least 1."),
-  rating: yup.number().nullable().min(0).max(5), // Optional rating
+  rating: yup.number().nullable().min(0).max(5),
   media: yup
     .array()
     .of(
@@ -76,6 +77,7 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     handleSubmit,
     formState: { errors },
     control,
+    setValue, // Used to set default values dynamically
   } = useForm<VenueCreate>({
     resolver: yupResolver(schema) as Resolver<VenueCreate>,
     defaultValues: {
@@ -97,23 +99,50 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     name: "media",
   });
 
+  useEffect(() => {
+    if (venueId) {
+      const fetchVenueData = async () => {
+        try {
+          console.log(`Fetching data for venueId: ${venueId}`); // Debugging log
+          const response = await getVenueById(venueId); // Fetch venue by ID
+          console.log("Venue data fetched:", response.data); // Log the fetched data
+
+          // Set form values with the fetched data for editing
+          setValue("name", response.data.name);
+          setValue("description", response.data.description);
+          setValue("price", response.data.price);
+          setValue("maxGuests", response.data.maxGuests);
+          setValue("rating", response.data.rating || null);
+          setValue("media", response.data.media || []);
+          setValue("location", response.data.location || {});
+          setValue("meta", response.data.meta || {});
+        } catch (error) {
+          console.log("Error fetching venue data:", error); // Log errors
+        }
+      };
+
+      fetchVenueData();
+    }
+  }, [venueId, token, setValue]);
+
   const onSubmit = async (data: VenueCreate) => {
     const venueData: VenueCreate = {
       ...data,
-      media: data.media?.length ? data.media : undefined, // Use optional chaining
+      media: data.media?.length ? data.media : undefined,
       rating: data.rating ?? null,
       location: data.location ?? null,
       meta: data.meta,
     };
 
     try {
-      const id = await submit(venueData); // Use 'const' instead of 'let'
+      const id = await submit(venueData); // Submit data
+      console.log("Submit response ID:", id); // Debugging log
 
       if (id) {
         navigate(`/venue/${id}`);
       }
     } catch (error) {
-      console.log("Error submitting form:", error);
+      console.log("Error submitting form:", error); // Log errors
     }
   };
 
@@ -239,7 +268,6 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
           placeholder="City"
         />
-        {/* Add more fields for zip, country, etc. */}
         <p className="text-red-500 text-xs italic">
           {errors.location?.address?.message}
         </p>
