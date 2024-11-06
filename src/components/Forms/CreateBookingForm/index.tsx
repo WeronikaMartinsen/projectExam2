@@ -2,17 +2,15 @@ import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useBookingForm } from "../../Hooks/useBookingForm";
 import { createBooking } from "../../../service/apiRequests";
+import { useLocation } from "react-router-dom";
 
 // Validation schema for booking form
 const schema = yup.object({
   dateFrom: yup.string().required("Start date is required."),
-  dateTo: yup
-    .string()
-    .required("End date is required.")
-    .min(yup.ref("dateFrom"), "End date cannot be before start date."),
+  dateTo: yup.string().required("End date is required."),
   guests: yup
     .number()
     .required("Number of guests is required.")
@@ -32,8 +30,12 @@ const CreateBookingForm: React.FC = () => {
   const { user, isLoggedIn } = useAuth();
   const token = user?.accessToken || "";
   const navigate = useNavigate();
-  const { id: venueId } = useParams<{ id: string }>();
 
+  // Get the venueId passed from the SingleVenueCard component
+  const location = useLocation();
+  const venueId = location.state?.venueId; // Retrieve venueId from state
+
+  console.log("Venue ID from state:", venueId); // Just for debugging
   const { loading, successMessage, errorMessage, submitBooking } =
     useBookingForm(createBooking, token);
 
@@ -43,7 +45,8 @@ const CreateBookingForm: React.FC = () => {
     formState: { errors },
   } = useForm<BookingCreate>({
     resolver: yupResolver(schema) as Resolver<BookingCreate>,
-    defaultValues: { venueId }, // Set venueId from the route parameters
+
+    defaultValues: { venueId: venueId || "" },
   });
 
   const onSubmit = async (data: BookingCreate) => {

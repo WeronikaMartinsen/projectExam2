@@ -9,15 +9,15 @@ import {
   MdDirectionsCar,
   MdPets,
   MdPerson,
-  MdEdit,
 } from "react-icons/md";
 import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
-import Calender from "../../Bookings/Calender";
+import Calender from "../../Bookings/Calender"; // Ensure Calender accepts `onDateRangeSelect` prop
 import LoadingSkeleton from "../../Skeleton";
 import { getUser } from "../../../service/Utils/userUtils";
 import { useNavigate } from "react-router-dom";
+import { createBooking } from "../../../service/apiRequests";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -25,9 +25,13 @@ function SingleVenueCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+  const [selectedFromDate, setSelectedFromDate] = useState<string | null>(null);
+  const [selectedToDate, setSelectedToDate] = useState<string | null>(null);
+  const [guests, setGuests] = useState(1); // Default to 1 guest
 
   const user = getUser(); // Get current user
+  console.log(user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVenue = async () => {
@@ -50,30 +54,33 @@ function SingleVenueCard() {
     fetchVenue();
   }, [id]);
 
-  const handleToggleDropdown = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent click event from bubbling up
-    setIsDropdownOpen((prev) => !prev);
-  };
+  const token = localStorage.getItem("accessToken");
 
-  const handleEdit = () => {
-    console.log("Edit venue", venue?.id);
-    // Handle edit logic (e.g., navigate to edit page)
-  };
-
-  const handleDelete = () => {
-    console.log("Delete venue", venue?.id);
-    // Handle delete logic (e.g., API call to delete)
-  };
-  const navigate = useNavigate();
-  
   const handleBook = () => {
     if (!user) {
-      navigate("/login"); // Redirect to login if not logged in
-    } else if (venue) {
-      navigate("/bookings", { state: { venueId: venue.id } });
+      navigate("/login");
+    } else if (venue && selectedFromDate && selectedToDate && token) {
+      // Prepare the booking data
+      const bookingData = {
+        venueId: venue.id,
+        dateFrom: selectedFromDate,
+        dateTo: selectedToDate,
+        guests,
+      };
+
+      console.log(token);
+      // Pass the token as the second argument to `createBooking`
+      createBooking(bookingData, token)
+        .then((bookingId) => {
+          navigate(`/booking/${bookingId}`); //FIx the address url
+        })
+        .catch((err) => {
+          setError(err.message);
+        });
+    } else {
+      setError("You need to be logged in to book.");
     }
   };
-  
 
   if (loading) return <LoadingSkeleton width="400px" height={40} />;
   if (error) return <div>Error: {error}</div>;
@@ -96,6 +103,7 @@ function SingleVenueCard() {
           alt={venue.media[0]?.alt || venue.name}
         />
       </div>
+
       <div className="w-full h-full bg-tertiary">
         <div className="flex items-center p-4">
           <IoLocation className="text-lg" />
@@ -121,39 +129,16 @@ function SingleVenueCard() {
               <span>Bookings:</span>
               <span className="font-semibold">{venue._count.bookings}</span>
             </div>
-            <Calender bookings={bookings} />
+            <Calender
+              bookings={bookings}
+              onDateRangeSelect={(fromDate: string, toDate: string) => {
+                setSelectedFromDate(fromDate);
+                setSelectedToDate(toDate);
+              }}
+            />
           </div>
+
           <div className="flex flex-col w-full h-full">
-            <div>
-              {/* Owner Options Dropdown */}
-              {venue.owner?.name === user.name && (
-                <div className="relative text-end">
-                  <button
-                    className="text-gray-600 hover:text-gray-900"
-                    onClick={handleToggleDropdown}
-                  >
-                    <MdEdit className="inline-block mr-1" />
-                    Edit
-                  </button>
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
-                      <button
-                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                        onClick={handleEdit}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
-                        onClick={handleDelete}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
             {venue.meta.breakfast && (
               <div className="flex items-center">
                 <MdFreeBreakfast title="Breakfast included" />
@@ -194,12 +179,53 @@ function SingleVenueCard() {
           </div>
         </div>
 
-        <button
-  className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary"
-  onClick={handleBook}
->
-  BOOK
-</button>
+        {/* Booking Form */}
+        <div className="mt-6">
+          <h3 className="text-2xl font-semibold mb-4">Book This Venue</h3>
+          <form className="flex flex-col">
+            <div className="mb-4">
+              <label className="text-sm">From Date</label>
+              <input
+                type="date"
+                value={selectedFromDate || ""}
+                onChange={(e) => setSelectedFromDate(e.target.value)}
+                className="p-2 border rounded-md"
+                min={new Date().toISOString().split("T")[0]} // Prevent past date
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="text-sm">To Date</label>
+              <input
+                type="date"
+                value={selectedToDate || ""}
+                onChange={(e) => setSelectedToDate(e.target.value)}
+                className="p-2 border rounded-md"
+                min={selectedFromDate || ""}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="text-sm">Number of Guests</label>
+              <input
+                type="number"
+                value={guests}
+                onChange={(e) => setGuests(Math.max(1, Number(e.target.value)))}
+                className="p-2 border rounded-md"
+                min={1}
+                max={venue.maxGuests}
+              />
+            </div>
+
+            <button
+              type="button"
+              className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary"
+              onClick={handleBook}
+            >
+              Book Now
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

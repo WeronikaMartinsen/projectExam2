@@ -114,33 +114,34 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       </div>
 
       <div className="h-full w-full flex flex-col justify-around align-middle p-4">
-        {venue.owner?.name === user.name && (
-          <div className="relative text-end">
-            <button
-              className="text-gray-600 hover:text-gray-900"
-              onClick={handleToggleDropdown}
-            >
-              <MdEdit className="inline-block mr-1" /> {/* Add the edit icon */}
-              Edit
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
-                <button
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={handleEdit} // Handle edit click
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        {user &&
+          venue.owner?.name === user.name && ( // Check if user exists before checking name
+            <div className="relative text-end">
+              <button
+                className="text-gray-600 hover:text-gray-900"
+                onClick={handleToggleDropdown}
+              >
+                <MdEdit className="inline-block mr-1" />
+                Edit
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={handleEdit}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         <div className=" w-full flex flex-col justify-end align-bottom">
           <p className="text-2xl text-primary pl-8 text-end">
             {venue.price} NOK

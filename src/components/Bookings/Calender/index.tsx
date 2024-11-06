@@ -11,6 +11,7 @@ interface Booking {
 
 interface CalenderProps {
   bookings: Booking[];
+  onDateRangeSelect: (fromDate: string, toDate: string) => void;
 }
 
 const Calender: React.FC<CalenderProps> = ({ bookings }) => {
