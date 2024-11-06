@@ -142,14 +142,20 @@ export const createBooking = async (
     venueId: string;
   },
   token: string
-): Promise<Booking> => {
+): Promise<ApiResponse<Booking>> => {
+  // Making the API request and getting the response
   const response = await apiRequest<typeof bookingData, Booking>(
     "/holidaze/bookings",
     "POST",
     bookingData,
     token
   );
-  return response.data;
+
+  // Ensure response is wrapped in ApiResponse, the `data` contains the booking object
+  return {
+    data: response.data, // The actual booking data returned from the API
+    message: response.message, // Optionally include any message from the API
+  };
 };
 
 // Update an existing booking

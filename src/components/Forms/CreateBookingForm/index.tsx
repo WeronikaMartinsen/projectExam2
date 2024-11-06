@@ -34,10 +34,8 @@ const CreateBookingForm: React.FC = () => {
   const navigate = useNavigate();
   const { id: venueId } = useParams<{ id: string }>();
 
-  const { loading, successMessage, errorMessage, submitBooking } = useBookingForm(
-    createBooking,
-    token
-  );
+  const { loading, successMessage, errorMessage, submitBooking } =
+    useBookingForm(createBooking, token);
 
   const {
     register,
@@ -52,6 +50,7 @@ const CreateBookingForm: React.FC = () => {
     try {
       const bookingId = await submitBooking(data);
       if (bookingId) {
+        // Navigate to the newly created booking's detail page
         navigate(`/booking/${bookingId}`);
       }
     } catch (error) {
@@ -62,7 +61,9 @@ const CreateBookingForm: React.FC = () => {
   if (!isLoggedIn) {
     return (
       <div className="text-center p-4">
-        <p className="text-red-500">You must be logged in to create a booking.</p>
+        <p className="text-red-500">
+          You must be logged in to create a booking.
+        </p>
       </div>
     );
   }
@@ -78,7 +79,9 @@ const CreateBookingForm: React.FC = () => {
           {...register("dateFrom")}
           className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-3 mb-1 leading-tight focus:outline-none focus:ring focus:ring-indigo-500"
         />
-        <p className="text-red-500 text-xs italic">{errors.dateFrom?.message}</p>
+        <p className="text-red-500 text-xs italic">
+          {errors.dateFrom?.message}
+        </p>
       </div>
 
       <div className="mb-4">
