@@ -17,6 +17,7 @@ import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
 import LoadingSkeleton from "../../Skeleton";
 import { getUser } from "../../../service/Utils/userUtils";
+import { useNavigate } from "react-router-dom";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -63,6 +64,16 @@ function SingleVenueCard() {
     console.log("Delete venue", venue?.id);
     // Handle delete logic (e.g., API call to delete)
   };
+  const navigate = useNavigate();
+  
+  const handleBook = () => {
+    if (!user) {
+      navigate("/login"); // Redirect to login if not logged in
+    } else if (venue) {
+      navigate("/bookings", { state: { venueId: venue.id } });
+    }
+  };
+  
 
   if (loading) return <LoadingSkeleton width="400px" height={40} />;
   if (error) return <div>Error: {error}</div>;
@@ -183,9 +194,12 @@ function SingleVenueCard() {
           </div>
         </div>
 
-        <button className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
-          BOOK
-        </button>
+        <button
+  className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary"
+  onClick={handleBook}
+>
+  BOOK
+</button>
       </div>
     </div>
   );

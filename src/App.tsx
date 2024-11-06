@@ -6,6 +6,7 @@ import About from "./pages/About";
 import SingleVenues from "./pages/SingleVenues";
 import CreateVenue from "./pages/CreateVenue";
 import UpdateVenue from "./pages/UpdateVenue";
+import CreateBooking from "./pages/CreateBooking";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/venue/:id" element={<SingleVenues />} />
           <Route path="/venues" element={<CreateVenue />} />
           <Route path="/venues/:id" element={<UpdateVenue />} />
+          <Route path="/bookings" element={<CreateBooking />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
