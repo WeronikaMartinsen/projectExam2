@@ -153,9 +153,7 @@ function Header() {
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Contact
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            About
-          </a>
+         <Link className="text-sm font-semibold leading-6 text-gray-900" to="/about">About</Link>
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
