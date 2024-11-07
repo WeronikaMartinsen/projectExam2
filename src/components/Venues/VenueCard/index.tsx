@@ -49,10 +49,10 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
 
   return (
     <li
-      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform"
+      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded shadow-sm hover:shadow-md transition-transform transform"
       // Navigate to the detail page on li click
     >
-      <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded-tl-lg rounded-bl-lg">
+      <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
           className="w-full h-full object-cover"
@@ -146,7 +146,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           <p className="text-2xl text-primary pl-8 text-end">
             {venue.price} NOK
           </p>
-          <button className="bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary">
+          <button className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary">
             View details
           </button>
         </div>

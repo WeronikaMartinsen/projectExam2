@@ -18,6 +18,10 @@ module.exports = withMT({
         textLight: "var(--color-text-light)",
         textDark: "var(--color-text-dark)",
       },
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+        heading: ["Roboto", "serif"],
+      },
     },
   },
 

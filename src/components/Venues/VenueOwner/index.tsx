@@ -9,7 +9,7 @@ function VenueOwner({ owner }: VenueOwnerProps) {
   if (!owner) return null; // If no owner, don't render
 
   return (
-    <section className="relative h-16 w-full max-w-sm rounded-lg overflow-hidden">
+    <section className="relative h-16 w-full max-w-sm rounded overflow-hidden">
       {/* Avatar and Owner Info Overlay */}
       <div className="absolute left-3 flex items-center bg-white bg-opacity-80 rounded-full p-1 mt-1 shadow-md">
         <Link to={`/profiles/${owner.name}`}>

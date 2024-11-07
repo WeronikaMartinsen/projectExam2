@@ -37,6 +37,7 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  font-family: "Poppins", sans-serif;
 }
 
 main {
@@ -46,6 +47,13 @@ main {
   padding: 0;
   margin: 0;
   width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Roboto", serif;
 }
 
 p,

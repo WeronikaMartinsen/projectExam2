@@ -100,7 +100,7 @@ function SingleVenueCard() {
           <Rating rating={venue.rating} />
         </div>
         <img
-          className="w-full h-full object-cover rounded-lg shadow"
+          className="w-full h-full object-cover rounded shadow"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />
@@ -187,62 +187,61 @@ function SingleVenueCard() {
               <span>Contact the owner:</span>
               <VenueOwner owner={venue.owner} />
             </div>
+            {/* Booking Form */}
+            <div className="mt-6">
+              <h3 className="text-2xl font-semibold mb-4">Book This Venue</h3>
+              <form className="flex flex-col">
+                <div className="mb-4">
+                  <label className="text-sm">From Date</label>
+                  <input
+                    type="date"
+                    value={selectedFromDate || ""}
+                    onChange={(e) => setSelectedFromDate(e.target.value)}
+                    className="p-2 border rounded"
+                    min={new Date().toISOString().split("T")[0]} // Prevent past date
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="text-sm">To Date</label>
+                  <input
+                    type="date"
+                    value={selectedToDate || ""}
+                    onChange={(e) => setSelectedToDate(e.target.value)}
+                    className="p-2 border rounded"
+                    min={selectedFromDate || ""}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="text-sm">Number of Guests</label>
+                  <input
+                    type="number"
+                    value={guests}
+                    onChange={(e) =>
+                      setGuests(
+                        Math.max(
+                          1,
+                          Math.min(venue.maxGuests, Number(e.target.value))
+                        )
+                      )
+                    }
+                    className="p-2 border rounded"
+                    min={1}
+                    max={venue.maxGuests}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  className="w-full bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary"
+                  onClick={handleBook}
+                >
+                  Book Now
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-
-        {/* Booking Form */}
-        <div className="mt-6">
-          <h3 className="text-2xl font-semibold mb-4">Book This Venue</h3>
-          <form className="flex flex-col">
-            <div className="mb-4">
-              <label className="text-sm">From Date</label>
-              <input
-                type="date"
-                value={selectedFromDate || ""}
-                onChange={(e) => setSelectedFromDate(e.target.value)}
-                className="p-2 border rounded-md"
-                min={new Date().toISOString().split("T")[0]} // Prevent past date
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="text-sm">To Date</label>
-              <input
-                type="date"
-                value={selectedToDate || ""}
-                onChange={(e) => setSelectedToDate(e.target.value)}
-                className="p-2 border rounded-md"
-                min={selectedFromDate || ""}
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="text-sm">Number of Guests</label>
-              <input
-                type="number"
-                value={guests}
-                onChange={(e) =>
-                  setGuests(
-                    Math.max(
-                      1,
-                      Math.min(venue.maxGuests, Number(e.target.value))
-                    )
-                  )
-                }
-                className="p-2 border rounded-md"
-                min={1}
-                max={venue.maxGuests}
-              />
-            </div>
-
-            <button
-              type="button"
-              className="w-full bg-accent p-3 rounded-md font-semibold text-sm mt-4 text-primary"
-              onClick={handleBook}
-            >
-              Book Now
-            </button>
-          </form>
         </div>
       </div>
     </div>

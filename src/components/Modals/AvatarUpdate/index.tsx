@@ -35,12 +35,12 @@ const AvatarUpdateModal: React.FC<AvatarUpdateModalProps> = ({
           onClick={handleOutsideClick}
         >
           <div className="max-w-lg w-full mx-auto">
-            <div className="bg-white border shadow-sm rounded-xl">
+            <div className="bg-white border shadow-sm rounded">
               <div className="flex justify-between items-center py-3 px-4 border-b">
                 <h3 className="font-bold">Update Avatar</h3>
                 <button
                   type="button"
-                  className="inline-flex justify-center items-center rounded-full p-2 hover:bg-gray-200"
+                  className="inline-flex justify-center items-center rounded p-2 hover:bg-gray-200"
                   onClick={handleOpen}
                 >
                   <span className="sr-only">Close</span>
@@ -71,7 +71,7 @@ const AvatarUpdateModal: React.FC<AvatarUpdateModalProps> = ({
               </div>
               <div className="flex justify-center py-3">
                 <button
-                  className="bg-accent text-primary p-2 rounded-md"
+                  className="bg-accent text-primary p-2 rounded"
                   onClick={handleUpdate}
                 >
                   Update Avatar

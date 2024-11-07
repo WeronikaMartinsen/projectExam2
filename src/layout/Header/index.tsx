@@ -16,12 +16,9 @@ import {
   FiMenu,
   FiPlus,
   FiEdit,
-  FiShield,
-  FiLayers,
-  FiRepeat,
   FiChevronDown,
   FiPhone,
-  FiPlayCircle,
+  FiList,
 } from "react-icons/fi";
 import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -29,40 +26,28 @@ import AuthModal from "../../components/Modals/AuthModal";
 
 const products = [
   {
+    name: "All Venues",
+    description: "Show all venues",
+    href: "/",
+    icon: FiList,
+  },
+  {
     name: "Add Venue",
     description: "Create your own venue and publish it!",
     href: "/venues",
     icon: FiPlus,
   },
   {
-    name: "Update Venue",
-    description: "Speak directly to your customers",
-    href: "#",
+    name: "My Venues",
+    description: "Manage your venues - edit/delete",
+    href: "/profiles",
     icon: FiEdit,
-  },
-  {
-    name: "Security",
-    description: "Your customers’ data will be safe and secure",
-    href: "#",
-    icon: FiShield,
-  },
-  {
-    name: "Integrations",
-    description: "Connect with third-party tools",
-    href: "#",
-    icon: FiLayers,
-  },
-  {
-    name: "Automations",
-    description: "Build strategic funnels that will convert",
-    href: "#",
-    icon: FiRepeat,
   },
 ];
 
 const callsToAction = [
-  { name: "Watch demo", href: "#", icon: FiPlayCircle },
-  { name: "Contact sales", href: "#", icon: FiPhone },
+  { name: "My Bookings", href: "/bookings", icon: FiList },
+  { name: "Customer Support", href: "/support", icon: FiPhone },
 ];
 
 function Header() {
@@ -94,7 +79,7 @@ function Header() {
         <div className="flex lg:hidden">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded p-2.5 text-gray-700"
           >
             <FiMenu className="h-6 w-6" />
           </button>
@@ -102,22 +87,22 @@ function Header() {
 
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
+            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary">
               Venues
               <FiChevronDown
                 aria-hidden="true"
-                className="h-5 w-5 flex-none text-gray-400"
+                className="h-5 w-5 flex-none text-gray-400 group-hover:text-secondary"
               />
             </PopoverButton>
-            <PopoverPanel className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition">
+            <PopoverPanel className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded bg-white shadow-lg ring-1 ring-gray-900/5 transition">
               <div className="p-4">
                 {products.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
+                    className="group relative flex items-center gap-x-6 rounded p-4 text-sm leading-6 hover:bg-gray-50 active:bg-secondary active:text-white"
                   >
-                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
                     </div>
                     <div className="flex-auto">
@@ -134,7 +119,7 @@ function Header() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
+                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100 active:bg-secondary active:text-white"
                   >
                     <item.icon className="h-5 w-5 flex-none text-gray-400" />
                     {item.name}
@@ -144,16 +129,29 @@ function Header() {
             </PopoverPanel>
           </Popover>
 
-          <a
-            href="#"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:g-100"
+          {/* My Bookings Link */}
+          <Link
+            to="/bookings"
+            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
           >
-            Filters
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            My Bookings
+          </Link>
+
+          {/* Contact Link */}
+          <Link
+            to="#"
+            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
+          >
             Contact
-          </a>
-         <Link className="text-sm font-semibold leading-6 text-gray-900" to="/about">About</Link>
+          </Link>
+
+          {/* About Link */}
+          <Link
+            to="/about"
+            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
+          >
+            About
+          </Link>
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -162,7 +160,7 @@ function Header() {
           ) : (
             <button
               onClick={handleOpenLoginModal}
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary active:text-white"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </button>
@@ -170,6 +168,7 @@ function Header() {
         </div>
       </nav>
 
+      {/* Mobile Menu Dialog */}
       <Dialog
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
@@ -179,11 +178,11 @@ function Header() {
         <div className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <Link to="/" className="flex items-center mb-6">
             <IoSunnyOutline className="text-accent h-8 w-8" />
-            <span className="text-2xl text-secondary font-bold">holidaze</span>
+            <span className="text-2xl text-secondary font-bold">Holidaze</span>
           </Link>
           <div className="space-y-2">
             <Disclosure as="div">
-              <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+              <DisclosureButton className="group flex w-full items-center justify-between rounded py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                 Venues
                 <FiChevronDown className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
               </DisclosureButton>
@@ -193,7 +192,7 @@ function Header() {
                     key={item.name}
                     as={Link}
                     to={item.href}
-                    className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className="block rounded py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50 active:bg-secondary active:text-white"
                   >
                     {item.name}
                   </DisclosureButton>
@@ -204,7 +203,7 @@ function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                className="-mx-3 block rounded px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 active:bg-secondary active:text-white"
               >
                 {item.name}
               </a>
@@ -216,7 +215,7 @@ function Header() {
             ) : (
               <button
                 onClick={handleOpenLoginModal}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary active:text-white"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </button>

@@ -72,7 +72,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
         {isDropdownOpen && query && filteredVenues.length > 0 && (
           <ul
             ref={dropdownRef}
-            className="absolute z-50 mt-1 bg-white border border-gray-300 shadow-lg rounded-md"
+            className="absolute z-50 mt-1 bg-white border border-gray-300 shadow-lg rounded"
           >
             {filteredVenues.map((venue) => (
               <li

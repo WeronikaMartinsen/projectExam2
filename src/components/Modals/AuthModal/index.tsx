@@ -33,7 +33,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
           onClick={handleOutsideClick} // Handle outside click
         >
           <div className="max-w-lg w-full mx-auto">
-            <div className="bg-white border shadow-sm rounded-xl">
+            <div className="bg-white border shadow-sm rounded">
               {/* Modal Header */}
               <div className="flex justify-between items-center py-3 px-4 border-b">
                 <h3 id="modal-label" className="font-bold">
