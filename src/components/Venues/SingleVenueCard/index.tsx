@@ -13,7 +13,7 @@ import {
 import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
-import Calender from "../../Bookings/Calender"; // Ensure Calender accepts `onDateRangeSelect` prop
+import Calender from "../../Bookings/Calender";
 import LoadingSkeleton from "../../Skeleton";
 import { getUser } from "../../../service/Utils/userUtils";
 import { useNavigate } from "react-router-dom";
@@ -29,8 +29,7 @@ function SingleVenueCard() {
   const [selectedToDate, setSelectedToDate] = useState<string | null>(null);
   const [guests, setGuests] = useState(1); // Default to 1 guest
 
-  const user = getUser(); // Get current user
-  console.log(user);
+  const user = getUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +57,7 @@ function SingleVenueCard() {
 
   const handleBook = () => {
     if (!user) {
+      // If the user is not logged in, navigate to login page
       navigate("/login");
     } else if (venue && selectedFromDate && selectedToDate && token) {
       // Prepare the booking data
@@ -69,13 +69,15 @@ function SingleVenueCard() {
       };
 
       console.log(token);
+
       // Pass the token as the second argument to `createBooking`
       createBooking(bookingData, token)
-        .then((bookingId) => {
-          navigate(`/booking/${bookingId}`); //FIx the address url
+        .then(() => {
+          // After booking is created, navigate to the user's profile page
+          navigate(`/profiles/${user.name}`);
         })
         .catch((err) => {
-          setError(err.message);
+          setError(err.message); // Handle any errors that occur during booking
         });
     } else {
       setError("You need to be logged in to book.");
@@ -123,7 +125,7 @@ function SingleVenueCard() {
             <p>{venue.description}</p>
             <div className="flex gap-2 justify-center items-center">
               <span>Price:</span>
-              <span className="text-2xl font-semibold">{venue.price} nok</span>
+              <span className="text-2xl font-semibold">{venue.price} NOK</span>
             </div>
             <div className="flex gap-2 justify-center items-center">
               <span>Bookings:</span>
@@ -136,6 +138,15 @@ function SingleVenueCard() {
                 setSelectedToDate(toDate);
               }}
             />
+
+            {/* Display selected date range */}
+            {selectedFromDate && selectedToDate && (
+              <p className="mt-2 text-sm">
+                Selected Dates:{" "}
+                {new Date(selectedFromDate).toLocaleDateString()} -{" "}
+                {new Date(selectedToDate).toLocaleDateString()}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col w-full h-full">
@@ -210,7 +221,14 @@ function SingleVenueCard() {
               <input
                 type="number"
                 value={guests}
-                onChange={(e) => setGuests(Math.max(1, Number(e.target.value)))}
+                onChange={(e) =>
+                  setGuests(
+                    Math.max(
+                      1,
+                      Math.min(venue.maxGuests, Number(e.target.value))
+                    )
+                  )
+                }
                 className="p-2 border rounded-md"
                 min={1}
                 max={venue.maxGuests}
