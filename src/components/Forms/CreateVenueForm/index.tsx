@@ -1,15 +1,15 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Resolver, useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
-import { createVenue, getVenueById } from "../../../service/apiRequests"; // Import getVenueById
+import { createVenue, getVenueById } from "../../../service/apiRequests";
 import { updateVenue } from "../../../service/apiRequests";
 import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate } from "react-router-dom";
 
-// Validation schema (same as before)
+// Validation schema
 const schema = yup.object({
   name: yup.string().required("Venue name is required."),
   description: yup.string().required("Description is required."),
@@ -69,7 +69,7 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     createVenue,
     updateVenue,
     token,
-    venueId // Pass venueId if updating
+    venueId
   );
 
   const {
@@ -77,7 +77,7 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     handleSubmit,
     formState: { errors },
     control,
-    setValue, // Used to set default values dynamically
+    setValue,
   } = useForm<VenueCreate>({
     resolver: yupResolver(schema) as Resolver<VenueCreate>,
     defaultValues: {
@@ -99,15 +99,12 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     name: "media",
   });
 
+  // Fetch venue data if editing
   useEffect(() => {
     if (venueId) {
       const fetchVenueData = async () => {
         try {
-          console.log(`Fetching data for venueId: ${venueId}`); // Debugging log
-          const response = await getVenueById(venueId); // Fetch venue by ID
-          console.log("Venue data fetched:", response.data); // Log the fetched data
-
-          // Set form values with the fetched data for editing
+          const response = await getVenueById(venueId);
           setValue("name", response.data.name);
           setValue("description", response.data.description);
           setValue("price", response.data.price);
@@ -117,7 +114,7 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
           setValue("location", response.data.location || {});
           setValue("meta", response.data.meta || {});
         } catch (error) {
-          console.log("Error fetching venue data:", error); // Log errors
+          console.error("Error fetching venue data:", error);
         }
       };
 
@@ -135,14 +132,12 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     };
 
     try {
-      const id = await submit(venueData); // Submit data
-      console.log("Submit response ID:", id); // Debugging log
-
+      const id = await submit(venueData);
       if (id) {
         navigate(`/venue/${id}`);
       }
     } catch (error) {
-      console.log("Error submitting form:", error); // Log errors
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -245,14 +240,11 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
         ))}
         <button
           type="button"
-          className="mt-2 w-full bg-indigo-500 text-white py-2 rounded-md"
+          className="mt-2 bg-secondary text-white py-2 rounded-md"
           onClick={() => append({ url: "", alt: "" })}
         >
-          Add Media
+          Add Image
         </button>
-        <p className="text-red-500 text-xs italic">
-          {errors.media?.[0]?.url?.message}
-        </p>
       </div>
 
       {/* Location Fields */}
@@ -271,6 +263,45 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
         <p className="text-red-500 text-xs italic">
           {errors.location?.address?.message}
         </p>
+      </div>
+
+      {/* Meta Fields */}
+      <div>
+        <label className="invisible">Meta</label>
+        <div className="flex justify-between align-middle mb-4">
+          <label>
+            <input
+              type="checkbox"
+              {...register("meta.wifi")}
+              className="mr-2"
+            />
+            WiFi
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              {...register("meta.parking")}
+              className="mr-2"
+            />
+            Parking
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              {...register("meta.breakfast")}
+              className="mr-2"
+            />
+            Breakfast
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              {...register("meta.pets")}
+              className="mr-2"
+            />
+            Pets Allowed
+          </label>
+        </div>
       </div>
 
       <button

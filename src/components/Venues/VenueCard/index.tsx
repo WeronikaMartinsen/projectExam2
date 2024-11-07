@@ -74,7 +74,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
             <span>{venue.location.country}</span>
           </a>
         </div>
-        <h2 className="text-xl">{venue.name}</h2>
+        <h4 className="text-xl">{venue.name}</h4>
         <Rating rating={venue.rating} />
 
         <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
