@@ -35,7 +35,7 @@ const Calender: React.FC<CalenderProps> = ({ bookings }) => {
 
   // Check if selected dates are available
   const areDatesAvailable = (start: Date | null, end: Date | null) => {
-    if (!start || !end) return true; // Not enough info
+    if (!start || !end) return true;
     return !bookedDates.some((date) => date >= start && date <= end);
   };
 
@@ -64,12 +64,11 @@ const Calender: React.FC<CalenderProps> = ({ bookings }) => {
 
   return (
     <div>
-      <h3>Check avalible dates:</h3>
       <Calendar
-        onChange={() => handleDateChange} // Handle only the value
+        onChange={() => handleDateChange}
         tileDisabled={tileDisabled}
         minDate={today}
-        value={dateRange} // Keep track of selected dates
+        value={dateRange}
       />
     </div>
   );

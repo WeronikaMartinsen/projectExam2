@@ -125,19 +125,24 @@ function SingleVenueCard() {
             <p>{venue.description}</p>
             <div className="flex gap-2 justify-center items-center">
               <span>Price:</span>
-              <span className="text-2xl font-semibold">{venue.price} NOK</span>
+              <span className="text-xl font-semibold">{venue.price} NOK</span>
             </div>
             <div className="flex gap-2 justify-center items-center">
               <span>Bookings:</span>
               <span className="font-semibold">{venue._count.bookings}</span>
             </div>
-            <Calender
-              bookings={bookings}
-              onDateRangeSelect={(fromDate: string, toDate: string) => {
-                setSelectedFromDate(fromDate);
-                setSelectedToDate(toDate);
-              }}
-            />
+            <div className="flex gap-2 justify-center items-center">
+              <span className="mb-2">Check available dates:</span>
+            </div>
+            <div className="flex gap-2 justify-center items-center">
+              <Calender
+                bookings={bookings}
+                onDateRangeSelect={(fromDate: string, toDate: string) => {
+                  setSelectedFromDate(fromDate);
+                  setSelectedToDate(toDate);
+                }}
+              />
+            </div>
 
             {/* Display selected date range */}
             {selectedFromDate && selectedToDate && (
@@ -157,25 +162,25 @@ function SingleVenueCard() {
               </div>
             )}
             {venue.meta.wifi && (
-              <div className="flex items-center">
+              <div className="flex items-center mt-1">
                 <MdWifi title="Wi-Fi available" />
                 <span className="ml-1 text-sm leading-6">Wi-Fi</span>
               </div>
             )}
             {venue.meta.parking && (
-              <div className="flex items-center">
+              <div className="flex items-center mt-1">
                 <MdDirectionsCar title="Parking available" />
                 <span className="ml-1 text-sm leading-6">Parking</span>
               </div>
             )}
             {venue.meta.pets && (
-              <div className="flex items-center">
+              <div className="flex items-center mt-1">
                 <MdPets title="Pets allowed" />
                 <span className="ml-1 text-sm leading-6">Pets</span>
               </div>
             )}
             {venue.maxGuests && (
-              <div className="flex items-center">
+              <div className="flex items-center mt-1">
                 <MdPerson title="Max guests" />
                 <span className="ml-1 text-sm leading-6">
                   Max guests: {venue.maxGuests}
@@ -189,9 +194,9 @@ function SingleVenueCard() {
             </div>
             {/* Booking Form */}
             <div className="mt-6">
-              <h3 className="text-2xl font-semibold mb-4">Book This Venue</h3>
+              <h3 className="text-xl mb-4">Book This Venue</h3>
               <form className="flex flex-col">
-                <div className="mb-4">
+                <div className="mb-4 flex flex-col">
                   <label className="text-sm">From Date</label>
                   <input
                     type="date"
@@ -202,7 +207,7 @@ function SingleVenueCard() {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 flex flex-col">
                   <label className="text-sm">To Date</label>
                   <input
                     type="date"
@@ -213,7 +218,7 @@ function SingleVenueCard() {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4  flex flex-col">
                   <label className="text-sm">Number of Guests</label>
                   <input
                     type="number"

@@ -43,7 +43,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
     // Handle delete logic (e.g., API call to delete)
   };
 
-  const handleImageClick = () => {
+  const handleNavigateToDetail = () => {
     navigate(`/venue/${venue.id}`); // Navigate to the venue detail page when image is clicked
   };
 
@@ -58,7 +58,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           className="w-full h-full object-cover"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
-          onClick={handleImageClick} // Use navigate on image click
+          onClick={handleNavigateToDetail} // Use navigate on image click
         />
       </div>
       <div className="flex flex-col items-center md:items-start md:border-r border-accent md:pr-4">
@@ -74,7 +74,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
             <span>{venue.location.country}</span>
           </a>
         </div>
-        <h2 className="text-xl font-semibold">{venue.name}</h2>
+        <h2 className="text-xl">{venue.name}</h2>
         <Rating rating={venue.rating} />
 
         <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
@@ -113,7 +113,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
         </div>
       </div>
 
-      <div className="h-full w-full flex flex-col justify-around align-middle p-4">
+      <div className="h-full w-full flex flex-col justify-end p-4">
         {user &&
           venue.owner?.name === user.name && ( // Check if user exists before checking name
             <div className="relative text-end">
@@ -142,11 +142,14 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
               )}
             </div>
           )}
-        <div className=" w-full flex flex-col justify-end align-bottom">
+        <div className=" w-full flex flex-col justify-between items-stretch">
           <p className="text-2xl text-primary pl-8 text-end">
             {venue.price} NOK
           </p>
-          <button className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary">
+          <button
+            onClick={handleNavigateToDetail}
+            className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary"
+          >
             View details
           </button>
         </div>

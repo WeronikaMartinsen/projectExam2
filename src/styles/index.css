@@ -60,7 +60,7 @@ p,
 span {
   word-break: break-all;
 }
-
+/* 
 .sidebar {
   width: 13em;
   padding: 1rem;
@@ -77,22 +77,21 @@ span {
   .sidebar.closed {
     display: block;
   }
-}
+} */
 
 .calendar-container {
   width: 100%;
-  min-width: 400px; /* Limit max width for larger screens */
   margin: auto; /* Center the calendar */
+  border: none;
 }
 
 .react-calendar {
-  border: 2px solid var(--color-secondary);
-  border-radius: 1em;
+  border-radius: 0.3em;
 }
 
 .react-calendar__tile {
-  height: 50px;
-  width: 50px;
+  height: 30px;
+  width: 30px;
   display: flex;
   align-items: center;
   justify-content: center;

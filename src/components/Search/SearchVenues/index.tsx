@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
+import { FiSearch } from "react-icons/fi";
 
 interface SearchVenuesProps {
   onSearch: (query: string) => void;
@@ -31,7 +32,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSearch(query);
-    setDropdownOpen(false); // Close dropdown on search submit
+    setDropdownOpen(false);
   };
 
   // Close dropdown if clicked outside
@@ -62,11 +63,15 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
             type="text"
             value={query}
             onChange={handleChange}
-            placeholder="Search by name, ID, or localization"
-            className="border rounded p-2 w-full mt-2 mb-2 text-xs"
+            placeholder="Search venues..."
+            className="border rounded p-3 w-full mt-2 mb-2 text-sm"
           />
-          <button type="submit" className="bg-blue-500 text-white p-1 rounded">
+          <button
+            type="submit"
+            className="flex justify-center text-center items-center gap-2 text-white p-2 rounded border"
+          >
             Search
+            <FiSearch />
           </button>
         </form>
         {isDropdownOpen && query && filteredVenues.length > 0 && (
