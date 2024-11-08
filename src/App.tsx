@@ -8,10 +8,12 @@ import CreateVenue from "./pages/CreateVenue";
 import UpdateVenue from "./pages/UpdateVenue";
 import CreateBooking from "./pages/CreateBooking";
 import Bookings from "./pages/Bookings";
+import { ScrollRestorationProvider } from "./context/ScrollRestorationProvider";
 
 function App() {
   return (
     <AuthProvider>
+      <ScrollRestorationProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -24,6 +26,7 @@ function App() {
           <Route path="/bookings/:name" element={<Bookings />} />
         </Routes>
       </BrowserRouter>
+      </ScrollRestorationProvider>
     </AuthProvider>
   );
 }
