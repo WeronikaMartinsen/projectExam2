@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
 import {
@@ -34,8 +34,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   };
 
   const handleEdit = () => {
-    console.log("Edit venue", venue.id); // Debugging log
-    navigate(`/venues/${venue.id}`); // Navigate to the edit page
+    navigate(`/venues/${venue.id}`, {
+      state: { venue },
+    });
   };
 
   const handleDelete = () => {
@@ -46,16 +47,35 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const handleNavigateToDetail = () => {
     navigate(`/venue/${venue.id}`); // Navigate to the venue detail page when image is clicked
   };
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <li
-      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded shadow-sm hover:shadow-md transition-transform transform"
+      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded transition-transform transform p-4"
       // Navigate to the detail page on li click
     >
       <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
           onClick={handleNavigateToDetail} // Use navigate on image click
@@ -116,7 +136,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       <div className="h-full w-full flex flex-col justify-end p-4">
         {user &&
           venue.owner?.name === user.name && ( // Check if user exists before checking name
-            <div className="relative text-end">
+            <div className="relative mb-auto text-end">
               <button
                 className="text-gray-600 hover:text-gray-900"
                 onClick={handleToggleDropdown}
@@ -125,7 +145,10 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
                 Edit
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3"
+                >
                   <button
                     className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={handleEdit}
@@ -148,7 +171,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           </p>
           <button
             onClick={handleNavigateToDetail}
-            className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary"
+            className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary transition-all duration-300 ease-in-out transform hover:bg-accent-dark hover:scale-102 hover:shadow-md"
           >
             View details
           </button>

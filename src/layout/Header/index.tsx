@@ -1,9 +1,10 @@
 import "../../styles/index.css";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Profile/Avatar";
 import { isLoggedIn } from "../../service/Utils/userUtils";
 import {
   Dialog,
+  DialogPanel,
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
@@ -63,6 +64,24 @@ function Header() {
     setOpen(false);
   };
 
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  // Close the menu if the user clicks outside of the menu
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setMobileMenuOpen(false);
+    }
+  };
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
   return (
     <header className="bg-white">
       <nav
@@ -103,7 +122,7 @@ function Header() {
                     className="group relative flex items-center gap-x-6 rounded p-4 text-sm leading-6 hover:bg-gray-50 active:bg-secondary active:text-white"
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
-                      <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
+                      <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
                     </div>
                     <div className="flex-auto">
                       <span className="block font-semibold text-gray-900">
@@ -174,25 +193,31 @@ function Header() {
         onClose={() => setMobileMenuOpen(false)}
         className="lg:hidden"
       >
-        <div className="fixed inset-0 z-10 bg-black opacity-30" />
-        <div className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <Link to="/" className="flex items-center mb-6">
-            <IoSunnyOutline className="text-accent h-8 w-8" />
-            <span className="text-2xl text-secondary font-bold">Holidaze</span>
-          </Link>
-          <div className="space-y-2">
+        <DialogPanel
+          ref={menuRef}
+          className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+        >
+          <div className="flex flex-col space-y-8 pl-2">
             <Disclosure as="div">
-              <DisclosureButton className="group flex w-full items-center justify-between rounded py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+              <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer mb-8">
+                <Link to="/" className="flex items-center">
+                  <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
+                  <span className="text-2xl text-blue-800 font-bold">
+                    holidaze
+                  </span>
+                </Link>
+              </div>
+              <DisclosureButton className="mt-6 group flex w-full items-center justify-between text-md hover:bg-gray-50">
                 Venues
-                <FiChevronDown className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
+                <FiChevronDown className="h-5 w-5 group-data-[open]:rotate-180" />
               </DisclosureButton>
-              <DisclosurePanel className="mt-2 space-y-2">
+              <DisclosurePanel className="space-y-4 mt-6 pl-4">
                 {products.map((item) => (
                   <DisclosureButton
                     key={item.name}
                     as={Link}
                     to={item.href}
-                    className="block rounded py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50 active:bg-secondary active:text-white"
+                    className="block text-md hover:bg-gray-50 active:bg-secondary active:text-white"
                   >
                     {item.name}
                   </DisclosureButton>
@@ -203,7 +228,7 @@ function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className="-mx-3 block rounded px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 active:bg-secondary active:text-white"
+                className="-mx-3 text-md hover:bg-gray-50 active:bg-secondary active:text-white"
               >
                 {item.name}
               </a>
@@ -215,13 +240,13 @@ function Header() {
             ) : (
               <button
                 onClick={handleOpenLoginModal}
-                className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary active:text-white"
+                className="text-md hover:text-secondary active:text-white"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </button>
             )}
           </div>
-        </div>
+        </DialogPanel>
       </Dialog>
 
       <AuthModal open={open} handleOpen={handleCloseLoginModal} />

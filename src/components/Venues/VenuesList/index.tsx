@@ -18,9 +18,7 @@ const VenuesList: React.FC = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const venuesArray = await new Promise<Venue[]>((resolve) =>
-          setTimeout(() => resolve(getVenues()), 2000)
-        );
+        const venuesArray = await getVenues();
         setVenues(venuesArray);
         setLoading(false);
       } catch (error) {
@@ -32,7 +30,7 @@ const VenuesList: React.FC = () => {
     };
 
     fetchVenues();
-  }, []);
+  }, []); // Empty dependency array to run the effect only once when the component mounts
 
   // Filtering venues based on search query
   const filteredVenues = venues.filter((venue) => {
@@ -83,7 +81,7 @@ const VenuesList: React.FC = () => {
         {visibleVenuesCount < filteredVenues.length && (
           <div className="text-center mt-8">
             <button
-              className="bg-primary text-white font-bold py-2 px-4 rounded"
+              className="bg-secondary p-3 rounded font-semibold text-sm mt-4 text-white transition-all duration-300 ease-in-out transform hover:bg-accent-dark hover:scale-102 hover:shadow-md"
               onClick={showMoreVenues}
             >
               Show More

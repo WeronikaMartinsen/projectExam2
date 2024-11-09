@@ -16,7 +16,6 @@ export async function apiRequest<T, R>(
     "X-Noroff-API-Key": apiKeyUrl,
     ...(token && { Authorization: `Bearer ${token}` }),
   };
-  console.log("Request headers:", headers);
 
   const options: RequestInit = {
     method,

@@ -239,7 +239,7 @@ function SingleVenueCard() {
 
                 <button
                   type="button"
-                  className="w-full bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary"
+                  className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary transition-all duration-300 ease-in-out transform hover:bg-accent-dark hover:scale-102 hover:shadow-md"
                   onClick={handleBook}
                 >
                   Book Now
