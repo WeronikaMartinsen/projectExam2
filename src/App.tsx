@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "../src/context/AuthContext";
 import Home from "../src/pages/Home";
@@ -13,20 +14,20 @@ import { ScrollRestorationProvider } from "./context/ScrollRestorationProvider";
 function App() {
   return (
     <AuthProvider>
-      <ScrollRestorationProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profiles/:name" element={<Profile />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/venue/:id" element={<SingleVenues />} />
-          <Route path="/venues" element={<CreateVenue />} />
-          <Route path="/venues/:id" element={<UpdateVenue />} />
-          <Route path="/bookings" element={<CreateBooking />} />
-          <Route path="/bookings/:name" element={<Bookings />} />
-        </Routes>
+        <ScrollRestorationProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/profiles/:name" element={<Profile />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/venue/:id" element={<SingleVenues />} />
+            <Route path="/venues" element={<CreateVenue />} />
+            <Route path="/venues/:id" element={<UpdateVenue />} />
+            <Route path="/bookings" element={<CreateBooking />} />
+            <Route path="/bookings/:name" element={<Bookings />} />
+          </Routes>
+        </ScrollRestorationProvider>
       </BrowserRouter>
-      </ScrollRestorationProvider>
     </AuthProvider>
   );
 }
