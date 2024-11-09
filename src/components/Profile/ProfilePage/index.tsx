@@ -149,9 +149,10 @@ function ProfilePage() {
                 className="grid grid-cols-1 md:grid-cols-3 gap-6 border border-light rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4"
               >
                 <div className="col-span-1 md:col-span-2">
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-lg">
                     Booking ID: {booking.id}
                   </h3>
+                  <p>{booking.created}</p>
                   <p className="text-sm text-gray-600">
                     Guests: {booking.guests}
                   </p>
@@ -164,15 +165,12 @@ function ProfilePage() {
                 </div>
                 {booking.venue && (
                   <div className="flex flex-col justify-center items-end">
-                    <h4 className="text-md font-semibold mt-2">
+                    <h4 className="text-md mt-2">
                       Venue: {booking.venue.name}
                     </h4>
-                    <p className="text-sm text-gray-500">
-                      {booking.venue.description}
-                    </p>
                     <Link
                       to={`/venue/${booking.venue.id}`}
-                      className="block text-accent p-2 rounded-md font-semibold text-sm mt-2"
+                      className="block text-accent p-2 rounded-md text-sm mt-2"
                     >
                       View Venue
                     </Link>
