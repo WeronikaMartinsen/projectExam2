@@ -3,11 +3,14 @@ import { Resolver, useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../../context/useAuth";
-import { createVenue, getVenueById } from "../../../service/apiRequests";
-import { updateVenue } from "../../../service/apiRequests";
+import {
+  createVenue,
+  getVenueById,
+  updateVenue,
+} from "../../../service/apiRequests";
 import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Validation schema
 const schema = yup.object({
@@ -56,16 +59,16 @@ const schema = yup.object({
     .default({}),
 });
 
-interface CreateVenueFormProps {
-  venueId?: string; // Optional for updating
-}
-
-const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
+const CreateVenueForm: React.FC = () => {
   const { user, isLoggedIn } = useAuth();
   const token = user?.accessToken || "";
   const navigate = useNavigate();
+  const { venueId } = useParams();
 
-  const { loading, successMessage, errorMessage, submit } = useVenueForm(
+  // Debugging log: Check if venueId is retrieved from URL
+  console.log("venueId from useParams:", venueId);
+
+  const { loading, successMessage, errorMessage } = useVenueForm(
     createVenue,
     updateVenue,
     token,
@@ -99,42 +102,72 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
     name: "media",
   });
 
-  // Fetch venue data if editing
   useEffect(() => {
+    console.log("venueId from useParams:", venueId); // Log the venueId for debugging
     if (venueId) {
+      // Fetch venue data if venueId exists
       const fetchVenueData = async () => {
         try {
           const response = await getVenueById(venueId);
-          setValue("name", response.data.name);
-          setValue("description", response.data.description);
-          setValue("price", response.data.price);
-          setValue("maxGuests", response.data.maxGuests);
-          setValue("rating", response.data.rating || null);
-          setValue("media", response.data.media || []);
-          setValue("location", response.data.location || {});
-          setValue("meta", response.data.meta || {});
+          console.log("Fetched venue data:", response);
+
+          // Handle default values for media and location in case they are missing
+          const {
+            name,
+            description,
+            price,
+            maxGuests,
+            rating,
+            media,
+            location,
+            meta,
+          } = response.data;
+
+          setValue("name", name);
+          setValue("description", description);
+          setValue("price", price);
+          setValue("maxGuests", maxGuests);
+          setValue("rating", rating ?? 0); // Set default rating if not available
+          setValue("media", media || [{ url: "", alt: "" }]); // Default media if not available
+          setValue(
+            "location",
+            location || {
+              address: "",
+              city: "",
+              zip: "",
+              country: "",
+              continent: "",
+              lat: 0,
+              lng: 0,
+            }
+          );
+          setValue(
+            "meta",
+            meta || {
+              wifi: false,
+              parking: false,
+              breakfast: false,
+              pets: false,
+            }
+          );
         } catch (error) {
           console.error("Error fetching venue data:", error);
         }
       };
-
       fetchVenueData();
     }
-  }, [venueId, token, setValue]);
+  }, [venueId, setValue]);
 
   const onSubmit = async (data: VenueCreate) => {
-    const venueData: VenueCreate = {
-      ...data,
-      media: data.media?.length ? data.media : undefined,
-      rating: data.rating ?? null,
-      location: data.location ?? null,
-      meta: data.meta,
-    };
-
     try {
-      const id = await submit(venueData);
+      // If venueId exists, update the venue; otherwise, create a new venue
+      const id = venueId
+        ? await updateVenue(venueId, data, token) // Update existing venue
+        : await createVenue(data, token); // Create a new venue
+
       if (id) {
-        navigate(`/venue/${id}`);
+        // Navigate to the venue page using the actual id
+        navigate(`/venue/${id}`); // Use template literal to insert the actual id
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -142,13 +175,8 @@ const CreateVenueForm: React.FC<CreateVenueFormProps> = ({ venueId }) => {
   };
 
   if (!isLoggedIn) {
-    return (
-      <div className="text-center p-4">
-        <p className="text-red-500">You must be logged in to create a venue.</p>
-      </div>
-    );
+    return <p>You must be logged in to create or update a venue.</p>;
   }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl w-full">
       <h1 className="text-center text-2xl m-4">

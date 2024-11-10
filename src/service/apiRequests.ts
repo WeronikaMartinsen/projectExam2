@@ -56,13 +56,12 @@ export const createVenue = async (
   );
 };
 
-// PUT (Update) a Venue
 export const updateVenue = async (
-  id: string,
-  venue: Venue,
-  token: string
+  id: string, // Venue ID as a string
+  venue: VenueCreate, // Data to update, which is of type VenueCreate
+  token: string // Authorization token
 ): Promise<ApiResponse<Venue>> => {
-  return apiRequest<Venue, Venue>(
+  return apiRequest<VenueCreate, Venue>( // The request is made with VenueCreate and expecting a Venue response
     `/holidaze/venues/${id}`,
     "PUT",
     venue,

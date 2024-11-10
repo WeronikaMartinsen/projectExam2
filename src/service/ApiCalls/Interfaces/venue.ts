@@ -97,5 +97,5 @@ export interface VenueUpdate {
   maxGuests?: number;
   rating?: number | null;
   meta?: Meta;
-  location?: Location;
+  location?: Location | null;
 }
