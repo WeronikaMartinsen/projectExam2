@@ -15,11 +15,13 @@ const VenuesList: React.FC = () => {
 
   const navigate = useNavigate();
 
+  // Fetch venues from API when component mounts
   useEffect(() => {
     const fetchVenues = async () => {
       try {
         const venuesArray = await getVenues();
         setVenues(venuesArray);
+        console.log(venuesArray);
         setLoading(false);
       } catch (error) {
         const errorMessage =
@@ -30,9 +32,24 @@ const VenuesList: React.FC = () => {
     };
 
     fetchVenues();
-  }, []); // Empty dependency array to run the effect only once when the component mounts
+  }, []); // Empty dependency array means this runs only once
 
-  // Filtering venues based on search query
+  // Handle venue selection
+  const handleVenueSelect = (id: string) => {
+    navigate(`/venue/${id}`);
+  };
+
+  // Handle search query update
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  // Show more venues when button is clicked
+  const showMoreVenues = () => {
+    setVisibleVenuesCount((prevCount) => prevCount + 10);
+  };
+
+  // Filter venues based on search query (search through all venues)
   const filteredVenues = venues.filter((venue) => {
     const name = venue.name?.toLowerCase() || "";
     const city = venue.location?.city?.toLowerCase() || "";
@@ -45,26 +62,15 @@ const VenuesList: React.FC = () => {
     );
   });
 
-  const handleVenueSelect = (id: string) => {
-    navigate(`/venue/${id}`);
-  };
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  const showMoreVenues = () => {
-    setVisibleVenuesCount((prevCount) => prevCount + 10);
-  };
-
   if (loading) return <LoadingSkeleton width="800px" height={40} />;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="w-full flex flex-col align-middle items-center justify-center">
+      {/* Pass all venues to the SearchVenues component */}
       <SearchVenues
         onSearch={handleSearch}
-        filteredVenues={filteredVenues}
+        venues={venues} // Pass all venues, not just filtered ones
         onVenueSelect={handleVenueSelect}
       />
       <div className="max-w-7xl">
