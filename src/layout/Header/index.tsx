@@ -1,7 +1,7 @@
 import "../../styles/index.css";
 import { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Profile/Avatar";
-import { isLoggedIn } from "../../service/Utils/userUtils";
+import { useAuth } from "../../context/useAuth";
 import {
   Dialog,
   DialogPanel,
@@ -47,17 +47,21 @@ const products = [
 ];
 
 const callsToAction = [
-  { name: "My Bookings", href: "/bookings", icon: FiList },
-  { name: "Customer Support", href: "/support", icon: FiPhone },
+  {
+    name: "Customer Support",
+    href: "/support",
+    icon: FiPhone,
+  },
 ];
 
 function Header() {
+  const { user, isLoggedIn } = useAuth();
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleOpenLoginModal = () => {
     setOpen(true);
-    setMobileMenuOpen(false); // Close mobile menu when opening modal
+    setMobileMenuOpen(false);
   };
 
   const handleCloseLoginModal = () => {
@@ -65,12 +69,13 @@ function Header() {
   };
 
   const menuRef = useRef<HTMLDivElement | null>(null);
-  // Close the menu if the user clicks outside of the menu
+
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setMobileMenuOpen(false);
     }
   };
+
   useEffect(() => {
     if (mobileMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -82,6 +87,7 @@ function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [mobileMenuOpen]);
+
   return (
     <header className="bg-white">
       <nav
@@ -105,6 +111,7 @@ function Header() {
         </div>
 
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+          {/* Popover for Venues */}
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary">
               Venues
@@ -149,14 +156,18 @@ function Header() {
           </Popover>
 
           {/* My Bookings Link */}
-          <Link
-            to="/profiles/:name/bookings"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
-          >
-            My Bookings
-          </Link>
+          {isLoggedIn && user ? (
+            <Link
+              to={`/profiles/${user.name}/bookings`} // Dynamically populate the name here
+              className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
+            >
+              My Bookings
+            </Link>
+          ) : (
+            <span className="text-sm text-gray-900">My Bookings</span>
+          )}
 
-          {/* Contact Link */}
+          {/* Other Links */}
           <Link
             to="#"
             className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
@@ -164,7 +175,6 @@ function Header() {
             Contact
           </Link>
 
-          {/* About Link */}
           <Link
             to="/about"
             className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
@@ -174,7 +184,7 @@ function Header() {
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {isLoggedIn() ? (
+          {isLoggedIn && user ? (
             <Avatar />
           ) : (
             <button
@@ -224,6 +234,17 @@ function Header() {
                 ))}
               </DisclosurePanel>
             </Disclosure>
+            {/* Mobile: My Bookings Link */}
+            {isLoggedIn && user ? (
+              <Link
+                to={`/profiles/${user.name}/bookings`} // Dynamically populate the name here
+                className="-mx-3 text-md hover:bg-gray-50 active:bg-secondary active:text-white"
+              >
+                My Bookings
+              </Link>
+            ) : (
+              <span className="-mx-3 text-md text-gray-900">My Bookings</span>
+            )}
             {callsToAction.map((item) => (
               <a
                 key={item.name}
@@ -235,7 +256,7 @@ function Header() {
             ))}
           </div>
           <div className="py-6 flex justify-end">
-            {isLoggedIn() ? (
+            {isLoggedIn && user ? (
               <Avatar />
             ) : (
               <button

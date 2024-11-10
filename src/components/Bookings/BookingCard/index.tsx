@@ -4,11 +4,20 @@ import { DateFormatter } from "../../../service/Utils/DateFormatter";
 
 interface BookingCardProps {
   booking: BookingWithDetails;
+  isPastBooking: boolean;
+  daysLeft?: number;
 }
 
-const BookingCard: React.FC<BookingCardProps> = ({ booking }) => {
+const BookingCard: React.FC<BookingCardProps> = ({
+  booking,
+  isPastBooking,
+}) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 border border-light rounded shadow-sm hover:shadow-md transition-transform transform p-4">
+    <div
+      className={`grid grid-cols-1 md:grid-cols-3 border border-primary rounded shadow-sm hover:shadow-md transition-transform transform p-4 ${
+        isPastBooking ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""
+      }`}
+    >
       <div className="col-span-1 md:col-span-2">
         <div className="flex text-center">
           <h1 className="text-xs mb-2 text-center">Order</h1>
