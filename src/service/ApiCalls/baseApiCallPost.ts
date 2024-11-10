@@ -24,16 +24,28 @@ export async function apiRequest<T, R>(
   };
 
   try {
+    // Sending the request to the API
     const response = await fetch(`${baseUrl}${endpoint}`, options);
 
+    // Handle non-OK responses by throwing an error with the status text
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
     }
 
     const data: ApiResponse<R> = await response.json();
+
+    console.log("API Response Data:", data);
+
+    // Return the parsed response data
     return data;
   } catch (error) {
+    // Log the error details for debugging
     console.error("API Request Error:", error);
-    throw error;
+
+    throw new Error(
+      `API Request Failed: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 }

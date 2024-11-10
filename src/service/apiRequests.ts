@@ -82,7 +82,7 @@ export const deleteVenue = async (
 export const getProfile = async (
   name: string,
   accessToken: string,
-  bookings = false // Optional parameter for including bookings
+  bookings = true // Optional parameter for including bookings
 ): Promise<ApiResponse<Profile>> => {
   const bookingsQuery = bookings ? "?_bookings=true" : "";
   return apiRequest<null, Profile>(
@@ -105,11 +105,10 @@ export const getVenuesByProfile = async (name: string, accessToken: string) => {
 // Fetch all bookings
 export const getAllBookings = async (
   token: string,
-  page = 1,
-  includeCustomer = false,
-  includeVenue = false
+  _customer = true,
+  _venue = true
 ): Promise<BookingWithDetails[]> => {
-  const queryParams = `?page=${page}&_customer=${includeCustomer}&_venue=${includeVenue}`;
+  const queryParams = `?_customer=${_customer}&_venue=${_venue}`;
   const response = await apiRequest<null, BookingWithDetails[]>(
     `/holidaze/bookings${queryParams}`,
     "GET",
@@ -119,13 +118,12 @@ export const getAllBookings = async (
   return response.data;
 };
 
-// Fetch a single booking by ID
-export const getBookingById = async (
-  bookingId: string,
+export const getBookingByProfile = async (
+  name: string,
   token: string
-): Promise<BookingWithDetails> => {
-  const response = await apiRequest<null, BookingWithDetails>(
-    `/holidaze/bookings/${bookingId}`,
+): Promise<BookingWithDetails[]> => {
+  const response = await apiRequest<null, BookingWithDetails[]>(
+    `/holidaze/profiles/${name}/bookings`,
     "GET",
     undefined,
     token
@@ -150,11 +148,9 @@ export const createBooking = async (
     bookingData,
     token
   );
-
-  // Ensure response is wrapped in ApiResponse, the `data` contains the booking object
   return {
-    data: response.data, // The actual booking data returned from the API
-    message: response.message, // Optionally include any message from the API
+    data: response.data,
+    message: response.message,
   };
 };
 

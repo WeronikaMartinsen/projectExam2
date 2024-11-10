@@ -150,7 +150,7 @@ function Header() {
 
           {/* My Bookings Link */}
           <Link
-            to="/bookings"
+            to="/profiles/:name/bookings"
             className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
           >
             My Bookings

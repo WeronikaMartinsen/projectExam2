@@ -1,14 +1,14 @@
 import LayoutComponent from "../layout/LayoutComponent";
 import "../styles/index.css";
 import GlobalSmallHeader from "../components/Venues/GlobalSmallHeader";
-import BookingByProfile from "../components/Bookings/BookingsByProfile";
+import MyBookingsPage from "../components/Bookings/MyBookingPage";
 
 function Bookings() {
   return (
     <>
       <LayoutComponent>
         <GlobalSmallHeader />
-        <BookingByProfile />
+        <MyBookingsPage />
       </LayoutComponent>
     </>
   );

@@ -166,7 +166,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
             </div>
           )}
         <div className=" w-full flex flex-col justify-between items-stretch">
-          <p className="text-2xl text-primary pl-8 text-end">
+          <p className="text-xl text-primary pl-8 text-end">
             {venue.price} NOK
           </p>
           <button
