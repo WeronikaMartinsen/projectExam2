@@ -57,16 +57,26 @@ export const createVenue = async (
 };
 
 export const updateVenue = async (
-  id: string, // Venue ID as a string
-  venue: VenueCreate, // Data to update, which is of type VenueCreate
-  token: string // Authorization token
-): Promise<ApiResponse<Venue>> => {
-  return apiRequest<VenueCreate, Venue>( // The request is made with VenueCreate and expecting a Venue response
-    `/holidaze/venues/${id}`,
-    "PUT",
-    venue,
-    token
-  );
+  id: string,
+  data: VenueCreate,
+  token: string
+) => {
+  const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "X-Noroff-API-Key": apiKeyUrl, // Add API key header here
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update venue");
+  }
+
+  const result = await response.json();
+  return result.id; // Ensure this returns the correct ID
 };
 
 // DELETE a Venue

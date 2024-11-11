@@ -31,7 +31,6 @@ const CreateBookingForm: React.FC = () => {
   const token = user?.accessToken || "";
   const navigate = useNavigate();
 
-  // Get the venueId passed from the SingleVenueCard component
   const location = useLocation();
   const venueId = location.state?.venueId; // Retrieve venueId from state
 
@@ -52,9 +51,8 @@ const CreateBookingForm: React.FC = () => {
   const onSubmit = async (data: BookingCreate) => {
     try {
       const bookingId = await submitBooking(data);
-      if (bookingId) {
-        // Navigate to the newly created booking's detail page
-        navigate(`/booking/${bookingId}`);
+      if (bookingId && isLoggedIn && user) {
+        navigate(`/profiles/${user.name}/bookings`);
       }
     } catch (error) {
       console.error("Error submitting booking form:", error);

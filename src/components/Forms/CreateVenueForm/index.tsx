@@ -108,6 +108,7 @@ const CreateVenueForm: React.FC = () => {
       // Fetch venue data if venueId exists
       const fetchVenueData = async () => {
         try {
+          console.log("venueId from useParams:", venueId);
           const response = await getVenueById(venueId);
           console.log("Fetched venue data:", response);
 
@@ -159,15 +160,26 @@ const CreateVenueForm: React.FC = () => {
   }, [venueId, setValue]);
 
   const onSubmit = async (data: VenueCreate) => {
+    console.log("Form submitted with data:", data);
+
     try {
+      let id: string;
+
       // If venueId exists, update the venue; otherwise, create a new venue
-      const id = venueId
-        ? await updateVenue(venueId, data, token) // Update existing venue
-        : await createVenue(data, token); // Create a new venue
+      if (venueId) {
+        // Update existing venue
+        await updateVenue(venueId, data, token); // No need to capture `id` here, it's already in `venueId`
+        id = venueId; // Use venueId directly for redirection
+      } else {
+        // Create a new venue
+        const response = await createVenue(data, token);
+        id = response.data.id; // Ensure the new venue ID is fetched from the response
+      }
 
       if (id) {
-        // Navigate to the venue page using the actual id
-        navigate(`/venue/${id}`); // Use template literal to insert the actual id
+        // Navigate to the venue detail page using the correct venue ID
+        console.log("Redirecting to venue with ID:", id);
+        navigate(`/venue/${id}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
