@@ -51,7 +51,7 @@ export const useBookingForm = (
     try {
       const response = await createBooking(bookingData, token);
       setSuccessMessage("Booking created successfully!");
-      return response.data.id; // Return the booking ID if needed
+      return response.data.id;
     } catch (error) {
       console.error(error);
       setErrorMessage("Failed to create booking. Please try again.");

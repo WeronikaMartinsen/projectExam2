@@ -7,23 +7,30 @@ import {
   MdDirectionsCar,
   MdPets,
   MdPerson,
-  MdEdit, // Import the MdEdit icon
+  MdEdit,
 } from "react-icons/md";
 import Rating from "../Rating";
 import { getUser } from "../../../service/Utils/userUtils";
 import { useNavigate } from "react-router-dom";
+import { useDeleteVenue } from "../../Hooks/useDelateVenue";
+import DeleteConfirmationModal from "../../Modals/DelateConfirmation"; // Ensure correct import path
 
 interface VenueCardProps {
   venue: Venue;
   onClick: (id: string) => void; // If you still want to keep the onClick prop for other purposes
 }
 
-const user = getUser();
 const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [venueToDelete, setVenueToDelete] = useState<string | null>(null); // Add this state to store the venue ID
   const navigate = useNavigate(); // Get the navigate function
 
-  // Construct a Google Maps URL
+  const user = getUser();
+  const token = user?.accessToken || "";
+
+  const { loading, data, error, deleteVenue } = useDeleteVenue(token || "");
+
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city} ${venue.location.country}`
   )}`;
@@ -39,14 +46,35 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
     });
   };
 
-  const handleDelete = () => {
-    console.log("Delete venue", venue.id);
-    // Handle delete logic (e.g., API call to delete)
+  const handleOpenModal = (venueId: string) => {
+    setVenueToDelete(venueId); // Set the venue to delete
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setVenueToDelete(null); // Reset the venue ID
+  };
+
+  const handleDelete = async (venueId: string) => {
+    if (loading) return;
+
+    // Proceed with deletion
+    await deleteVenue(venueId);
+
+    // If deleted successfully, refresh the page and show success message
+    if (data) {
+      alert(`Venue with ID: ${venueId} successfully deleted`);
+      window.location.reload(); // Refresh the page
+    } else if (error) {
+      alert(`Failed to delete the venue: ${error}`);
+    }
   };
 
   const handleNavigateToDetail = () => {
     navigate(`/venue/${venue.id}`); // Navigate to the venue detail page when image is clicked
   };
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -68,10 +96,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li
-      className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded transition-transform transform p-4"
-      // Navigate to the detail page on li click
-    >
+    <li className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded transition-transform transform p-4">
       <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
@@ -157,7 +182,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
                   </button>
                   <button
                     className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
-                    onClick={handleDelete}
+                    onClick={() => handleOpenModal(venue.id)}
                   >
                     Delete
                   </button>
@@ -177,6 +202,14 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        venueId={venueToDelete!}
+        handleClose={handleCloseModal}
+        handleDelete={handleDelete}
+      />
     </li>
   );
 };

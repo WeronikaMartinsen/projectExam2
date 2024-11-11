@@ -79,15 +79,27 @@ export const updateVenue = async (
   return result.id; // Ensure this returns the correct ID
 };
 
-// DELETE a Venue
-export const deleteVenue = async (
-  id: string,
-  token: string
-): Promise<ApiResponse<null>> => {
-  return apiRequest<null, null>(`/venues/${id}`, "DELETE", undefined, token);
+export const deleteVenue = async (id: string, token: string) => {
+  const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`, // Make sure the token is passed properly here
+      "Content-Type": "application/json",
+      "X-Noroff-API-Key": apiKeyUrl,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete venue");
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return await response.json();
 };
 
-// Adjusted getProfile function to include bookings parameter
 export const getProfile = async (
   name: string,
   accessToken: string,
