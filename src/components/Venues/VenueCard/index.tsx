@@ -29,7 +29,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const user = getUser();
   const token = user?.accessToken || "";
 
-  const { loading, data, error, deleteVenue } = useDeleteVenue(token || "");
+  const { loading, data, deleteVenue } = useDeleteVenue(token || "");
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city} ${venue.location.country}`
@@ -57,17 +57,28 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   };
 
   const handleDelete = async (venueId: string) => {
-    if (loading) return;
+    if (loading) return; // Avoid multiple deletion requests
 
-    // Proceed with deletion
-    await deleteVenue(venueId);
+    try {
+      // Proceed with deletion
+      await deleteVenue(venueId);
 
-    // If deleted successfully, refresh the page and show success message
-    if (data) {
-      alert(`Venue with ID: ${venueId} successfully deleted`);
-      window.location.reload(); // Refresh the page
-    } else if (error) {
-      alert(`Failed to delete the venue: ${error}`);
+      // Check if data is available and deletion was successful
+      if (!data) {
+        alert(`Venue with ID: ${venueId} successfully deleted`);
+
+        // Close the modal and reset the venueToDelete state
+        setIsModalOpen(false);
+        setVenueToDelete(null);
+        window.location.reload(); // Reload the page
+      } else {
+        // Handle case when no data is returned but deletion might still have occurred
+        alert("Failed to delete the venue.");
+      }
+    } catch (error) {
+      // If an error occurs, log it and notify the user
+      console.error("Error during venue deletion:", error);
+      alert("An error occurred while trying to delete the venue.");
     }
   };
 
@@ -202,7 +213,6 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           </button>
         </div>
       </div>
-
       {/* Confirmation Modal */}
       <DeleteConfirmationModal
         open={isModalOpen}
