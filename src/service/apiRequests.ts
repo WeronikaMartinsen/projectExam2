@@ -118,6 +118,20 @@ export const getProfile = async (
   );
 };
 
+// // Function to update the profile
+// export const updateProfile = async (
+//   name: string, // The profile's unique identifier (name)
+//   updatedData: RegisterUserData, // The data to update, using RegisterUserData interface
+//   accessToken: string // The authentication token
+// ): Promise<Profile> => {
+//   return apiRequest<RegisterUserData, Profile>(
+//     `/holidaze/profiles/${name}`, // API endpoint for updating the profile
+//     "PUT",
+//     updatedData, // Data to send in the request body
+//     accessToken // Authorization token
+//   );
+// };
+
 export const getVenuesByProfile = async (name: string, accessToken: string) => {
   return apiRequest<null, Venue[]>(
     `/holidaze/profiles/${name}/venues?_owner=true&_bookings=true`,

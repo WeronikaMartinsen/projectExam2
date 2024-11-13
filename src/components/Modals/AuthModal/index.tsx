@@ -43,7 +43,7 @@ const AuthModal: React.FC<ModalDialogProps> = ({ open, handleOpen }) => {
                   type="button"
                   className="inline-flex justify-center items-center rounded-full p-2 hover:bg-gray-200 focus:outline-none"
                   aria-label="Close"
-                  onClick={closeModal} // Close the modal
+                  onClick={closeModal} 
                 >
                   <span className="sr-only">Close</span>
                   <svg
