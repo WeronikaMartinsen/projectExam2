@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useBookingForm } from "../../Hooks/useBookingForm";
 import { createBooking } from "../../../service/apiRequests";
 import { useLocation } from "react-router-dom";
+import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 
 // Validation schema for booking form
 const schema = yup.object({
@@ -61,11 +62,12 @@ const CreateBookingForm: React.FC = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="text-center p-4">
-        <p className="text-red-500">
-          You must be logged in to create a booking.
-        </p>
-      </div>
+      <MessageWithRedirect
+        message="You must be logged in to create a booking."
+        redirectTo="/login"
+        buttonText="Go to Login"
+        autoRedirect={false}
+      />
     );
   }
 

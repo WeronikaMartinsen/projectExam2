@@ -14,7 +14,7 @@ function VenueOwner({ owner }: VenueOwnerProps) {
       <div className="absolute left-3 flex items-center bg-white bg-opacity-80 rounded-full p-1 mt-2 shadow-md">
         <Link to={`/profiles/${owner.name}`}>
           <img
-            className="w-12 h-12 rounded-full object-cover border-2 border-white"
+            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg"
             src={owner.avatar.url || "/default-avatar.png"}
             alt={owner.avatar.alt || "Owner avatar"}
           />

@@ -1,3 +1,4 @@
+import { Booking } from "./bookings";
 import { Venue } from "./venue";
 
 interface Avatar {
@@ -11,16 +12,23 @@ interface Banner {
 }
 
 export interface Profile {
-  bookings: never[];
+  bookings?: Booking[] | null;
   name: string;
   email: string;
   bio?: string | null;
-  avatar: Avatar;
-  banner: Banner;
-  venueManager: boolean;
+  avatar?: Avatar | null;
+  banner?: Banner | null;
+  venueManager?: boolean;
   venues: Venue[];
   _count?: {
     venues: number;
     bookings: number;
   };
+}
+
+export interface UpdatedProfileData {
+  bio?: string;
+  avatar?: Avatar | null;
+  banner?: Banner | null;
+  venueManager?: boolean;
 }

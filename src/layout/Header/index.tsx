@@ -24,7 +24,6 @@ import {
 import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-
 const products = [
   {
     name: "All Venues",
@@ -56,13 +55,8 @@ const callsToAction = [
 
 function Header() {
   const { user, isLoggedIn } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleOpenLoginModal = () => {
-    setOpen(true);
-    setMobileMenuOpen(false);
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -183,9 +177,12 @@ function Header() {
           {isLoggedIn && user ? (
             <Avatar />
           ) : (
-            <Link to="/login" className="text-md hover:text-secondary active:text-white">
-      Log in <span aria-hidden="true">&rarr;</span>
-    </Link>
+            <Link
+              to="/login"
+              className="text-md hover:text-secondary active:text-white"
+            >
+              Log in <span aria-hidden="true">&rarr;</span>
+            </Link>
           )}
         </div>
       </nav>
@@ -252,9 +249,12 @@ function Header() {
             {isLoggedIn && user ? (
               <Avatar />
             ) : (
-              <Link to="/login" className="text-md hover:text-secondary active:text-white">
-      Log in <span aria-hidden="true">&rarr;</span>
-    </Link>
+              <Link
+                to="/login"
+                className="text-md hover:text-secondary active:text-white"
+              >
+                Log in <span aria-hidden="true">&rarr;</span>
+              </Link>
             )}
           </div>
         </DialogPanel>

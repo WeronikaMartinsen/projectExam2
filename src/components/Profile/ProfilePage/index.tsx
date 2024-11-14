@@ -1,14 +1,24 @@
 import "../../../styles/index.css";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProfile, getVenuesByProfile } from "../../../service/apiRequests";
+import {
+  getProfile,
+  getVenuesByProfile,
+  updateProfile,
+} from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
-import { Profile } from "../../../service/ApiCalls/Interfaces/profile";
+import {
+  Profile,
+  UpdatedProfileData,
+} from "../../../service/ApiCalls/Interfaces/profile";
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
 import { useAuth } from "../../../context/useAuth";
 import LoadingSkeleton from "../../Skeleton";
 import VenueCard from "../../Venues/VenueCard";
 import BookingCard from "../../Bookings/BookingCard";
+import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
+import { MdEdit } from "react-icons/md";
+import ProfileUpdateModal from "../../Modals/ProfileUpdateModal";
 
 // Helper function to calculate the number of days until travel
 const daysUntilTravel = (travelDate: string) => {
@@ -27,6 +37,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const handleVenueSelect = (id: string) => {
@@ -40,26 +51,58 @@ function ProfilePage() {
       try {
         const profileData = await getProfile(name, accessToken, true);
         setProfile(profileData.data);
-
-        if (profileData.data.bookings) {
-          setBookings(profileData.data.bookings);
-        } else {
-          setBookings([]);
-        }
+        setBookings(profileData.data.bookings || []);
         const venuesData = await getVenuesByProfile(name, accessToken);
         setVenues(venuesData.data || []);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch profile data"
         );
+      } finally {
+        setLoading(false);
       }
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleProfileUpdate = async (updatedData: UpdatedProfileData) => {
+    if (!accessToken || !name) {
+      console.error("No access token or profile name available");
+      return;
+    }
+
+    try {
+      const updatedProfileData: Profile = {
+        ...profile!,
+        ...updatedData,
+      };
+
+      if (updatedProfileData.avatar === null) {
+        updatedProfileData.avatar = undefined;
+      }
+
+      setProfile(updatedProfileData);
+
+      await updateProfile(name, updatedProfileData, accessToken);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsModalOpen(false); // Close the modal after update
+    }
+  };
+
   useEffect(() => {
-    setLoading(true);
-    fetchProfileAndVenues();
-    setLoading(false);
+    if (isLoggedIn) {
+      setLoading(true);
+      fetchProfileAndVenues();
+    }
   }, [name, accessToken, isLoggedIn]);
 
   if (loading) return <LoadingSkeleton width="800px" height={40} />;
@@ -73,14 +116,9 @@ function ProfilePage() {
     );
   }
 
-  // Sort bookings: upcoming ones first (by `dateFrom`)
-  const sortedBookings = [...bookings].sort((a, b) => {
-    const dateA = new Date(a.dateFrom).getTime();
-    const dateB = new Date(b.dateFrom).getTime();
-    return dateA - dateB;
-  });
-
-  // Separate upcoming and past bookings
+  const sortedBookings = [...bookings].sort(
+    (a, b) => new Date(a.dateFrom).getTime() - new Date(b.dateFrom).getTime()
+  );
   const upcomingBookings = sortedBookings.filter(
     (booking) => new Date(booking.dateFrom) >= new Date()
   );
@@ -96,7 +134,7 @@ function ProfilePage() {
             <div
               className="w-full h-48 bg-cover bg-center"
               style={{ backgroundImage: `url(${profile.banner?.url || ""})` }}
-            ></div>
+            />
 
             <div className="relative flex flex-col items-center -mt-16">
               <img
@@ -104,12 +142,29 @@ function ProfilePage() {
                 src={profile.avatar?.url || "/default-avatar.png"}
                 alt={profile.avatar?.alt || "Owner avatar"}
               />
+              {profile.name === user?.name && ( // Check if the profile is the logged-in user's profile
+                <div className="ml-auto mr-2">
+                  <button
+                    className="p-2 border-primary border rounded flex justify-center gap-2 items-center"
+                    onClick={handleOpenModal}
+                  >
+                    Edit
+                    <MdEdit />
+                  </button>
+                  <ProfileUpdateModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    onSubmit={handleProfileUpdate}
+                    profile={profile}
+                  />
+                </div>
+              )}
+
               <h1 className="text-2xl font-semibold mt-4">{profile.name}</h1>
               {profile.venueManager && (
                 <h2 className="text-md">Venue Manager</h2>
               )}
             </div>
-
             <div className="text-center mt-4 mb-2">
               <span className="block text-sm text-gray-700">
                 {profile.email}
@@ -134,7 +189,12 @@ function ProfilePage() {
                   />
                 ))
               ) : (
-                <div>No venues found for this profile.</div>
+                <MessageWithRedirect
+                  message="You don't have any venue yet. Create it now!"
+                  redirectTo="/venues"
+                  buttonText="Add venue"
+                  autoRedirect={false}
+                />
               )}
             </ul>
           </div>
@@ -143,8 +203,6 @@ function ProfilePage() {
             <h3 className="w-full bg-primary text-white rounded p-3 h-12">
               Bookings
             </h3>
-
-            {/* Display upcoming bookings */}
             {upcomingBookings.length > 0 && (
               <div className="flex flex-col gap-2">
                 <h4 className="text-lg text-gray-700 mt-4">Upcoming</h4>
@@ -152,14 +210,12 @@ function ProfilePage() {
                   <BookingCard
                     key={booking.id}
                     booking={booking}
-                    isPastBooking={false} // Upcoming booking
-                    daysLeft={daysUntilTravel(booking.dateFrom)} // Display days left
+                    isPastBooking={false}
+                    daysLeft={daysUntilTravel(booking.dateFrom)}
                   />
                 ))}
               </div>
             )}
-
-            {/* Display past bookings */}
             {pastBookings.length > 0 && (
               <div className="mt-8 flex flex-col gap-2">
                 <h4 className="text-lg text-gray-700 mt-4">Last Travel</h4>
@@ -167,12 +223,11 @@ function ProfilePage() {
                   <BookingCard
                     key={booking.id}
                     booking={booking}
-                    isPastBooking={true} // Past booking, should be disabled
+                    isPastBooking={true}
                   />
                 ))}
               </div>
             )}
-
             {bookings.length === 0 && (
               <div>No bookings found for this profile.</div>
             )}

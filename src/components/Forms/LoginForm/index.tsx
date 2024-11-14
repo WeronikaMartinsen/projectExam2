@@ -3,7 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { loginUser } from "../../../service/ApiCalls/Auth/login";
-import { LoginRequest, LoginResponse } from "../../../service/ApiCalls/Interfaces/loginResponse";
+import {
+  LoginRequest,
+  LoginResponse,
+} from "../../../service/ApiCalls/Interfaces/loginResponse";
 import "../../../styles/index.css";
 import { useAuth } from "../../../context/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +29,7 @@ function LoginForm() {
   const { login } = useAuth();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const {
     register,
@@ -101,7 +104,7 @@ function LoginForm() {
         </div>
 
         {/* Submit Button */}
-        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4">
+        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4 mb-10">
           <button
             type="submit"
             className="w-full border bg-secondary text-white p-2"
