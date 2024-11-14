@@ -173,7 +173,7 @@ const CreateVenueForm: React.FC = () => {
       } else {
         // Create a new venue
         const response = await createVenue(data, token);
-        id = response.data.id; // Ensure the new venue ID is fetched from the response
+        id = response.data.id; 
       }
 
       if (id) {

@@ -23,7 +23,7 @@ import {
 } from "react-icons/fi";
 import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import AuthModal from "../../components/Modals/AuthModal";
+
 
 const products = [
   {
@@ -62,10 +62,6 @@ function Header() {
   const handleOpenLoginModal = () => {
     setOpen(true);
     setMobileMenuOpen(false);
-  };
-
-  const handleCloseLoginModal = () => {
-    setOpen(false);
   };
 
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -187,12 +183,9 @@ function Header() {
           {isLoggedIn && user ? (
             <Avatar />
           ) : (
-            <button
-              onClick={handleOpenLoginModal}
-              className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary active:text-white"
-            >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </button>
+            <Link to="/login" className="text-md hover:text-secondary active:text-white">
+      Log in <span aria-hidden="true">&rarr;</span>
+    </Link>
           )}
         </div>
       </nav>
@@ -259,18 +252,13 @@ function Header() {
             {isLoggedIn && user ? (
               <Avatar />
             ) : (
-              <button
-                onClick={handleOpenLoginModal}
-                className="text-md hover:text-secondary active:text-white"
-              >
-                Log in <span aria-hidden="true">&rarr;</span>
-              </button>
+              <Link to="/login" className="text-md hover:text-secondary active:text-white">
+      Log in <span aria-hidden="true">&rarr;</span>
+    </Link>
             )}
           </div>
         </DialogPanel>
       </Dialog>
-
-      <AuthModal open={open} handleOpen={handleCloseLoginModal} />
     </header>
   );
 }

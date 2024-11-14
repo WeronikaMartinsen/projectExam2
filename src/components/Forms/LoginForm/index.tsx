@@ -1,13 +1,12 @@
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { loginUser } from "../../../service/ApiCalls/Auth/login";
-import {
-  LoginRequest,
-  LoginResponse,
-} from "../../../service/ApiCalls/Interfaces/loginResponse";
+import { LoginRequest, LoginResponse } from "../../../service/ApiCalls/Interfaces/loginResponse";
 import "../../../styles/index.css";
 import { useAuth } from "../../../context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 // Validation schema
 const schema = yup
@@ -23,12 +22,12 @@ const schema = yup
   })
   .required();
 
-interface LoginFormProps {
-  handleOpen: () => void; // Close modal function
-}
+function LoginForm() {
+  const { login } = useAuth();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate(); 
 
-function LoginForm({ handleOpen }: LoginFormProps) {
-  const { login } = useAuth(); // Use the login function from AuthContext
   const {
     register,
     handleSubmit,
@@ -39,23 +38,28 @@ function LoginForm({ handleOpen }: LoginFormProps) {
 
   const onSubmit = async (loginData: LoginRequest) => {
     try {
-      const response: LoginResponse = await loginUser(loginData); // Call the login function
+      const response: LoginResponse = await loginUser(loginData);
       console.log("API Response:", response);
       const accessToken = response.accessToken;
 
       if (!accessToken) {
         console.error("Login failed: No access token found in response.");
+        setErrorMessage("Login failed. Please try again.");
         return;
       }
 
-      // Update the Auth context state
-      login(response); // Pass the response to the login function
-
+      login(response);
       localStorage.setItem("accessToken", accessToken);
-      handleOpen();
       console.log("Login successful, token:", accessToken);
+
+      setSuccessMessage("You are successfully logged in now!");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (error) {
       console.error("Login error:", error);
+      setErrorMessage("An error occurred while logging in. Please try again.");
     }
   };
 
@@ -106,6 +110,14 @@ function LoginForm({ handleOpen }: LoginFormProps) {
           </button>
         </div>
       </form>
+
+      {/* Success or Error Message */}
+      {successMessage && (
+        <div className="text-green-500 text-center mt-4">{successMessage}</div>
+      )}
+      {errorMessage && (
+        <div className="text-red-500 text-center mt-4">{errorMessage}</div>
+      )}
     </div>
   );
 }

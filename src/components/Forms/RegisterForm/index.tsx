@@ -3,63 +3,54 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { registerUser } from "../../../service/ApiCalls/Auth/register";
 import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData";
+import { useNavigate } from "react-router-dom";
 import "../../../styles/index.css";
-import { setUser } from "../../../service/Utils/userUtils";
 
 // Validation schema
-const schema = yup
-  .object({
-    name: yup
+const schema = yup.object({
+  name: yup
+    .string()
+    .min(3, "Your name should be at least 3 characters.")
+    .matches(
+      /^[A-Za-z_\s]+$/,
+      "Name must only contain letters, spaces, or underscores (_)."
+    )
+    .required("Name is required."),
+  email: yup
+    .string()
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/,
+      "Email must be a valid stud.noroff.no address."
+    )
+    .required("Email is required."),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .required("Password is required."),
+  bio: yup.string().max(160, "Bio must be less than 160 characters.").nullable(),
+  role: yup
+    .string()
+    .oneOf(["customer", "venue_manager"], "Please select a role.")
+    .required(),
+  avatar: yup.object().shape({
+    url: yup.string().url("Please enter a valid URL.").nullable(),
+    alt: yup
       .string()
-      .min(3, "Your name should be at least 3 characters.")
-      .matches(
-        /^[A-Za-z_\s]+$/,
-        "Name must only contain letters, spaces, or underscores (_)."
-      )
-      .required("Name is required."),
-    email: yup
-      .string()
-      .matches(
-        /^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/,
-        "Email must be a valid stud.noroff.no address."
-      )
-      .required("Email is required."),
-    password: yup
-      .string()
-      .min(8, "Password must be at least 8 characters.")
-      .required("Password is required."),
-    bio: yup
-      .string()
-      .max(160, "Bio must be less than 160 characters.")
+      .max(120, "Alt text must be less than 120 characters.")
       .nullable(),
-    role: yup
+  }),
+  banner: yup.object().shape({
+    url: yup.string().url("Please enter a valid URL.").nullable(),
+    alt: yup
       .string()
-      .oneOf(["customer", "venue_manager"], "Please select a role.")
-      .required(),
-    avatar: yup.object().shape({
-      url: yup.string().url("Please enter a valid URL.").nullable(),
-      alt: yup
-        .string()
-        .max(120, "Alt text must be less than 120 characters.")
-        .nullable(),
-    }),
-    banner: yup.object().shape({
-      url: yup.string().url("Please enter a valid URL.").nullable(),
-      alt: yup
-        .string()
-        .max(120, "Alt text must be less than 120 characters.")
-        .nullable(),
-    }),
-  })
-  .required();
+      .max(120, "Alt text must be less than 120 characters.")
+      .nullable(),
+  }),
+}).required();
 
 type FormData = yup.InferType<typeof schema>;
 
-interface RegisterFormProps {
-  switchToLogin: () => void;
-}
-
-function RegisterForm({ switchToLogin }: RegisterFormProps) {
+function RegisterForm() {
   const {
     register,
     handleSubmit,
@@ -68,6 +59,7 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+  const navigate = useNavigate();  // Hook to navigate
 
   const onSubmit = async (formData: FormData) => {
     const data: RegisterUserData = {
@@ -94,9 +86,13 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
       const response = await registerUser(data);
       if (response.data) {
         console.log("User registered successfully", response.data);
-        setUser(response.data);
         reset();
-        switchToLogin();
+        // Show success message
+        alert("You are successfully registered!");
+        // Redirect to login page after a brief delay (for UX)
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);  // Adjust delay if needed
       } else {
         console.error("Failed to register user:", response.message);
         alert("Failed to register user. Please try again.");
@@ -217,10 +213,10 @@ function RegisterForm({ switchToLogin }: RegisterFormProps) {
         </div>
 
         {/* Submit Button */}
-        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2">
+        <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2 mb-10">
           <button
             type="submit"
-            className="w-full border bg-secondary text-white p-2 rounded hover:bg-accent transition"
+            className="w-full lg:w-3/5 py-2 px-4 bg-[#1e3a8a] text-white rounded-md"
           >
             Register
           </button>
