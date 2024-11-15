@@ -68,8 +68,6 @@ function SingleVenueCard() {
         guests,
       };
 
-      console.log(token);
-
       // Pass the token as the second argument to `createBooking`
       createBooking(bookingData, token)
         .then(() => {
@@ -131,6 +129,8 @@ function SingleVenueCard() {
               <span>Bookings:</span>
               <span className="font-semibold">{venue._count.bookings}</span>
             </div>
+
+            {/* Calendar */}
             <div className="flex gap-2 justify-center items-center">
               <span className="mb-2">Check available dates:</span>
             </div>
@@ -202,44 +202,30 @@ function SingleVenueCard() {
                     type="date"
                     value={selectedFromDate || ""}
                     onChange={(e) => setSelectedFromDate(e.target.value)}
-                    className="p-2 border rounded"
-                    min={new Date().toISOString().split("T")[0]} // Prevent past date
+                    className="border p-2 rounded"
                   />
                 </div>
-
                 <div className="mb-4 flex flex-col">
                   <label className="text-sm">To Date</label>
                   <input
                     type="date"
                     value={selectedToDate || ""}
                     onChange={(e) => setSelectedToDate(e.target.value)}
-                    className="p-2 border rounded"
-                    min={selectedFromDate || ""}
+                    className="border p-2 rounded"
                   />
                 </div>
-
-                <div className="mb-4  flex flex-col">
+                <div className="mb-4 flex flex-col">
                   <label className="text-sm">Number of Guests</label>
                   <input
                     type="number"
                     value={guests}
-                    onChange={(e) =>
-                      setGuests(
-                        Math.max(
-                          1,
-                          Math.min(venue.maxGuests, Number(e.target.value))
-                        )
-                      )
-                    }
-                    className="p-2 border rounded"
-                    min={1}
-                    max={venue.maxGuests}
+                    onChange={(e) => setGuests(parseInt(e.target.value))}
+                    className="border p-2 rounded"
                   />
                 </div>
-
                 <button
                   type="button"
-                  className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary transition-all duration-300 ease-in-out transform hover:bg-accent-dark hover:scale-102 hover:shadow-md"
+                  className="p-2 bg-primary text-white rounded"
                   onClick={handleBook}
                 >
                   Book Now
@@ -248,6 +234,23 @@ function SingleVenueCard() {
             </div>
           </div>
         </div>
+      </div>
+      {/* Booked Dates Section */}
+      <div className="mt-4">
+        <h3 className="text-lg">Existing Bookings:</h3>
+        {bookings.length === 0 ? (
+          <p>No bookings yet. Be the first to book!</p>
+        ) : (
+          <ul className="list-disc pl-6">
+            {bookings.map((booking, idx) => (
+              <li key={idx}>
+                {new Date(booking.dateFrom).toLocaleDateString()} -{" "}
+                {new Date(booking.dateTo).toLocaleDateString()} (Guests:{" "}
+                {booking.guests})
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

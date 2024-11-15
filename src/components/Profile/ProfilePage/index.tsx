@@ -135,14 +135,13 @@ function ProfilePage() {
               className="w-full h-48 bg-cover bg-center"
               style={{ backgroundImage: `url(${profile.banner?.url || ""})` }}
             />
-
             <div className="relative flex flex-col items-center -mt-16">
               <img
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                 src={profile.avatar?.url || "/default-avatar.png"}
                 alt={profile.avatar?.alt || "Owner avatar"}
               />
-              {profile.name === user?.name && ( // Check if the profile is the logged-in user's profile
+              {profile.name === user?.name && (
                 <div className="ml-auto mr-2">
                   <button
                     className="p-2 border-primary border rounded flex justify-center gap-2 items-center"
