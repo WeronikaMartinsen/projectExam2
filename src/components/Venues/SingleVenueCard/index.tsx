@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getVenueById } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
+import Rating from "../Rating";
 import {
   MdFreeBreakfast,
   MdWifi,
@@ -10,7 +11,6 @@ import {
   MdPets,
   MdPerson,
 } from "react-icons/md";
-import Rating from "../Rating";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
@@ -19,6 +19,8 @@ import { getUser } from "../../../service/Utils/userUtils";
 import { useNavigate } from "react-router-dom";
 import { createBooking } from "../../../service/apiRequests";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
+import BookingForm from "../../Forms/BookingForm";
+import BookedDates from "../../Bookings/BookedDates";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -58,12 +60,14 @@ function SingleVenueCard() {
 
   const handleBook = () => {
     if (!user) {
-      <MessageWithRedirect
-        message="You must be logged in to create a booking!"
-        redirectTo="/login"
-        buttonText="Login now"
-        autoRedirect={false}
-      />;
+      return (
+        <MessageWithRedirect
+          message="You must be logged in to create a booking!"
+          redirectTo="/login"
+          buttonText="Login now"
+          autoRedirect={false}
+        />
+      );
     } else if (venue && selectedFromDate && selectedToDate && token) {
       const bookingData = {
         venueId: venue.id,
@@ -194,66 +198,22 @@ function SingleVenueCard() {
               <span>Contact the owner:</span>
               <VenueOwner owner={venue.owner} />
             </div>
-            {/* Booking Form */}
-            <div className="mt-6">
-              <h3 className="text-xl mb-4">Book This Venue</h3>
-              <form className="flex flex-col">
-                <div className="mb-4 flex flex-col">
-                  <label className="text-sm">From Date</label>
-                  <input
-                    type="date"
-                    value={selectedFromDate || ""}
-                    onChange={(e) => setSelectedFromDate(e.target.value)}
-                    className="border p-2 rounded"
-                  />
-                </div>
-                <div className="mb-4 flex flex-col">
-                  <label className="text-sm">To Date</label>
-                  <input
-                    type="date"
-                    value={selectedToDate || ""}
-                    onChange={(e) => setSelectedToDate(e.target.value)}
-                    className="border p-2 rounded"
-                  />
-                </div>
-                <div className="mb-4 flex flex-col">
-                  <label className="text-sm">Number of Guests</label>
-                  <input
-                    type="number"
-                    value={guests}
-                    onChange={(e) => setGuests(parseInt(e.target.value))}
-                    className="border p-2 rounded"
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="p-2 bg-primary text-white rounded"
-                  onClick={handleBook}
-                >
-                  Book Now
-                </button>
-              </form>
-            </div>
+
+            {/* Use the BookingForm component here */}
+            <BookingForm
+              venue={venue}
+              selectedFromDate={selectedFromDate || ""}
+              selectedToDate={selectedToDate || ""}
+              setSelectedFromDate={setSelectedFromDate}
+              setSelectedToDate={setSelectedToDate}
+              guests={guests}
+              setGuests={setGuests}
+              handleBook={handleBook}
+            />
           </div>
         </div>
       </div>
-      {/* Booked Dates Section */}
-      <div className="mt-4">
-        <h3 className="text-lg">Existing Bookings:</h3>
-        {bookings.length === 0 ? (
-          <p>No bookings yet. Be the first to book!</p>
-        ) : (
-          <ul className="list-disc pl-6">
-            {bookings.map((booking, idx) => (
-              <li key={idx}>
-                {new Date(booking.dateFrom).toLocaleDateString()} -{" "}
-                {new Date(booking.dateTo).toLocaleDateString()} (Guests:{" "}
-                {booking.guests})
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <BookedDates bookings={bookings} />
     </div>
   );
 }
