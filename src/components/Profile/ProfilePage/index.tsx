@@ -173,7 +173,7 @@ function ProfilePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 justify-center">
           <div className="max-w-9xl w-full mt-6">
             <h3 className="text-md ml-4 w-full bg-primary p-3 text-white rounded">
               Venues

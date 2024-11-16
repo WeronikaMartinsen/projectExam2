@@ -38,7 +38,7 @@ interface ProfileUpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (updatedData: UpdatedProfileData) => void;
-  profile: Profile | null; // Accept profile data as a prop
+  profile: Profile | null;
 }
 
 const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
@@ -62,14 +62,14 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
         bio: profile.bio || "",
         venueManager: profile.venueManager || undefined,
         avatar: profile.avatar || undefined,
-        banner: profile.avatar || undefined,
+        banner: profile.banner || undefined, // Fix: Set banner separately
       });
     }
   }, [profile, reset]);
 
   const onSubmitHandler = (data: FormData) => {
     const updatedData: UpdatedProfileData = {
-      bio: data.bio || undefined, // Convert null to undefined
+      bio: data.bio || undefined,
       avatar: data.avatar?.url
         ? { url: data.avatar.url, alt: data.avatar.alt || "" }
         : undefined,
@@ -79,7 +79,7 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
       venueManager: data.venueManager,
     };
 
-    onSubmit(updatedData); // Pass the updated profile data
+    onSubmit(updatedData);
   };
 
   return (
@@ -125,38 +125,56 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
               <form onSubmit={handleSubmit(onSubmitHandler)}>
                 {/* Bio Field */}
                 <div className="w-full flex flex-col mb-4">
+                  <label htmlFor="bio" className="text-sm font-semibold mb-1">
+                    Bio
+                  </label>
                   <textarea
+                    id="bio"
                     {...register("bio")}
                     className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
                     placeholder="Tell us about yourself..."
                   />
-                  <p className="text-red-500 text-xs italic">
+                  <p className="text-danger text-xs italic">
                     {errors.bio?.message}
                   </p>
                 </div>
 
                 {/* Avatar URL Field */}
                 <div className="w-full flex flex-col mb-4">
+                  <label
+                    htmlFor="avatar-url"
+                    className="text-sm font-semibold mb-1"
+                  >
+                    Avatar URL
+                  </label>
                   <input
+                    id="avatar-url"
                     {...register("avatar.url")}
                     className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
                     type="url"
                     placeholder="Avatar URL"
                   />
-                  <p className="text-red-500 text-xs italic">
+                  <p className="text-danger text-xs italic">
                     {errors.avatar?.url?.message}
                   </p>
                 </div>
 
                 {/* Banner URL Field */}
                 <div className="w-full flex flex-col mb-4">
+                  <label
+                    htmlFor="banner-url"
+                    className="text-sm font-semibold mb-1"
+                  >
+                    Banner URL
+                  </label>
                   <input
+                    id="banner-url"
                     {...register("banner.url")}
                     className="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white hover:border-gray-500"
                     type="url"
                     placeholder="Banner URL"
                   />
-                  <p className="text-red-500 text-xs italic">
+                  <p className="text-danger text-xs italic">
                     {errors.banner?.url?.message}
                   </p>
                 </div>
