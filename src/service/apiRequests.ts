@@ -62,12 +62,11 @@ export const createVenue = async (
   }
 };
 
-// Update an existing venue
 export const updateVenue = async (
   id: string,
   data: VenueCreate,
   token: string
-): Promise<string> => {
+): Promise<ApiResponse<Venue>> => {
   try {
     const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
       method: "PUT",
@@ -84,7 +83,9 @@ export const updateVenue = async (
     }
 
     const result = await response.json();
-    return result.id;
+
+    // Return the response in the ApiResponse<Venue> format
+    return { data: result }; // Assuming the API returns the updated venue data
   } catch (error) {
     throw new Error(apiErrorHandler(error).message);
   }

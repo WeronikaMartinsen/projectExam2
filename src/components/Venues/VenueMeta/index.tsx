@@ -46,7 +46,7 @@ const VenueMeta: React.FC<VenueMetaProps> = ({ meta, maxGuests }) => (
     {maxGuests && (
       <div className="flex items-center">
         <MdPerson title="Max guests" />
-        <span className="ml-1 text-sm leading-6">Max guests: {maxGuests}</span>
+        <span className="ml-1 text-sm leading-6">{maxGuests}</span>
       </div>
     )}
   </div>
