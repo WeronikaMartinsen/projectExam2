@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface MessageWithRedirectProps {
-  message: React.ReactNode; // The message to display
-  redirectTo: string; // Path to redirect to
-  buttonText: string; // Text for the button
-  autoRedirect?: boolean; // Whether to auto redirect after a delay
-  delay?: number; // Delay before auto redirect in milliseconds
+  message: React.ReactNode;
+  redirectTo: string;
+  buttonText: string;
+  autoRedirect?: boolean;
+  delay?: number;
 }
 
 const MessageWithRedirect: React.FC<MessageWithRedirectProps> = ({
@@ -26,13 +26,11 @@ const MessageWithRedirect: React.FC<MessageWithRedirectProps> = ({
         setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            navigate(redirectTo); // Automatically redirect when countdown reaches 0
+            navigate(redirectTo);
           }
           return prev - 1;
         });
       }, 1000);
-
-      // Cleanup timer on component unmount
       return () => clearInterval(timer);
     }
   }, [autoRedirect, countdown, delay, navigate, redirectTo]);

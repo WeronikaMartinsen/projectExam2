@@ -1,18 +1,18 @@
+import apiErrorHandler from "./Utils/apiErrorhandler";
 import { apiRequest, ApiResponse } from "./ApiCalls/baseApiCallPost";
 import { Venue, VenueCreate, VenueResponse } from "./ApiCalls/Interfaces/venue";
-import { baseUrl } from "./ApiCalls/Endpoints";
-import { apiKeyUrl } from "./ApiCalls/Endpoints";
+import { baseUrl, apiKeyUrl } from "./ApiCalls/Endpoints";
 import { Profile } from "./ApiCalls/Interfaces/profile";
-
 import { Booking, BookingWithDetails } from "./ApiCalls/Interfaces/bookings";
 
+// Get all venues
 export const getVenues = async (): Promise<Venue[]> => {
-  const headers = {
-    "X-Noroff-API-Key": apiKeyUrl,
-    "Content-Type": "application/json",
-  };
-
   try {
+    const headers = {
+      "X-Noroff-API-Key": apiKeyUrl,
+      "Content-Type": "application/json",
+    };
+
     const response = await fetch(
       `${baseUrl}/holidaze/venues?_owner=true&_bookings=true`,
       {
@@ -22,151 +22,193 @@ export const getVenues = async (): Promise<Venue[]> => {
     );
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(response.statusText);
     }
 
     const data: VenueResponse = await response.json();
     return data.data;
   } catch (error) {
-    console.error("API Request Error:", error);
-    throw error;
+    const handledError = apiErrorHandler(error);
+    throw new Error(handledError.message);
   }
 };
 
-// GET Venue by ID
+// Get venue by ID
 export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
-  return apiRequest<null, Venue>(
-    `/holidaze/venues/${id}?_owner=true&_bookings=true`,
-    "GET"
-  );
+  try {
+    return await apiRequest<null, Venue>(
+      `/holidaze/venues/${id}?_owner=true&_bookings=true`,
+      "GET"
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
+// Create a new venue
 export const createVenue = async (
   venue: VenueCreate,
   token: string
 ): Promise<ApiResponse<Venue>> => {
-  console.log("Creating venue with data:", venue);
-  console.log("Using token:", token);
-
-  return apiRequest<VenueCreate, Venue>(
-    "/holidaze/venues",
-    "POST",
-    venue,
-    token
-  );
+  try {
+    return await apiRequest<VenueCreate, Venue>(
+      "/holidaze/venues",
+      "POST",
+      venue,
+      token
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
+// Update an existing venue
 export const updateVenue = async (
   id: string,
   data: VenueCreate,
   token: string
-) => {
-  const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "X-Noroff-API-Key": apiKeyUrl, // Add API key header here
-    },
-    body: JSON.stringify(data),
-  });
+): Promise<string> => {
+  try {
+    const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Noroff-API-Key": apiKeyUrl,
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to update venue");
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    const result = await response.json();
+    return result.id;
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
   }
-
-  const result = await response.json();
-  return result.id; // Ensure this returns the correct ID
 };
 
+// Delete a venue
 export const deleteVenue = async (
   id: string,
   token: string
 ): Promise<ApiResponse<null>> => {
-  const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "X-Noroff-API-Key": apiKeyUrl,
-    },
-  });
+  try {
+    const response = await fetch(`${baseUrl}/holidaze/venues/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Noroff-API-Key": apiKeyUrl,
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to delete venue");
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    if (response.status === 204) {
+      return { data: null };
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
   }
-
-  // If the response is a 204 (no content) status, return null
-  if (response.status === 204) {
-    return { data: null }; // Return null data field on success
-  }
-
-  return await response.json(); // Handle any other response format
 };
 
+// Get profile
 export const getProfile = async (
   name: string,
   accessToken: string,
   bookings = true
 ): Promise<ApiResponse<Profile>> => {
-  const bookingsQuery = bookings ? "?_bookings=true" : "";
-  return apiRequest<null, Profile>(
-    `/holidaze/profiles/${name}${bookingsQuery}`,
-    "GET",
-    undefined,
-    accessToken
-  );
+  try {
+    const bookingsQuery = bookings ? "?_bookings=true" : "";
+    return await apiRequest<null, Profile>(
+      `/holidaze/profiles/${name}${bookingsQuery}`,
+      "GET",
+      undefined,
+      accessToken
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
+// Update profile
 export const updateProfile = async (
   name: string,
   updatedData: Profile,
   accessToken: string
 ): Promise<ApiResponse<Profile>> => {
-  return apiRequest<Profile, Profile>(
-    `/holidaze/profiles/${name}`,
-    "PUT",
-    updatedData,
-    accessToken
-  );
+  try {
+    return await apiRequest<Profile, Profile>(
+      `/holidaze/profiles/${name}`,
+      "PUT",
+      updatedData,
+      accessToken
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
-export const getVenuesByProfile = async (name: string, accessToken: string) => {
-  return apiRequest<null, Venue[]>(
-    `/holidaze/profiles/${name}/venues?_owner=true&_bookings=true`,
-    "GET",
-    undefined,
-    accessToken
-  );
+// Get venues by profile
+export const getVenuesByProfile = async (
+  name: string,
+  accessToken: string
+): Promise<ApiResponse<Venue[]>> => {
+  try {
+    return await apiRequest<null, Venue[]>(
+      `/holidaze/profiles/${name}/venues?_owner=true&_bookings=true`,
+      "GET",
+      undefined,
+      accessToken
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
-// Fetch all bookings
+// Get all bookings
 export const getAllBookings = async (
   token: string,
   _customer = true,
   _venue = true
 ): Promise<BookingWithDetails[]> => {
-  const queryParams = `?_customer=${_customer}&_venue=${_venue}`;
-  const response = await apiRequest<null, BookingWithDetails[]>(
-    `/holidaze/bookings${queryParams}`,
-    "GET",
-    undefined,
-    token
-  );
-  return response.data;
+  try {
+    const queryParams = `?_customer=${_customer}&_venue=${_venue}`;
+    const response = await apiRequest<null, BookingWithDetails[]>(
+      `/holidaze/bookings${queryParams}`,
+      "GET",
+      undefined,
+      token
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
+// Get bookings by profile
 export const getBookingByProfile = async (
   name: string,
   token: string
 ): Promise<BookingWithDetails[]> => {
-  const response = await apiRequest<null, BookingWithDetails[]>(
-    `/holidaze/profiles/${name}/bookings`,
-    "GET",
-    undefined,
-    token
-  );
-  return response.data;
+  try {
+    const response = await apiRequest<null, BookingWithDetails[]>(
+      `/holidaze/profiles/${name}/bookings`,
+      "GET",
+      undefined,
+      token
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
 // Create a new booking
@@ -179,17 +221,16 @@ export const createBooking = async (
   },
   token: string
 ): Promise<ApiResponse<Booking>> => {
-  // Making the API request and getting the response
-  const response = await apiRequest<typeof bookingData, Booking>(
-    "/holidaze/bookings",
-    "POST",
-    bookingData,
-    token
-  );
-  return {
-    data: response.data,
-    message: response.message,
-  };
+  try {
+    return await apiRequest<typeof bookingData, Booking>(
+      "/holidaze/bookings",
+      "POST",
+      bookingData,
+      token
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
 // Update an existing booking
@@ -198,13 +239,17 @@ export const updateBooking = async (
   updatedData: Partial<Omit<Booking, "id" | "created" | "updated">>,
   token: string
 ): Promise<Booking> => {
-  const response = await apiRequest<typeof updatedData, Booking>(
-    `/holidaze/bookings/${bookingId}`,
-    "PUT",
-    updatedData,
-    token
-  );
-  return response.data;
+  try {
+    const response = await apiRequest<typeof updatedData, Booking>(
+      `/holidaze/bookings/${bookingId}`,
+      "PUT",
+      updatedData,
+      token
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };
 
 // Delete a booking
@@ -212,10 +257,14 @@ export const deleteBooking = async (
   bookingId: string,
   token: string
 ): Promise<void> => {
-  await apiRequest<null, void>(
-    `/holidaze/bookings/${bookingId}`,
-    "DELETE",
-    undefined,
-    token
-  );
+  try {
+    await apiRequest<null, void>(
+      `/holidaze/bookings/${bookingId}`,
+      "DELETE",
+      undefined,
+      token
+    );
+  } catch (error) {
+    throw new Error(apiErrorHandler(error).message);
+  }
 };

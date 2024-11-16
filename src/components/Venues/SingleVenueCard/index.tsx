@@ -18,6 +18,7 @@ import LoadingSkeleton from "../../Skeleton";
 import { getUser } from "../../../service/Utils/userUtils";
 import { useNavigate } from "react-router-dom";
 import { createBooking } from "../../../service/apiRequests";
+import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -57,10 +58,13 @@ function SingleVenueCard() {
 
   const handleBook = () => {
     if (!user) {
-      // If the user is not logged in, navigate to login page
-      navigate("/login");
+      <MessageWithRedirect
+        message="You must be logged in to create a booking!"
+        redirectTo="/login"
+        buttonText="Login now"
+        autoRedirect={false}
+      />;
     } else if (venue && selectedFromDate && selectedToDate && token) {
-      // Prepare the booking data
       const bookingData = {
         venueId: venue.id,
         dateFrom: selectedFromDate,
@@ -68,14 +72,12 @@ function SingleVenueCard() {
         guests,
       };
 
-      // Pass the token as the second argument to `createBooking`
       createBooking(bookingData, token)
         .then(() => {
-          // After booking is created, navigate to the user's profile page
           navigate(`/profiles/${user.name}`);
         })
         .catch((err) => {
-          setError(err.message); // Handle any errors that occur during booking
+          setError(err.message);
         });
     } else {
       setError("You need to be logged in to book.");

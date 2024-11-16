@@ -38,6 +38,7 @@ export interface Booking {
   created: string;
   updated: string;
   customer: {
+    venues: never[];
     name: string;
     email: string;
     bio: string;
