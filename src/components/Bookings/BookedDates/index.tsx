@@ -7,8 +7,8 @@ interface BookedDatesProps {
 
 const BookedDates: React.FC<BookedDatesProps> = ({ bookings }) => {
   return (
-    <div className="mt-6 bg-white p-4 rounded-lg shadow-lg">
-      <h3 className="text-2xl font-semibold mb-4 text-primary">
+    <div className="mt-10 max-w-md flex flex-col justify-start">
+      <h3 className="text-xl text-start font-semibold mb-4">
         Bookings for this venue:
       </h3>
       {bookings.length === 0 ? (
@@ -18,12 +18,11 @@ const BookedDates: React.FC<BookedDatesProps> = ({ bookings }) => {
       ) : (
         <ul className="list-disc pl-6 space-y-3">
           {bookings.map((booking, idx) => (
-            <li key={idx} className="flex justify-between items-center text-sm">
+            <li key={idx} className="flex justify-start items-start text-sm">
               <span>
                 {new Date(booking.dateFrom).toLocaleDateString()} -{" "}
                 {new Date(booking.dateTo).toLocaleDateString()}
               </span>
-              <span className="font-semibold">Guests: {booking.guests}</span>
             </li>
           ))}
         </ul>

@@ -15,7 +15,6 @@ const VenuesList: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Fetch venues from API when component mounts
   useEffect(() => {
     const fetchVenues = async () => {
       try {
@@ -32,24 +31,20 @@ const VenuesList: React.FC = () => {
     };
 
     fetchVenues();
-  }, []); // Empty dependency array means this runs only once
+  }, []);
 
-  // Handle venue selection
   const handleVenueSelect = (id: string) => {
     navigate(`/venue/${id}`);
   };
 
-  // Handle search query update
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  // Show more venues when button is clicked
   const showMoreVenues = () => {
     setVisibleVenuesCount((prevCount) => prevCount + 10);
   };
 
-  // Filter venues based on search query (search through all venues)
   const filteredVenues = venues.filter((venue) => {
     const name = venue.name?.toLowerCase() || "";
     const city = venue.location?.city?.toLowerCase() || "";
@@ -62,7 +57,31 @@ const VenuesList: React.FC = () => {
     );
   });
 
-  if (loading) return <LoadingSkeleton width="800px" height={40} />;
+  if (loading) {
+    return (
+      <div className="w-full flex flex-col align-middle items-center justify-center">
+        {/* Skeleton for search bar */}
+        <div className="mb-6">
+          <LoadingSkeleton width="800px" height="50px" />
+        </div>
+        {/* Skeleton for venue cards */}
+        <div className="max-w-7xl">
+          <ul className="space-y-8 mt-4">
+            {[...Array(visibleVenuesCount)].map((_, index) => (
+              <li key={index}>
+                <LoadingSkeleton width="100%" height="150px" />
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* Skeleton for Show More button */}
+        <div className="text-center mt-8">
+          <LoadingSkeleton width="150px" height="40px" />
+        </div>
+      </div>
+    );
+  }
+
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -70,7 +89,7 @@ const VenuesList: React.FC = () => {
       {/* Pass all venues to the SearchVenues component */}
       <SearchVenues
         onSearch={handleSearch}
-        venues={venues} // Pass all venues, not just filtered ones
+        venues={venues}
         onVenueSelect={handleVenueSelect}
       />
       <div className="max-w-7xl">
@@ -79,7 +98,6 @@ const VenuesList: React.FC = () => {
             <VenueCard
               key={venue.id}
               venue={venue}
-              onClick={() => handleVenueSelect(venue.id)}
             />
           ))}
         </ul>

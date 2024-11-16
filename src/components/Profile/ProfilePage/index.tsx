@@ -1,6 +1,6 @@
 import "../../../styles/index.css";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getProfile,
   getVenuesByProfile,
@@ -38,11 +38,6 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const navigate = useNavigate();
-  const handleVenueSelect = (id: string) => {
-    navigate(`/venue/${id}`);
-  };
 
   const accessToken = user?.accessToken;
 
@@ -181,11 +176,7 @@ function ProfilePage() {
             <ul className="space-y-8 mt-4">
               {venues.length > 0 ? (
                 venues.map((venue) => (
-                  <VenueCard
-                    key={venue.id}
-                    venue={venue}
-                    onClick={() => handleVenueSelect(venue.id)}
-                  />
+                  <VenueCard key={venue.id} venue={venue} />
                 ))
               ) : (
                 <MessageWithRedirect

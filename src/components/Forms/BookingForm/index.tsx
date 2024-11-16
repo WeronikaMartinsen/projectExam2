@@ -42,7 +42,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         {/* From Date */}
         <div>
           <label className="text-sm font-medium text-gray-600 mb-2 block">
-            From Date
+            From
           </label>
           <input
             type="date"
@@ -55,7 +55,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         {/* To Date */}
         <div>
           <label className="text-sm font-medium text-gray-600 mb-2 block">
-            To Date
+            To
           </label>
           <input
             type="date"

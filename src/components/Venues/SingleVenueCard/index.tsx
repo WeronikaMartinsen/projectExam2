@@ -4,13 +4,7 @@ import { getVenueById } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
 import Rating from "../Rating";
-import {
-  MdFreeBreakfast,
-  MdWifi,
-  MdDirectionsCar,
-  MdPets,
-  MdPerson,
-} from "react-icons/md";
+import VenueMeta from "../VenueMeta"; // Import the new VenueMeta component
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
@@ -88,7 +82,18 @@ function SingleVenueCard() {
     }
   };
 
-  if (loading) return <LoadingSkeleton width="400px" height={40} />;
+  if (loading)
+    return (
+      <div className="container mx-auto p-4">
+        <div className="mb-6">
+          <LoadingSkeleton width="100%" height="300px" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LoadingSkeleton width="100%" height="200px" />
+          <LoadingSkeleton width="100%" height="400px" />
+        </div>
+      </div>
+    );
   if (error) return <div>Error: {error}</div>;
   if (!venue) return <div>Venue not found</div>;
 
@@ -97,125 +102,97 @@ function SingleVenueCard() {
   )}`;
 
   return (
-    <div className="container max-w-6lg grid mb-8">
-      <div className="w-full max-h-64 overflow-hidden mt-6">
-        <div className="flex gap-2 pl-2">
-          <h2 className="text-3xl font-semibold mb-4">{venue.name}</h2>
-          <Rating rating={venue.rating} />
-        </div>
+    <div className="container mx-auto bg-tertiary p-6 rounded-lg shadow-md">
+      {/* Full-width image */}
+      <div className="w-full h-64 overflow-hidden mb-6">
         <img
-          className="w-full h-full object-cover rounded shadow"
+          className="w-full h-full object-cover"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />
       </div>
 
-      <div className="w-full h-full bg-tertiary">
-        <div className="flex items-center p-4">
-          <IoLocation className="text-lg" />
+      {/* Venue Header */}
+      <div className="mb-6">
+        <h2 className="text-3xl font-semibold mb-4 text-gray-800">
+          {venue.name}
+        </h2>
+        <div className="flex items-center gap-2 mb-4">
+          <Rating rating={venue.rating} />
+        </div>
+        <div className="flex items-center gap-2 text-gray-600">
+          <IoLocation className="text-primary text-lg" />
           <a
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            <span>{venue.location.city}</span>
-            <span>{venue.location.country}</span>
+            {venue.location.city}, {venue.location.country}
           </a>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 justify-start p-3 gap-8 xs:gap-0 text-primary text-sm">
-          <div className="flex flex-col justify-start items-start gap-4">
-            <p>{venue.description}</p>
-            <div className="flex gap-2 justify-center items-center">
-              <span>Price:</span>
-              <span className="text-xl font-semibold">{venue.price} NOK</span>
-            </div>
-            <div className="flex gap-2 justify-center items-center">
-              <span>Bookings:</span>
-              <span className="font-semibold">{venue._count.bookings}</span>
-            </div>
-
-            {/* Calendar */}
-            <div className="flex gap-2 justify-center items-center">
-              <span className="mb-2">Check available dates:</span>
-            </div>
-            <div className="flex justify-center items-center w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl p-4">
-              <div className="w-full">
-                <Calender
-                  bookings={bookings}
-                  onDateRangeSelect={(fromDate: string, toDate: string) => {
-                    setSelectedFromDate(fromDate);
-                    setSelectedToDate(toDate);
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Display selected date range */}
-            {selectedFromDate && selectedToDate && (
-              <p className="mt-2 text-sm">
-                Selected Dates:{" "}
-                {new Date(selectedFromDate).toLocaleDateString()} -{" "}
-                {new Date(selectedToDate).toLocaleDateString()}
-              </p>
-            )}
+      {/* Venue Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p className="text-gray-600">{venue.description}</p>
+          <div className="mt-4">
+            <span className="text-lg font-semibold">Price:</span>{" "}
+            <span className="text-lg text-primary">{venue.price} NOK</span>
+          </div>
+          <div className="mt-2">
+            <span className="text-lg font-semibold">Bookings:</span>{" "}
+            <span>{venue._count.bookings}</span>
           </div>
 
-          <div className="flex flex-col w-full h-full">
-            {venue.meta.breakfast && (
-              <div className="flex items-center">
-                <MdFreeBreakfast title="Breakfast included" />
-                <span className="ml-1 text-sm leading-6">Breakfast</span>
-              </div>
-            )}
-            {venue.meta.wifi && (
-              <div className="flex items-center mt-1">
-                <MdWifi title="Wi-Fi available" />
-                <span className="ml-1 text-sm leading-6">Wi-Fi</span>
-              </div>
-            )}
-            {venue.meta.parking && (
-              <div className="flex items-center mt-1">
-                <MdDirectionsCar title="Parking available" />
-                <span className="ml-1 text-sm leading-6">Parking</span>
-              </div>
-            )}
-            {venue.meta.pets && (
-              <div className="flex items-center mt-1">
-                <MdPets title="Pets allowed" />
-                <span className="ml-1 text-sm leading-6">Pets</span>
-              </div>
-            )}
-            {venue.maxGuests && (
-              <div className="flex items-center mt-1">
-                <MdPerson title="Max guests" />
-                <span className="ml-1 text-sm leading-6">
-                  Max guests: {venue.maxGuests}
-                </span>
-              </div>
-            )}
+          {/* Features - Replaced with VenueMeta component */}
+          <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
+        </div>
 
-            <div className="mt-4 flex flex-col align-top justify-start">
-              <span>Contact the owner:</span>
-              <VenueOwner owner={venue.owner} />
+        {/* Calendar Section */}
+        <div className="flex flex-col align-top">
+          <h3 className="text-xl text-center font-semibold mb-4">
+            Available Dates
+          </h3>
+          <div className="flex justify-center items-center w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+            <div className="w-full flex justify-center">
+              <Calender
+                bookings={bookings}
+                onDateRangeSelect={(fromDate: string, toDate: string) => {
+                  setSelectedFromDate(fromDate);
+                  setSelectedToDate(toDate);
+                }}
+              />
             </div>
-
-            {/* Use the BookingForm component here */}
-            <BookingForm
-              venue={venue}
-              selectedFromDate={selectedFromDate || ""}
-              selectedToDate={selectedToDate || ""}
-              setSelectedFromDate={setSelectedFromDate}
-              setSelectedToDate={setSelectedToDate}
-              guests={guests}
-              setGuests={setGuests}
-              handleBook={handleBook}
-            />
           </div>
         </div>
       </div>
-      <BookedDates bookings={bookings} />
+
+      {/* Booking Form */}
+      <div className="mt-6">
+        <BookingForm
+          venue={venue}
+          selectedFromDate={selectedFromDate || ""}
+          selectedToDate={selectedToDate || ""}
+          setSelectedFromDate={setSelectedFromDate}
+          setSelectedToDate={setSelectedToDate}
+          guests={guests}
+          setGuests={setGuests}
+          handleBook={handleBook}
+        />
+      </div>
+
+      {/* Contact Owner */}
+      <div className="mt-8">
+        <h3 className="text-xl font-semibold mb-4">Contact the host:</h3>
+        <VenueOwner owner={venue.owner} />
+      </div>
+
+      {/* Booked Dates */}
+      <div className="mt-6">
+        <BookedDates bookings={bookings} />
+      </div>
     </div>
   );
 }
