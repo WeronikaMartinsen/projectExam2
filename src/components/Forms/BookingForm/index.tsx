@@ -34,41 +34,59 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   return (
-    <div className="mt-6">
-      <h3 className="text-xl mb-4">Book This Venue</h3>
-      <form className="flex flex-col">
-        <div className="mb-4 flex flex-col">
-          <label className="text-sm">From Date</label>
+    <div className="mt-6 w-full mx-auto bg-white shadow-md p-6 rounded-lg">
+      <h3 className="text-xl font-semibold mb-6 text-center text-gray-800">
+        Book this venue now
+      </h3>
+      <form className="flex flex-col gap-4">
+        {/* From Date */}
+        <div>
+          <label className="text-sm font-medium text-gray-600 mb-2 block">
+            From Date
+          </label>
           <input
             type="date"
             value={selectedFromDate || ""}
             onChange={(e) => setSelectedFromDate(e.target.value)}
-            className="border p-2 rounded"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
           />
         </div>
-        <div className="mb-4 flex flex-col">
-          <label className="text-sm">To Date</label>
+
+        {/* To Date */}
+        <div>
+          <label className="text-sm font-medium text-gray-600 mb-2 block">
+            To Date
+          </label>
           <input
             type="date"
             value={selectedToDate || ""}
             onChange={(e) => setSelectedToDate(e.target.value)}
-            className="border p-2 rounded"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
           />
         </div>
-        <div className="mb-4 flex flex-col">
-          <label className="text-sm">Number of Guests</label>
+
+        {/* Number of Guests */}
+        <div>
+          <label className="text-sm font-medium text-gray-600 mb-2 block">
+            Number of Guests
+          </label>
           <input
             type="number"
             value={guests}
             min={minGuests}
             max={maxGuests}
             onChange={handleGuestChange}
-            className="border p-2 rounded"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
           />
+          <small className="text-sm text-gray-500">
+            Maximum allowed guests: {maxGuests}
+          </small>
         </div>
+
+        {/* Submit Button */}
         <button
           type="button"
-          className="p-2 bg-primary text-white rounded"
+          className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           onClick={handleBook}
         >
           Book Now

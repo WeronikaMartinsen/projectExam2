@@ -140,14 +140,16 @@ function SingleVenueCard() {
             <div className="flex gap-2 justify-center items-center">
               <span className="mb-2">Check available dates:</span>
             </div>
-            <div className="flex gap-2 justify-center items-center">
-              <Calender
-                bookings={bookings}
-                onDateRangeSelect={(fromDate: string, toDate: string) => {
-                  setSelectedFromDate(fromDate);
-                  setSelectedToDate(toDate);
-                }}
-              />
+            <div className="flex justify-center items-center w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl p-4">
+              <div className="w-full">
+                <Calender
+                  bookings={bookings}
+                  onDateRangeSelect={(fromDate: string, toDate: string) => {
+                    setSelectedFromDate(fromDate);
+                    setSelectedToDate(toDate);
+                  }}
+                />
+              </div>
             </div>
 
             {/* Display selected date range */}
