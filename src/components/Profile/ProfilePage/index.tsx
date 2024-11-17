@@ -100,7 +100,62 @@ function ProfilePage() {
     }
   }, [name, accessToken, isLoggedIn]);
 
-  if (loading) return <LoadingSkeleton width="800px" height={40} />;
+  if (loading) {
+    return (
+      <div className="container w-full">
+        <div className="flex flex-col justify-center items-center">
+          <div className="container max-w-7xl shadow-lg">
+            {/* Banner Skeleton */}
+            <LoadingSkeleton width="100%" height={192} />
+
+            <div className="relative flex flex-col items-center -mt-16">
+              {/* Avatar Skeleton */}
+              <LoadingSkeleton width={128} height={128} />
+
+              {/* Name Skeleton */}
+              <LoadingSkeleton width={200} height={30} />
+
+              {/* Venue Manager Label Skeleton */}
+              <LoadingSkeleton width={150} height={20} />
+            </div>
+
+            <div className="text-center mt-4 mb-2">
+              {/* Email Skeleton */}
+              <LoadingSkeleton width={300} height={20} />
+
+              {/* Bio Skeleton */}
+              <LoadingSkeleton width={400} height={60} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 justify-center">
+            {/* Venues Section Skeleton */}
+            <div className="max-w-9xl w-full mt-6">
+              <LoadingSkeleton width="100%" height={48} />
+              <div className="space-y-4 mt-4">
+                {/* Venue Card Skeletons */}
+                <LoadingSkeleton width="100%" height={100} />
+                <LoadingSkeleton width="100%" height={100} />
+                <LoadingSkeleton width="100%" height={100} />
+              </div>
+            </div>
+
+            {/* Bookings Section Skeleton */}
+            <div className="max-w-5xl w-full mt-6">
+              <LoadingSkeleton width="100%" height={48} />
+              <div className="space-y-4 mt-4">
+                {/* Booking Card Skeletons */}
+                <LoadingSkeleton width="100%" height={100} />
+                <LoadingSkeleton width="100%" height={100} />
+                <LoadingSkeleton width="100%" height={100} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (error) return <div>Error: {error}</div>;
 
   if (!isLoggedIn) {

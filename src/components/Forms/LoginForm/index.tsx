@@ -10,6 +10,7 @@ import {
 import "../../../styles/index.css";
 import { useAuth } from "../../../context/useAuth";
 import { useNavigate } from "react-router-dom";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
 
 // Validation schema
 const schema = yup
@@ -27,7 +28,7 @@ const schema = yup
 
 function LoginForm() {
   const { login } = useAuth();
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showMessage, setShowMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -54,9 +55,7 @@ function LoginForm() {
       login(response);
       localStorage.setItem("accessToken", accessToken);
       console.log("Login successful, token:", accessToken);
-
-      setSuccessMessage("You are successfully logged in now!");
-
+      setShowMessage(true);
       setTimeout(() => {
         navigate("/");
       }, 1500);
@@ -107,7 +106,7 @@ function LoginForm() {
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4 mb-10">
           <button
             type="submit"
-            className="w-full border bg-secondary text-white p-2"
+            className="w-full border bg-secondary text-white p-2 rounded hover:shadow-lg"
           >
             Login
           </button>
@@ -115,8 +114,12 @@ function LoginForm() {
       </form>
 
       {/* Success or Error Message */}
-      {successMessage && (
-        <div className="text-green-500 text-center mt-4">{successMessage}</div>
+      {showMessage && (
+        <SuccessMessage
+          message="You are successfully logged in now!"
+          duration={3000}
+          onClose={() => setShowMessage(false)}
+        />
       )}
       {errorMessage && (
         <div className="text-red-500 text-center mt-4">{errorMessage}</div>

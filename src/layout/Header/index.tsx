@@ -13,14 +13,7 @@ import {
   PopoverGroup,
   PopoverPanel,
 } from "@headlessui/react";
-import {
-  FiMenu,
-  FiPlus,
-  FiEdit,
-  FiChevronDown,
-  FiPhone,
-  FiList,
-} from "react-icons/fi";
+import { FiMenu, FiPlus, FiEdit, FiChevronDown, FiList } from "react-icons/fi";
 import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
@@ -45,19 +38,9 @@ const products = [
   },
 ];
 
-const callsToAction = [
-  {
-    name: "Customer Support",
-    href: "/support",
-    icon: FiPhone,
-  },
-];
-
 function Header() {
   const { user, isLoggedIn } = useAuth();
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -100,10 +83,9 @@ function Header() {
           </button>
         </div>
 
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          {/* Popover for Venues */}
+        <PopoverGroup className="hidden text-center lg:flex justify-center align-middle lg:gap-x-12">
           <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary">
+            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded">
               Venues
               <FiChevronDown
                 aria-hidden="true"
@@ -116,7 +98,7 @@ function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="group relative flex items-center gap-x-6 rounded p-4 text-sm leading-6 hover:bg-gray-50 active:bg-secondary active:text-white"
+                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50 focus:bg-secondary focus:text-white active:bg-secondary active:text-white focus:ring-2 focus:ring-secondary"
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
@@ -130,44 +112,27 @@ function Header() {
                   </Link>
                 ))}
               </div>
-              <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
-                {callsToAction.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100 active:bg-secondary active:text-white"
-                  >
-                    <item.icon className="h-5 w-5 flex-none text-gray-400" />
-                    {item.name}
-                  </a>
-                ))}
-              </div>
             </PopoverPanel>
           </Popover>
 
-          {/* My Bookings Link */}
           {isLoggedIn && user ? (
             <Link
-              to={`/profiles/${user.name}/bookings`} // Dynamically populate the name here
-              className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
+              to={`/profiles/${user.name}/bookings`}
+              className="text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded"
             >
               My Bookings
             </Link>
           ) : (
-            <span className="text-sm text-gray-900">My Bookings</span>
+            <div className="flex items-center">
+              <span className="text-sm text-center leading-6 text-gray-900">
+                My Bookings
+              </span>
+            </div>
           )}
-
-          {/* Other Links */}
-          <Link
-            to="#"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
-          >
-            Contact
-          </Link>
 
           <Link
             to="/about"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary focus:text-secondary active:text-white"
+            className="text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded"
           >
             About
           </Link>
@@ -187,7 +152,10 @@ function Header() {
         </div>
       </nav>
 
-      {/* Mobile Menu Dialog */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-25 z-10"></div>
+      )}
+
       <Dialog
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
@@ -195,7 +163,7 @@ function Header() {
       >
         <DialogPanel
           ref={menuRef}
-          className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+          className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
         >
           <div className="flex flex-col space-y-8 pl-2">
             <Disclosure as="div">
@@ -207,7 +175,7 @@ function Header() {
                   </span>
                 </Link>
               </div>
-              <DisclosureButton className="mt-6 group flex w-full items-center justify-between text-md hover:bg-gray-50">
+              <DisclosureButton className="mt-6 group flex w-full items-center justify-between text-md hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary">
                 Venues
                 <FiChevronDown className="h-5 w-5 group-data-[open]:rotate-180" />
               </DisclosureButton>
@@ -217,33 +185,26 @@ function Header() {
                     key={item.name}
                     as={Link}
                     to={item.href}
-                    className="block text-md hover:bg-gray-50 active:bg-secondary active:text-white"
+                    className="block text-md rounded px-3 py-2 hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary"
                   >
                     {item.name}
                   </DisclosureButton>
                 ))}
               </DisclosurePanel>
             </Disclosure>
-            {/* Mobile: My Bookings Link */}
+
             {isLoggedIn && user ? (
               <Link
-                to={`/profiles/${user.name}/bookings`} // Dynamically populate the name here
-                className="-mx-3 text-md hover:bg-gray-50 active:bg-secondary active:text-white"
+                to={`/profiles/${user.name}/bookings`}
+                className="block text-md rounded px-3 py-2 hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary"
               >
                 My Bookings
               </Link>
             ) : (
-              <span className="-mx-3 text-md text-gray-900">My Bookings</span>
+              <span className="block text-md rounded px-3 py-2 cursor-not-allowed opacity-60">
+                My Bookings
+              </span>
             )}
-            {callsToAction.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="-mx-3 text-md hover:bg-gray-50 active:bg-secondary active:text-white"
-              >
-                {item.name}
-              </a>
-            ))}
           </div>
           <div className="py-6 flex justify-end">
             {isLoggedIn && user ? (

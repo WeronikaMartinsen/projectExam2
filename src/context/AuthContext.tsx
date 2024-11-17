@@ -34,14 +34,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = (userData: LoginResponse) => {
     setUserState(userData);
-    setUser(userData); // Store user in localStorage
+    setUser(userData);
     setIsLoggedIn(true);
   };
 
   const logout = () => {
+    console.log("Before logout:", { user, isLoggedIn });
     setUserState(null);
     deleteUser();
     setIsLoggedIn(false);
+    console.log("After logout:", { user: null, isLoggedIn: false });
   };
 
   return (
