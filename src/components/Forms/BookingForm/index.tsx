@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
 
 interface BookingFormProps {
   venue: {
@@ -25,6 +26,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 }) => {
   const maxGuests = venue.maxGuests || 1;
   const minGuests = 1;
+  const [showMessage, setShowMessage] = useState(false);
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newGuests = parseInt(e.target.value);
@@ -92,6 +94,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
           Book Now
         </button>
       </form>
+      {/* Success or Error Message */}
+      {showMessage && (
+        <SuccessMessage
+          message="Congratulations! You have successfully booked this venue!"
+          duration={2000}
+          onClose={() => setShowMessage(false)}
+        />
+      )}
     </div>
   );
 };

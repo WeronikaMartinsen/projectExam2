@@ -9,6 +9,7 @@ import { useDeleteVenue } from "../../Hooks/useDelateVenue";
 import DeleteConfirmationModal from "../../Modals/DelateConfirmation";
 import VenueMeta from "../VenueMeta";
 import { MdEdit } from "react-icons/md";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
 
 interface VenueCardProps {
   venue: Venue;
@@ -19,6 +20,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [venueToDelete, setVenueToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [showMessage, setShowMessage] = useState(false);
 
   const user = getUser();
   const token = user?.accessToken || "";
@@ -57,7 +59,8 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       await deleteVenue(venueId);
 
       if (!data) {
-        alert(`Venue with ID: ${venueId} successfully deleted`);
+        setShowMessage(true);
+        setTimeout(() => {}, 2000);
         setIsModalOpen(false);
         setVenueToDelete(null);
         window.location.reload();
@@ -66,7 +69,6 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       }
     } catch (error) {
       console.error("Error during venue deletion:", error);
-      alert("An error occurred while trying to delete the venue.");
     }
   };
 
@@ -149,6 +151,14 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
                 >
                   Delete
                 </button>
+                {/* Success or Error Message */}
+                {showMessage && (
+                  <SuccessMessage
+                    message="You have successfully delated your venue!"
+                    duration={2000}
+                    onClose={() => setShowMessage(false)}
+                  />
+                )}
               </div>
             )}
           </div>

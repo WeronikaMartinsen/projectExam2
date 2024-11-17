@@ -17,7 +17,10 @@ const schema = yup
   .object({
     email: yup
       .string()
-      .email("Please enter a valid email")
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/,
+        "Email must be a valid stud.noroff.no address."
+      )
       .required("Email is required."),
     password: yup
       .string()
@@ -54,11 +57,10 @@ function LoginForm() {
 
       login(response);
       localStorage.setItem("accessToken", accessToken);
-      console.log("Login successful, token:", accessToken);
       setShowMessage(true);
       setTimeout(() => {
         navigate("/");
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("An error occurred while logging in. Please try again.");
@@ -106,7 +108,7 @@ function LoginForm() {
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-4 mb-10">
           <button
             type="submit"
-            className="w-full border bg-secondary text-white p-2 rounded hover:shadow-lg"
+            className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Login
           </button>
@@ -117,7 +119,7 @@ function LoginForm() {
       {showMessage && (
         <SuccessMessage
           message="You are successfully logged in now!"
-          duration={3000}
+          duration={2000}
           onClose={() => setShowMessage(false)}
         />
       )}

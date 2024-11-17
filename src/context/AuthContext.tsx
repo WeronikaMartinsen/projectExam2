@@ -5,7 +5,7 @@ import { getUser, setUser, deleteUser } from "../service/Utils/userUtils";
 interface AuthContextType {
   user: LoginResponse | null;
   isLoggedIn: boolean;
-  loadingAuth: boolean; // Add this line
+  loadingAuth: boolean;
   login: (user: LoginResponse) => void;
   logout: () => void;
 }
@@ -21,7 +21,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUserState] = useState<LoginResponse | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loadingAuth, setLoadingAuth] = useState(true); // New state for loading
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const storedUser = getUser();
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUserState(storedUser);
       setIsLoggedIn(true);
     }
-    setLoadingAuth(false); // Auth check is complete
+    setLoadingAuth(false);
   }, []);
 
   const login = (userData: LoginResponse) => {
@@ -39,11 +39,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
-    console.log("Before logout:", { user, isLoggedIn });
     setUserState(null);
     deleteUser();
     setIsLoggedIn(false);
-    console.log("After logout:", { user: null, isLoggedIn: false });
   };
 
   return (

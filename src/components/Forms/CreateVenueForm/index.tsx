@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Resolver, useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -67,7 +67,7 @@ const CreateVenueForm: React.FC = () => {
   const navigate = useNavigate();
   const { venueId } = useParams();
 
-  const { loading, successMessage, errorMessage } = useVenueForm(
+  const { loading, errorMessage } = useVenueForm(
     createVenue,
     updateVenue,
     token,
@@ -100,6 +100,10 @@ const CreateVenueForm: React.FC = () => {
     control,
     name: "media",
   });
+
+  const [successMessageState, setSuccessMessageState] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (venueId) {
@@ -165,7 +169,10 @@ const CreateVenueForm: React.FC = () => {
       }
 
       if (id) {
-        navigate(`/venue/${id}`);
+        setSuccessMessageState("Venue saved successfully!");
+        setTimeout(() => {
+          navigate(`/venue/${id}`);
+        }, 2000);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -315,6 +322,7 @@ const CreateVenueForm: React.FC = () => {
           placeholder="Continent"
         />
       </div>
+
       <div className="mb-4">
         <div className="flex flex-col space-y-2">
           <label className="flex items-center">
@@ -363,8 +371,8 @@ const CreateVenueForm: React.FC = () => {
       {errorMessage && (
         <p className="text-red-500 text-xs mt-2">{errorMessage}</p>
       )}
-      {successMessage && (
-        <p className="text-green-500 text-xs mt-2">{successMessage}</p>
+      {successMessageState && (
+        <p className="text-green-500 text-xs mt-2">{successMessageState}</p>
       )}
     </form>
   );

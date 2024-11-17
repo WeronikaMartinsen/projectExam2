@@ -5,6 +5,8 @@ import { registerUser } from "../../../service/ApiCalls/Auth/register";
 import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/index.css";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
+import { useState } from "react";
 
 // Validation schema
 const schema = yup
@@ -64,6 +66,7 @@ function RegisterForm() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+  const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate(); // Hook to navigate
 
   const onSubmit = async (formData: FormData) => {
@@ -90,11 +93,8 @@ function RegisterForm() {
     try {
       const response = await registerUser(data);
       if (response.data) {
-        console.log("User registered successfully", response.data);
         reset();
-        // Show success message
-        alert("You are successfully registered!");
-        // Redirect to login page after a brief delay (for UX)
+        setShowMessage(true);
         setTimeout(() => {
           navigate("/login");
         }, 1000); // Adjust delay if needed
@@ -221,12 +221,21 @@ function RegisterForm() {
         <div className="w-full lg:w-3/5 flex flex-col justify-center items-center mt-2 mb-10">
           <button
             type="submit"
-            className="w-full lg:w-3/5 py-2 px-4 bg-secondary text-white rounded-md"
+            className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Register
           </button>
         </div>
       </form>
+
+      {/* Success or Error Message */}
+      {showMessage && (
+        <SuccessMessage
+          message={`You are successfully register now! Please log in to continue.`}
+          duration={2000}
+          onClose={() => setShowMessage(false)}
+        />
+      )}
     </div>
   );
 }

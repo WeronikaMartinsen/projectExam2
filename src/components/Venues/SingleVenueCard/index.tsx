@@ -1,20 +1,20 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getVenueById } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
 import Rating from "../Rating";
-import VenueMeta from "../VenueMeta"; // Import the new VenueMeta component
+import VenueMeta from "../VenueMeta";
 import VenueOwner from "../VenueOwner";
 import { Booking } from "../../../service/ApiCalls/Interfaces/venue";
 import Calender from "../../Bookings/Calender";
 import LoadingSkeleton from "../../Skeleton";
 import { getUser } from "../../../service/Utils/userUtils";
-import { useNavigate } from "react-router-dom";
 import { createBooking } from "../../../service/apiRequests";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 import BookingForm from "../../Forms/BookingForm";
 import BookedDates from "../../Bookings/BookedDates";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +24,8 @@ function SingleVenueCard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedFromDate, setSelectedFromDate] = useState<string | null>(null);
   const [selectedToDate, setSelectedToDate] = useState<string | null>(null);
-  const [guests, setGuests] = useState(1); // Default to 1 guest
+  const [guests, setGuests] = useState(1);
+  const [showMessage, setShowMessage] = useState(false);
 
   const user = getUser();
   const navigate = useNavigate();
@@ -53,16 +54,7 @@ function SingleVenueCard() {
   const token = localStorage.getItem("accessToken");
 
   const handleBook = () => {
-    if (!user) {
-      return (
-        <MessageWithRedirect
-          message="You must be logged in to create a booking!"
-          redirectTo="/login"
-          buttonText="Login now"
-          autoRedirect={false}
-        />
-      );
-    } else if (venue && selectedFromDate && selectedToDate && token) {
+    if (venue && selectedFromDate && selectedToDate && token) {
       const bookingData = {
         venueId: venue.id,
         dateFrom: selectedFromDate,
@@ -72,13 +64,16 @@ function SingleVenueCard() {
 
       createBooking(bookingData, token)
         .then(() => {
-          navigate(`/profiles/${user.name}`);
+          setShowMessage(true);
+          setTimeout(() => {
+            navigate(`/profiles/${user.name}/bookings`);
+          }, 2000);
         })
         .catch((err) => {
           setError(err.message);
         });
     } else {
-      setError("You need to be logged in to book.");
+      setError("Please complete the booking details.");
     }
   };
 
@@ -94,6 +89,7 @@ function SingleVenueCard() {
         </div>
       </div>
     );
+
   if (error) return <div>Error: {error}</div>;
   if (!venue) return <div>Venue not found</div>;
 
@@ -138,23 +134,23 @@ function SingleVenueCard() {
         <div>
           <p className="text-gray-600">{venue.description}</p>
           <div className="mt-4">
-            <span className="text-lg font-semibold">Price:</span>{" "}
-            <span className="text-lg text-primary">{venue.price} NOK</span>
+            <span className="text-md font-semibold">Price:</span>{" "}
+            <span className="text-md text-primary">{venue.price} NOK</span>
           </div>
           <div className="mt-2">
-            <span className="text-lg font-semibold">Bookings:</span>{" "}
+            <span className="text-md font-semibold">Bookings:</span>{" "}
             <span>{venue._count.bookings}</span>
           </div>
 
-          {/* Features - Replaced with VenueMeta component */}
+          {/* Features */}
           <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
         </div>
 
         {/* Calendar Section */}
         <div className="flex flex-col align-top">
-          <h3 className="text-xl text-center font-semibold mb-4">
+          <span className="text-md font-semibold text-center mb-4">
             Available Dates
-          </h3>
+          </span>
           <div className="flex justify-center items-center w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
             <div className="w-full flex justify-center">
               <Calender
@@ -171,28 +167,52 @@ function SingleVenueCard() {
 
       {/* Booking Form */}
       <div className="mt-6">
-        <BookingForm
-          venue={venue}
-          selectedFromDate={selectedFromDate || ""}
-          selectedToDate={selectedToDate || ""}
-          setSelectedFromDate={setSelectedFromDate}
-          setSelectedToDate={setSelectedToDate}
-          guests={guests}
-          setGuests={setGuests}
-          handleBook={handleBook}
-        />
+        {user ? (
+          <BookingForm
+            venue={venue}
+            selectedFromDate={selectedFromDate || ""}
+            selectedToDate={selectedToDate || ""}
+            setSelectedFromDate={setSelectedFromDate}
+            setSelectedToDate={setSelectedToDate}
+            guests={guests}
+            setGuests={setGuests}
+            handleBook={handleBook}
+          />
+        ) : (
+          <div></div>
+        )}
       </div>
+
+      {/* Success Message */}
+      {showMessage && (
+        <SuccessMessage
+          message="Your booking was successful!"
+          duration={2000}
+          onClose={() => setShowMessage(false)}
+        />
+      )}
 
       {/* Contact Owner */}
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-4">Contact the host:</h3>
-        <VenueOwner owner={venue.owner} />
-      </div>
+      {user ? (
+        <div className="mt-8">
+          <span className="text-md font-semibold mb-4">Contact the host:</span>
+          <VenueOwner owner={venue.owner} />
+        </div>
+      ) : (
+        <MessageWithRedirect
+          message="You must be logged in to book this venue!"
+          redirectTo="/login"
+          buttonText="Login now"
+          autoRedirect={false}
+        />
+      )}
 
       {/* Booked Dates */}
-      <div className="mt-6">
-        <BookedDates bookings={bookings} />
-      </div>
+      {user && (
+        <div className="mt-6">
+          <BookedDates bookings={bookings} />
+        </div>
+      )}
     </div>
   );
 }

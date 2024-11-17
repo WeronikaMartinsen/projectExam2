@@ -8,9 +8,9 @@ interface BookedDatesProps {
 const BookedDates: React.FC<BookedDatesProps> = ({ bookings }) => {
   return (
     <div className="mt-10 max-w-md flex flex-col justify-start">
-      <h3 className="text-xl text-start font-semibold mb-4">
+      <span className="text-md text-start font-semibold mb-4">
         Bookings for this venue:
-      </h3>
+      </span>
       {bookings.length === 0 ? (
         <p className="text-sm text-gray-600">
           No bookings yet. Be the first to book!

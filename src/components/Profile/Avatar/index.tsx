@@ -21,7 +21,7 @@ function Avatar() {
     setTimeout(() => {
       logout();
       navigate("/");
-    }, 3000); // Match SuccessMessage duration
+    }, 2000);
   };
 
   useEffect(() => {

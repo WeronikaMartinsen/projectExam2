@@ -1,27 +1,26 @@
-// SuccessMessage.tsx
-import React from "react";
+import React, { useEffect } from "react";
 
 interface SuccessMessageProps {
   message: string;
-  duration?: number;
-  onClose?: () => void;
+  duration: number;
+  onClose: () => void;
 }
 
 const SuccessMessage: React.FC<SuccessMessageProps> = ({
   message,
-  duration = 3000,
+  duration,
   onClose,
 }) => {
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
-      if (onClose) onClose();
+      onClose();
     }, duration);
 
     return () => clearTimeout(timer);
   }, [duration, onClose]);
 
   return (
-    <div className="fixed top-4 right-4 p-4 bg-green-500 text-white rounded shadow-md">
+    <div className="fixed top-4 right-4 z-50 bg-green-500 text-white p-4 rounded-lg shadow-lg">
       {message}
     </div>
   );

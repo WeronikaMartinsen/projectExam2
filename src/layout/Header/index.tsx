@@ -103,7 +103,7 @@ function Header() {
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
                     </div>
-                    <div className="flex-auto">
+                    <div className="flex flex-col justify-start items-start">
                       <span className="block font-semibold text-gray-900">
                         {item.name}
                       </span>

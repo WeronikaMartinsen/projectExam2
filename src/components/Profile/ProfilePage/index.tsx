@@ -225,7 +225,7 @@ function ProfilePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 justify-center">
           <div className="max-w-9xl w-full mt-6">
-            <h3 className="text-md ml-4 w-full bg-primary p-3 text-white rounded">
+            <h3 className="text-md text-center w-full bg-primary p-3 text-white rounded">
               Venues
             </h3>
             <ul className="space-y-8 mt-4">
@@ -245,12 +245,11 @@ function ProfilePage() {
           </div>
 
           <div className="max-w-5xl w-full mt-6">
-            <h3 className="w-full bg-primary text-white rounded p-3 h-12">
-              Bookings
+            <h3 className="w-full bg-primary text-white text-center rounded p-3 h-12">
+              Your bookings
             </h3>
             {upcomingBookings.length > 0 && (
-              <div className="flex flex-col gap-2">
-                <h4 className="text-lg text-gray-700 mt-4">Upcoming</h4>
+              <div className="flex flex-col gap-2 mt-4">
                 {upcomingBookings.map((booking) => (
                   <BookingCard
                     key={booking.id}
@@ -263,7 +262,7 @@ function ProfilePage() {
             )}
             {pastBookings.length > 0 && (
               <div className="mt-8 flex flex-col gap-2">
-                <h4 className="text-lg text-gray-700 mt-4">Last Travel</h4>
+                <span className="text-lg text-gray-700 mt-4">Last Travel</span>
                 {pastBookings.map((booking) => (
                   <BookingCard
                     key={booking.id}
@@ -274,7 +273,12 @@ function ProfilePage() {
               </div>
             )}
             {bookings.length === 0 && (
-              <div>No bookings found for this profile.</div>
+              <MessageWithRedirect
+                message="You don't have any bookings yet. Book now!"
+                redirectTo="/"
+                buttonText="Find venue"
+                autoRedirect={false}
+              />
             )}
           </div>
         </div>
