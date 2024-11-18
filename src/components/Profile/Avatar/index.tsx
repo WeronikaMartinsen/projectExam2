@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Hooks/useAuth";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
 
@@ -14,6 +14,10 @@ function Avatar() {
 
   const handleToggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleEnterProfilePage = () => {
+    navigate(`/profiles/${user?.name}`);
   };
 
   const handleLogout = () => {
@@ -67,12 +71,12 @@ function Avatar() {
               <span className="text-sm font-semibold leading-6 text-gray-900 pl-4">
                 {user?.name}
               </span>
-              <Link
-                to={`/profiles/${user?.name}`}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              <button
+                onClick={handleEnterProfilePage}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Profile
-              </Link>
+              </button>
               <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"

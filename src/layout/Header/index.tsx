@@ -77,13 +77,13 @@ function Header() {
         <div className="flex lg:hidden">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded p-2.5 text-gray-700 hover:bg-gray-200"
           >
             <FiMenu className="h-6 w-6" />
           </button>
         </div>
 
-        <PopoverGroup className="hidden text-center lg:flex justify-center align-middle lg:gap-x-12">
+        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded">
               Venues
@@ -103,7 +103,7 @@ function Header() {
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
                     </div>
-                    <div className="flex flex-col justify-start items-start">
+                    <div>
                       <span className="block font-semibold text-gray-900">
                         {item.name}
                       </span>
@@ -165,30 +165,36 @@ function Header() {
           ref={menuRef}
           className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
         >
-          <div className="flex flex-col space-y-8 pl-2">
-            <Disclosure as="div">
-              <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer mb-8">
-                <Link to="/" className="flex items-center">
-                  <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
-                  <span className="text-2xl text-blue-800 font-bold">
-                    holidaze
-                  </span>
-                </Link>
-              </div>
-              <DisclosureButton className="mt-6 group flex w-full items-center justify-between text-md hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary">
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <Link to="/" className="flex items-center">
+                <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
+                <span className="text-2xl font-bold text-blue-800">
+                  holidaze
+                </span>
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-gray-700 hover:text-red-600 focus:outline-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            <Disclosure as="div" className="space-y-4">
+              <DisclosureButton className="flex items-center justify-between text-md font-semibold text-gray-900 hover:bg-gray-100 focus:bg-gray-200 p-3 rounded">
                 Venues
-                <FiChevronDown className="h-5 w-5 group-data-[open]:rotate-180" />
+                <FiChevronDown className="h-5 w-5 transition-transform group-data-[open]:rotate-180" />
               </DisclosureButton>
-              <DisclosurePanel className="space-y-4 mt-6 pl-4">
+              <DisclosurePanel className="pl-4 space-y-3">
                 {products.map((item) => (
-                  <DisclosureButton
+                  <Link
                     key={item.name}
-                    as={Link}
                     to={item.href}
-                    className="block text-md rounded px-3 py-2 hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="block text-md font-medium text-gray-700 hover:bg-gray-100 p-2 rounded"
                   >
                     {item.name}
-                  </DisclosureButton>
+                  </Link>
                 ))}
               </DisclosurePanel>
             </Disclosure>
@@ -196,23 +202,31 @@ function Header() {
             {isLoggedIn && user ? (
               <Link
                 to={`/profiles/${user.name}/bookings`}
-                className="block text-md rounded px-3 py-2 hover:bg-gray-50 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-secondary"
+                className="block text-md font-medium text-gray-900 hover:bg-gray-100 p-3 rounded"
               >
                 My Bookings
               </Link>
             ) : (
-              <span className="block text-md rounded px-3 py-2 cursor-not-allowed opacity-60">
+              <span className="block text-md text-gray-400 p-3 rounded cursor-not-allowed">
                 My Bookings
               </span>
             )}
-          </div>
-          <div className="py-6 flex justify-end">
+
+            <Link
+              to="/about"
+              className="block text-md font-medium text-gray-900 hover:bg-gray-100 p-3 rounded"
+            >
+              About
+            </Link>
+
             {isLoggedIn && user ? (
-              <Avatar />
+              <div className="mt-4">
+                <Avatar />
+              </div>
             ) : (
               <Link
                 to="/login"
-                className="text-md hover:text-secondary active:text-white"
+                className="text-md font-medium text-blue-700 hover:text-blue-800 mt-4 block"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </Link>
