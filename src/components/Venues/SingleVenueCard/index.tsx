@@ -98,11 +98,11 @@ function SingleVenueCard() {
   )}`;
 
   return (
-    <div className="container mx-auto bg-tertiary p-6 rounded-lg shadow-md">
+    <div className="container max-w-5xl mx-auto bg-tertiary p-6 rounded-lg shadow-md w-full">
       {/* Full-width image */}
       <div className="w-full h-64 overflow-hidden mb-6">
         <img
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />

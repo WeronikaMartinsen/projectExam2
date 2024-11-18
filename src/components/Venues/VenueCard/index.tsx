@@ -1,4 +1,3 @@
-// VenueCard.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 import { IoLocation } from "react-icons/io5";
@@ -96,8 +95,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="grid grid-cols-1 md:grid-cols-3 justify-center items-center gap-6 bg-tertiary border border-light rounded transition-transform transform p-4">
-      <div className="w-full h-56 md:h-64 overflow-hidden cursor-pointer rounded">
+    <li className="relative flex flex-col md:flex-row bg-tertiary border border-light rounded overflow-hidden transition-transform transform p-4 hover:shadow-lg">
+      {/* Image Section */}
+      <div className="w-full md:w-1/3 h-56 md:h-auto overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
@@ -106,82 +106,88 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           onClick={handleNavigateToDetail}
         />
       </div>
-      <div className="flex flex-col items-center md:items-start md:border-r border-accent md:pr-4">
-        <div className="flex items-center gap-2 mb-2">
-          <IoLocation />
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
-            <span>{venue.location.city}</span>{" "}
-            <span>{venue.location.country}</span>
-          </a>
-        </div>
-        <h4 className="text-xl">{venue.name}</h4>
-        <Rating rating={venue.rating} />
-        <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
-      </div>
 
-      <div className="h-full w-full flex flex-col justify-end p-4">
-        {user && venue.owner?.name === user.name && (
-          <div className="relative mb-auto text-end">
-            <button
-              className="text-gray-600 hover:text-gray-900"
-              onClick={handleToggleDropdown}
+      {/* Venue Details */}
+      <div className="flex flex-col flex-1 p-8">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col items-center gap-2">
+            <IoLocation className="text-primary" />
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-sm text-gray-700"
             >
-              <MdEdit className="inline-block mr-1" />
-              Edit
-            </button>
-            {isDropdownOpen && (
-              <div
-                ref={dropdownRef}
-                className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3"
-              >
-                <button
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={handleEdit}
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 py-1 text-gray-700 hover:bg-gray-100"
-                  onClick={() => handleOpenModal(venue.id)}
-                >
-                  Delete
-                </button>
-                {/* Success or Error Message */}
-                {showMessage && (
-                  <SuccessMessage
-                    message="You have successfully delated your venue!"
-                    duration={2000}
-                    onClose={() => setShowMessage(false)}
-                  />
-                )}
-              </div>
-            )}
+              {venue.location.city} {venue.location.country}
+            </a>
           </div>
-        )}
-        <div className=" w-full flex flex-col justify-between items-stretch">
-          <p className="text-xl text-primary pl-8 text-end">
+          <p className="text-xl font-semibold text-primary">
             {venue.price} NOK
           </p>
+        </div>
+        <h4 className="text-2xl font-bold text-gray-900">{venue.name}</h4>
+        <Rating rating={venue.rating} />
+        <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
+
+        {/* Action Button */}
+        <div className="mt-6 flex justify-center gap-4">
           <button
             onClick={handleNavigateToDetail}
-            className="bg-accent p-3 rounded font-semibold text-sm mt-4 text-primary transition-all duration-300 ease-in-out transform hover:bg-accent-dark hover:scale-102 hover:shadow-md"
+            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300"
           >
-            View details
+            View Details
           </button>
+          {/* Floating Edit Button */}
+          {user && venue.owner?.name === user.name && (
+            <div className="">
+              <div className="relative">
+                <button
+                  className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded shadow-md hover:bg-accent-dark transition"
+                  onClick={handleToggleDropdown}
+                >
+                  <MdEdit className="text-lg" />
+                  <span>Update</span>
+                </button>
+                {isDropdownOpen && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-0 mt-2 w-40 bg-white border shadow-md z-10 rounded"
+                  >
+                    <button
+                      className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                      onClick={handleEdit}
+                    >
+                      Edit Venue
+                    </button>
+                    <button
+                      className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
+                      onClick={() => handleOpenModal(venue.id)}
+                    >
+                      Delete Venue
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal
         open={isModalOpen}
         venueId={venueToDelete!}
         handleClose={handleCloseModal}
         handleDelete={handleDelete}
       />
+      {/* Success Message */}
+      {showMessage && (
+        <SuccessMessage
+          message="Venue deleted successfully!"
+          duration={2000}
+          onClose={() => setShowMessage(false)}
+        />
+      )}
     </li>
   );
 };

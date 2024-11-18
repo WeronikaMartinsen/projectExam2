@@ -92,13 +92,10 @@ const VenuesList: React.FC = () => {
         venues={venues}
         onVenueSelect={handleVenueSelect}
       />
-      <div className="max-w-7xl">
+      <div className="max-w-5xl w-full">
         <ul className="space-y-8 mt-4">
           {filteredVenues.slice(0, visibleVenuesCount).map((venue) => (
-            <VenueCard
-              key={venue.id}
-              venue={venue}
-            />
+            <VenueCard key={venue.id} venue={venue} />
           ))}
         </ul>
 

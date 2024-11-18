@@ -18,7 +18,7 @@ interface VenueMetaProps {
 }
 
 const VenueMeta: React.FC<VenueMetaProps> = ({ meta, maxGuests }) => (
-  <div className="flex flex-col gap-2 mt-4 text-primary text-sm">
+  <div className="w-full grid grid-cols-2 gap-2 mt-4 text-sm justify-between align-middle items-center">
     {meta.breakfast && (
       <div className="flex items-center">
         <MdFreeBreakfast title="Breakfast included" />

@@ -36,7 +36,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   return (
-    <div className="mt-6 w-full mx-auto bg-white shadow-md p-6 rounded-lg">
+    <div className="mt-6 w-full max-w-2xl mx-auto bg-white shadow-md p-6 rounded-lg">
       <h3 className="text-xl font-semibold mb-6 text-center text-gray-800">
         Book this venue now
       </h3>
