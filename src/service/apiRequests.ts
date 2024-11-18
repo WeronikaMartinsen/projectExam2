@@ -5,8 +5,11 @@ import { baseUrl, apiKeyUrl } from "./ApiCalls/Endpoints";
 import { Profile } from "./ApiCalls/Interfaces/profile";
 import { Booking, BookingWithDetails } from "./ApiCalls/Interfaces/bookings";
 
-// Get all venues
-export const getVenues = async (): Promise<Venue[]> => {
+export const getVenues = async (
+  page = 1,
+  limit = 15,
+  query = ""
+): Promise<Venue[]> => {
   try {
     const headers = {
       "X-Noroff-API-Key": apiKeyUrl,
@@ -14,22 +17,16 @@ export const getVenues = async (): Promise<Venue[]> => {
     };
 
     const response = await fetch(
-      `${baseUrl}/holidaze/venues?_owner=true&_bookings=true`,
-      {
-        method: "GET",
-        headers: headers,
-      }
+      `${baseUrl}/holidaze/venues?_owner=true&_bookings=true&page=${page}&limit=${limit}&search=${query}`,
+      { method: "GET", headers }
     );
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
+    if (!response.ok) throw new Error(response.statusText);
 
     const data: VenueResponse = await response.json();
     return data.data;
   } catch (error) {
-    const handledError = apiErrorHandler(error);
-    throw new Error(handledError.message);
+    throw new Error(apiErrorHandler(error).message);
   }
 };
 

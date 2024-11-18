@@ -124,7 +124,7 @@ function SingleVenueCard() {
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            {venue.location.city}, {venue.location.country}
+            {venue.location.city} {venue.location.country}
           </a>
         </div>
       </div>

@@ -246,7 +246,7 @@ function ProfilePage() {
 
           <div className="max-w-5xl w-full mt-6">
             <h3 className="w-full bg-primary text-white text-center rounded p-3 h-12">
-              Your bookings
+              Bookings
             </h3>
             {upcomingBookings.length > 0 && (
               <div className="flex flex-col gap-2 mt-4">

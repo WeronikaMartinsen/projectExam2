@@ -95,7 +95,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative flex flex-col md:flex-row bg-tertiary border border-light rounded overflow-hidden transition-transform transform p-4 hover:shadow-lg">
+    <li className="relative flex flex-col md:flex-row bg-tertiary border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
       <div className="w-full md:w-1/3 h-56 md:h-auto overflow-hidden cursor-pointer rounded">
         <img
@@ -121,55 +121,56 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
               {venue.location.city} {venue.location.country}
             </a>
           </div>
-          <p className="text-xl font-semibold text-primary">
-            {venue.price} NOK
-          </p>
         </div>
+        {/* Floating Edit Button */}
+        {user && venue.owner?.name === user.name && (
+          <div className="flex justify-end">
+            <div className="relative z-50">
+              <button
+                className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded shadow-md hover:bg-accent-dark transition z-50"
+                onClick={handleToggleDropdown}
+              >
+                <MdEdit className="text-lg" />
+                <span>Update</span>
+              </button>
+              {isDropdownOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute right-0 mt-2 w-40 bg-white border shadow-md z-10 rounded"
+                >
+                  <button
+                    className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                    onClick={handleEdit}
+                  >
+                    Edit Venue
+                  </button>
+                  <button
+                    className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
+                    onClick={() => handleOpenModal(venue.id)}
+                  >
+                    Delete Venue
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         <h4 className="text-2xl font-bold text-gray-900">{venue.name}</h4>
         <Rating rating={venue.rating} />
         <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
 
         {/* Action Button */}
-        <div className="mt-6 flex justify-center gap-4">
+        <div className="mt-6 flex flex-col justify-end gap-4">
+          <div className="flex justify-end gap-1">
+            <p className="text-md font-semibold text-end">{venue.price} NOK</p>
+            <p>per night</p>
+          </div>
           <button
             onClick={handleNavigateToDetail}
-            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300"
+            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300 mt-4"
           >
             View Details
           </button>
-          {/* Floating Edit Button */}
-          {user && venue.owner?.name === user.name && (
-            <div className="">
-              <div className="relative">
-                <button
-                  className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded shadow-md hover:bg-accent-dark transition"
-                  onClick={handleToggleDropdown}
-                >
-                  <MdEdit className="text-lg" />
-                  <span>Update</span>
-                </button>
-                {isDropdownOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute right-0 mt-2 w-40 bg-white border shadow-md z-10 rounded"
-                  >
-                    <button
-                      className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-                      onClick={handleEdit}
-                    >
-                      Edit Venue
-                    </button>
-                    <button
-                      className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
-                      onClick={() => handleOpenModal(venue.id)}
-                    >
-                      Delete Venue
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

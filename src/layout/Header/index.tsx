@@ -13,7 +13,7 @@ import {
   PopoverGroup,
   PopoverPanel,
 } from "@headlessui/react";
-import { FiMenu, FiPlus, FiEdit, FiChevronDown, FiList } from "react-icons/fi";
+import { FiMenu, FiPlus, FiChevronDown, FiList } from "react-icons/fi";
 import { IoSunnyOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
@@ -29,12 +29,6 @@ const products = [
     description: "Create your own venue and publish it!",
     href: "/venues",
     icon: FiPlus,
-  },
-  {
-    name: "My Venues",
-    description: "Manage your venues - edit/delete",
-    href: "/profiles",
-    icon: FiEdit,
   },
 ];
 
@@ -209,6 +203,19 @@ function Header() {
             ) : (
               <span className="block text-md text-gray-400 p-3 rounded cursor-not-allowed">
                 My Bookings
+              </span>
+            )}
+
+            {isLoggedIn && user ? (
+              <Link
+                to={`/`}
+                className="block font-semibold text-md text-gray-900 hover:bg-gray-100 p-3 rounded"
+              >
+                Book now
+              </Link>
+            ) : (
+              <span className="block text-md text-gray-400 p-3 rounded cursor-not-allowed">
+                Book now
               </span>
             )}
 
