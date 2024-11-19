@@ -12,6 +12,8 @@ import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
+import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
+import ErrorMessage from "../../ErrorMessage";
 
 // Validation schema
 const schema = yup.object({
@@ -67,12 +69,7 @@ const CreateVenueForm: React.FC = () => {
   const navigate = useNavigate();
   const { venueId } = useParams();
 
-  const { loading, errorMessage } = useVenueForm(
-    createVenue,
-    updateVenue,
-    token,
-    venueId
-  );
+  const { loading } = useVenueForm(createVenue, updateVenue, token, venueId);
 
   const {
     register,
@@ -104,6 +101,7 @@ const CreateVenueForm: React.FC = () => {
   const [successMessageState, setSuccessMessageState] = useState<string | null>(
     null
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (venueId) {
@@ -150,6 +148,7 @@ const CreateVenueForm: React.FC = () => {
           );
         } catch (error) {
           console.error("Error fetching venue data:", error);
+          setErrorMessage("Failed to load venue data.");
         }
       };
       fetchVenueData();
@@ -161,10 +160,10 @@ const CreateVenueForm: React.FC = () => {
       let id: string;
 
       if (venueId) {
-        await updateVenue(venueId, data, token);
+        await updateVenue(venueId, data, token); // Update existing venue
         id = venueId;
       } else {
-        const response = await createVenue(data, token);
+        const response = await createVenue(data, token); // Create a new venue
         id = response.data.id;
       }
 
@@ -175,7 +174,8 @@ const CreateVenueForm: React.FC = () => {
         }, 2000);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      const apiError = apiErrorHandler(error);
+      setErrorMessage(apiError.message);
     }
   };
 
@@ -368,9 +368,8 @@ const CreateVenueForm: React.FC = () => {
         {loading ? "Saving..." : venueId ? "Update Venue" : "Create Venue"}
       </button>
 
-      {errorMessage && (
-        <p className="text-red-500 text-xs mt-2">{errorMessage}</p>
-      )}
+      {errorMessage && <ErrorMessage message={errorMessage} />}
+
       {successMessageState && (
         <p className="text-green-500 text-xs mt-2">{successMessageState}</p>
       )}

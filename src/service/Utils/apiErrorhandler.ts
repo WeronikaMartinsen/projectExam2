@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+
 export enum ApiErrorType {
   NetworkError = "NETWORK_ERROR",
   ServerError = "SERVER_ERROR",
@@ -15,10 +16,14 @@ interface ApiError {
   type: ApiErrorType;
   message: string;
 }
+
 const apiErrorHandler = (error: unknown): ApiError => {
+  console.error("Error received:", error);
+
   if (error instanceof AxiosError) {
     const { response } = error;
 
+    // Network errors
     if (!response) {
       return {
         type: ApiErrorType.NetworkError,
@@ -26,53 +31,49 @@ const apiErrorHandler = (error: unknown): ApiError => {
       };
     }
 
-    const apiMessage = response.data?.message;
+    const apiMessage = response.data?.message || "";
 
-    switch (response.status) {
-      case 400:
-        return {
-          type: ApiErrorType.ValidationError,
-          message: apiMessage || "Invalid request data. Please check your input.",
-        };
-      case 401:
-        return {
-          type: ApiErrorType.UnauthorizedError,
-          message: "Unauthorized: Please log in.",
-        };
-      case 403:
-        return {
-          type: ApiErrorType.ForbiddenError,
-          message: "Access denied: You do not have permission.",
-        };
-      case 404:
-        return {
-          type: ApiErrorType.NotFoundError,
-          message: "Requested resource not found.",
-        };
-      case 409:
-        if (apiMessage?.includes("already exists")) {
-          return {
-            type: ApiErrorType.AccountExistsError,
-            message: "Account already exists. Try logging in.",
-          };
-        }
-        break;
-      case 500:
-        return {
-          type: ApiErrorType.ServerError,
-          message: "Server error: Please try again later.",
-        };
-      default:
-        return {
-          type: ApiErrorType.UnknownError,
-          message: apiMessage || "An unknown error occurred. Please try again.",
-        };
-    }
+    const errorMap: Record<number, ApiError> = {
+      400: {
+        type: ApiErrorType.ValidationError,
+        message: apiMessage || "Invalid request data. Please check your input.",
+      },
+      401: {
+        type: ApiErrorType.UnauthorizedError,
+        message: "Unauthorized: Please log in.",
+      },
+      403: {
+        type: ApiErrorType.ForbiddenError,
+        message: "Access denied: You do not have permission.",
+      },
+      404: {
+        type: ApiErrorType.NotFoundError,
+        message: "Requested resource not found.",
+      },
+      409: {
+        type: apiMessage.includes("already exists")
+          ? ApiErrorType.AccountExistsError
+          : ApiErrorType.UnknownError,
+        message:
+          apiMessage || "Conflict error. Please verify your request details.",
+      },
+      500: {
+        type: ApiErrorType.ServerError,
+        message: "Server error: Please try again later.",
+      },
+    };
+
+    return (
+      errorMap[response.status] || {
+        type: ApiErrorType.UnknownError,
+        message: apiMessage || "An unknown error occurred. Please try again.",
+      }
+    );
   }
 
   return {
     type: ApiErrorType.UnknownError,
-    message: "An unknown error occurred. Please try again.",
+    message: "An unexpected error occurred. Please try again.",
   };
 };
 

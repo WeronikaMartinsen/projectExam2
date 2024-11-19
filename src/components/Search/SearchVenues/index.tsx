@@ -108,7 +108,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
             placeholder="Search venues..."
             className="border rounded p-3 w-full text-sm bg-white text-dark shadow-md focus:outline-none focus:ring-2 focus:ring-accent-dark transition-all duration-300 ease-in-out pl-4 pr-10"
           />
-          <span className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500">
+          <span className="absolute top-1/2 right-8 transform -translate-y-1/2 text-gray-500">
             <FiSearch />
           </span>
         </div>

@@ -42,7 +42,6 @@ export const getVenueById = async (id: string): Promise<ApiResponse<Venue>> => {
   }
 };
 
-// Create a new venue
 export const createVenue = async (
   venue: VenueCreate,
   token: string
@@ -55,9 +54,11 @@ export const createVenue = async (
       token
     );
   } catch (error) {
-    throw new Error(apiErrorHandler(error).message);
+    const apiError = apiErrorHandler(error);
+    throw new Error(apiError.message);
   }
 };
+
 
 export const updateVenue = async (
   id: string,
