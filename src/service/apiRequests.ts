@@ -59,7 +59,6 @@ export const createVenue = async (
   }
 };
 
-
 export const updateVenue = async (
   id: string,
   data: VenueCreate,

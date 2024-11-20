@@ -63,11 +63,11 @@ function Avatar() {
             <img
               src={avatarUrl}
               alt="User Avatar"
-              className="w-10 h-10 rounded-full shadow-lg"
+              className="w-10 h-10 rounded-full shadow-2xl"
             />
           </button>
           {dropdownOpen && (
-            <div className="absolute right-0 w-48 bg-white border shadow-lg z-20 pt-3">
+            <div className="absolute -left-20 w-48 bg-white border shadow-lg z-20 pt-3">
               <span className="text-sm font-semibold leading-6 text-gray-900 pl-4">
                 {user?.name}
               </span>

@@ -92,7 +92,7 @@ function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50 focus:bg-secondary focus:text-white active:bg-secondary active:text-white focus:ring-2 focus:ring-secondary"
+                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50 focus:bg-secondary focus:text-white active:text-white focus:ring-2 focus:ring-secondary"
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
@@ -157,16 +157,21 @@ function Header() {
       >
         <DialogPanel
           ref={menuRef}
-          className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+          className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-xs sm:ring-1 sm:ring-gray-900/10"
         >
-          <div className="flex flex-col space-y-6">
-            <div className="flex items-center justify-between mb-6">
-              <Link to="/" className="flex items-center">
-                <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
-                <span className="text-2xl font-bold text-blue-800">
+          <div className="flex flex-col space-y-6 justify-center items-center">
+            <div className="w-full flex items-center justify-between mb-6">
+              {/* Left-aligned logo */}
+              <div className="flex items-center">
+                <Link to="/">
+                  <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
+                </Link>
+                <span className="text-2xl font-bold text-blue-800 ml-2">
                   holidaze
                 </span>
-              </Link>
+              </div>
+
+              {/* Right-aligned close button */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-gray-700 hover:text-red-600 focus:outline-none"
@@ -180,7 +185,7 @@ function Header() {
                 Venues
                 <FiChevronDown className="h-5 w-5 transition-transform group-data-[open]:rotate-180" />
               </DisclosureButton>
-              <DisclosurePanel className="pl-4 space-y-3">
+              <DisclosurePanel className="space-y-3 text-center">
                 {products.map((item) => (
                   <Link
                     key={item.name}

@@ -12,7 +12,9 @@ import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
-import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
+import apiErrorHandler, {
+  ApiErrorType,
+} from "../../../service/Utils/apiErrorhandler";
 import ErrorMessage from "../../ErrorMessage";
 
 // Validation schema
@@ -22,18 +24,28 @@ const schema = yup.object({
   price: yup
     .number()
     .required("Price is required.")
-    .positive("Price must be positive."),
+    .positive("Price must be positive.")
+    .typeError("Price must be a valid number."), // This handles type errors like NaN
   maxGuests: yup
     .number()
     .required("Maximum guests is required.")
     .min(1, "Must be at least 1.")
-    .max(5, "Cannot exceed 5 guests."),
-  rating: yup.number().nullable().min(0).max(5),
+    .max(5, "Cannot exceed 5 guests.")
+    .typeError("Maximum guests must be a valid number."), // This handles NaN errors
+  rating: yup
+    .number()
+    .nullable()
+    .min(0, "Rating must be between 0 and 5.")
+    .max(5, "Rating must be between 0 and 5.")
+    .typeError("Rating must be a valid number."), // Handles NaN errors
   media: yup
     .array()
     .of(
       yup.object().shape({
-        url: yup.string().url("Must be a valid URL").optional(),
+        url: yup
+          .string()
+          .url("Must be a valid URL")
+          .required("Must be a valid URL"),
         alt: yup.string().optional(),
       })
     )
@@ -44,11 +56,8 @@ const schema = yup.object({
     .shape({
       address: yup.string().nullable(),
       city: yup.string().nullable(),
-      zip: yup.string().nullable(),
       country: yup.string().nullable(),
       continent: yup.string().nullable(),
-      lat: yup.number().nullable().default(0),
-      lng: yup.number().nullable().default(0),
     })
     .nullable()
     .default(null),
@@ -84,16 +93,13 @@ const CreateVenueForm: React.FC = () => {
       location: {
         address: "",
         city: "",
-        zip: "",
         country: "",
         continent: "",
-        lat: 0,
-        lng: 0,
       },
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: "media",
   });
@@ -102,6 +108,8 @@ const CreateVenueForm: React.FC = () => {
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [forbidden, setForbidden] = useState(false);
 
   useEffect(() => {
     if (venueId) {
@@ -130,11 +138,8 @@ const CreateVenueForm: React.FC = () => {
             location || {
               address: "",
               city: "",
-              zip: "",
               country: "",
               continent: "",
-              lat: 0,
-              lng: 0,
             }
           );
           setValue(
@@ -155,30 +160,6 @@ const CreateVenueForm: React.FC = () => {
     }
   }, [venueId, setValue]);
 
-  const onSubmit = async (data: VenueCreate) => {
-    try {
-      let id: string;
-
-      if (venueId) {
-        await updateVenue(venueId, data, token); // Update existing venue
-        id = venueId;
-      } else {
-        const response = await createVenue(data, token); // Create a new venue
-        id = response.data.id;
-      }
-
-      if (id) {
-        setSuccessMessageState("Venue saved successfully!");
-        setTimeout(() => {
-          navigate(`/venue/${id}`);
-        }, 2000);
-      }
-    } catch (error) {
-      const apiError = apiErrorHandler(error);
-      setErrorMessage(apiError.message);
-    }
-  };
-
   if (!isLoggedIn) {
     return (
       <div>
@@ -192,12 +173,62 @@ const CreateVenueForm: React.FC = () => {
     );
   }
 
+  const onSubmit = async (data: VenueCreate) => {
+    try {
+      const response = await createVenue(data, token);
+      const id = response.data.id;
+
+      if (id) {
+        setSuccessMessageState("Venue saved successfully!");
+        setTimeout(() => {
+          navigate(`/venue/${id}`);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Raw error:", error);
+      const apiError = apiErrorHandler(error);
+      console.log("Processed API error:", apiError);
+
+      if (apiError.type === ApiErrorType.ForbiddenError) {
+        setErrorMessage(apiError.message);
+        setForbidden(true);
+      } else {
+        setErrorMessage(apiError.message);
+      }
+    }
+  };
+
+  if (forbidden && user) {
+    return (
+      <div>
+        <MessageWithRedirect
+          message="You must be a venue manager to create a venue. Upgrade your profile now!"
+          redirectTo={`/profile/${user.name}/bookings`}
+          buttonText="Upgrade Profile"
+          autoRedirect={false}
+        />
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div>
+        <MessageWithRedirect
+          message="You must be logged in to create or update a venue."
+          redirectTo="/login"
+          buttonText="Go to Login"
+          autoRedirect={false}
+        />
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg space-y-4"
     >
-      <h1 className="text-center text-3xl font-semibold">
+      <h1 className="text-center text-3xl">
         {venueId ? "Update" : "Create"} a venue
       </h1>
 
@@ -270,31 +301,23 @@ const CreateVenueForm: React.FC = () => {
               className="w-full p-3 border border-gray-300 rounded-md"
               placeholder="Image URL"
             />
+            {/* Display specific error message for the URL field */}
+            {errors.media?.[index]?.url && (
+              <p className="text-danger text-xs">
+                {errors.media[index].url.message}
+              </p>
+            )}
             <input
               {...register(`media.${index}.alt`)}
               className="w-full p-3 border border-gray-300 rounded-md"
               placeholder="Image Alt Text"
             />
-            <button
-              type="button"
-              className="text-danger mt-2"
-              onClick={() => remove(index)}
-            >
-              Remove
-            </button>
           </div>
         ))}
-        <button
-          type="button"
-          className="bg-secondary text-white py-2 px-2 rounded-md"
-          onClick={() => append({ url: "", alt: "" })}
-        >
-          Add Media
-        </button>
       </div>
 
       {/* Location Fields */}
-      <div className="mb-4">
+      <div className="mb-4 flex flex-col gap-2">
         <label className="block text-sm font-medium">Location</label>
         <input
           {...register("location.address")}
@@ -305,11 +328,6 @@ const CreateVenueForm: React.FC = () => {
           {...register("location.city")}
           className="w-full p-3 border border-gray-300 rounded-md"
           placeholder="City"
-        />
-        <input
-          {...register("location.zip")}
-          className="w-full p-3 border border-gray-300 rounded-md"
-          placeholder="ZIP"
         />
         <input
           {...register("location.country")}
@@ -323,39 +341,46 @@ const CreateVenueForm: React.FC = () => {
         />
       </div>
 
-      <div className="mb-4">
-        <div className="flex flex-col space-y-2">
-          <label className="flex items-center">
+      <div className="mb-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* WiFi */}
+          <label className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition">
             <input
               type="checkbox"
               {...register("meta.wifi")}
-              className="mr-2"
+              className="w-5 h-5 accent-blue-600"
             />
-            WiFi
+            <span className="text-gray-800 font-medium">WiFi</span>
           </label>
-          <label className="flex items-center">
+
+          {/* Parking */}
+          <label className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition">
             <input
               type="checkbox"
               {...register("meta.parking")}
-              className="mr-2"
+              className="w-5 h-5 accent-blue-600"
             />
-            Parking
+            <span className="text-gray-800 font-medium">Parking</span>
           </label>
-          <label className="flex items-center">
+
+          {/* Breakfast */}
+          <label className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition">
             <input
               type="checkbox"
               {...register("meta.breakfast")}
-              className="mr-2"
+              className="w-5 h-5 accent-blue-600"
             />
-            Breakfast
+            <span className="text-gray-800 font-medium">Breakfast</span>
           </label>
-          <label className="flex items-center">
+
+          {/* Pets Allowed */}
+          <label className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition">
             <input
               type="checkbox"
               {...register("meta.pets")}
-              className="mr-2"
+              className="w-5 h-5 accent-blue-600"
             />
-            Pets Allowed
+            <span className="text-gray-800 font-medium">Pets Allowed</span>
           </label>
         </div>
       </div>

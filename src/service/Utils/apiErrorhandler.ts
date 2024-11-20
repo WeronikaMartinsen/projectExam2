@@ -1,80 +1,85 @@
 import { AxiosError } from "axios";
 
 export enum ApiErrorType {
-  NetworkError = "NETWORK_ERROR",
-  ServerError = "SERVER_ERROR",
-  ValidationError = "VALIDATION_ERROR",
-  NotFoundError = "NOT_FOUND",
-  UnauthorizedError = "UNAUTHORIZED",
-  AccountExistsError = "ACCOUNT_EXISTS",
-  IncorrectPasswordError = "INCORRECT_PASSWORD",
   ForbiddenError = "FORBIDDEN",
-  UnknownError = "UNKNOWN_ERROR",
+  NotFoundError = "NOT_FOUND",
+  ValidationError = "VALIDATION_ERROR",
+  UnknownError = "UNKNOWN",
 }
 
-interface ApiError {
-  type: ApiErrorType;
-  message: string;
+interface FetchErrorResponse {
+  response?: {
+    status?: number; // status can be undefined
+    data?: {
+      errors?: { message: string }[];
+    };
+  };
 }
 
-const apiErrorHandler = (error: unknown): ApiError => {
-  console.error("Error received:", error);
-
+export default function apiErrorHandler(error: unknown) {
+  // Handling Axios error
   if (error instanceof AxiosError) {
-    const { response } = error;
+    const status = error.response?.status;
+    const responseData = error.response?.data;
 
-    // Network errors
-    if (!response) {
+    if (status === 403) {
+      const errorMessage =
+        responseData?.errors?.[0]?.message ||
+        "Access denied. You do not have the required permissions.";
       return {
-        type: ApiErrorType.NetworkError,
-        message: "Network error: Please check your internet connection.",
+        type: ApiErrorType.ForbiddenError,
+        message: errorMessage,
       };
     }
 
-    const apiMessage = response.data?.message || "";
-
-    const errorMap: Record<number, ApiError> = {
-      400: {
-        type: ApiErrorType.ValidationError,
-        message: apiMessage || "Invalid request data. Please check your input.",
-      },
-      401: {
-        type: ApiErrorType.UnauthorizedError,
-        message: "Unauthorized: Please log in.",
-      },
-      403: {
-        type: ApiErrorType.ForbiddenError,
-        message: "Access denied: You do not have permission.",
-      },
-      404: {
+    if (status === 404) {
+      return {
         type: ApiErrorType.NotFoundError,
-        message: "Requested resource not found.",
-      },
-      409: {
-        type: apiMessage.includes("already exists")
-          ? ApiErrorType.AccountExistsError
-          : ApiErrorType.UnknownError,
-        message:
-          apiMessage || "Conflict error. Please verify your request details.",
-      },
-      500: {
-        type: ApiErrorType.ServerError,
-        message: "Server error: Please try again later.",
-      },
-    };
+        message: "Resource not found.",
+      };
+    }
 
-    return (
-      errorMap[response.status] || {
-        type: ApiErrorType.UnknownError,
-        message: apiMessage || "An unknown error occurred. Please try again.",
-      }
-    );
+    if (status && status >= 400 && status < 500) {
+      return {
+        type: ApiErrorType.ValidationError,
+        message: responseData?.message || "Validation error occurred.",
+      };
+    }
+
+    return {
+      type: ApiErrorType.UnknownError,
+      message:
+        responseData?.message ||
+        "An unexpected error occurred. Please try again.",
+    };
   }
 
+  // Handling fetch errors
+  if (error instanceof Error && "message" in error) {
+    // Check if error contains a response status and message
+    if (error.message.includes("Failed to fetch")) {
+      return {
+        type: ApiErrorType.UnknownError,
+        message: "Network error. Please check your connection.",
+      };
+    }
+
+    // Check for specific error response from the fetch API
+    const fetchError = error as FetchErrorResponse;
+    if (fetchError.response?.data?.errors) {
+      const message =
+        fetchError.response.data.errors[0]?.message ||
+        "Unknown error occurred.";
+      return {
+        type: ApiErrorType.UnknownError,
+        message: message,
+      };
+    }
+  }
+
+  // Fallback for unknown errors
   return {
     type: ApiErrorType.UnknownError,
     message: "An unexpected error occurred. Please try again.",
   };
-};
-
-export default apiErrorHandler;
+}
