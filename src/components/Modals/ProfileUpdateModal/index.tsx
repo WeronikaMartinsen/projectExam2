@@ -62,7 +62,7 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
         bio: profile.bio || "",
         venueManager: profile.venueManager || undefined,
         avatar: profile.avatar || undefined,
-        banner: profile.banner || undefined, // Fix: Set banner separately
+        banner: profile.banner || undefined,
       });
     }
   }, [profile, reset]);

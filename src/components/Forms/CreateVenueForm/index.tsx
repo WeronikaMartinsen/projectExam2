@@ -12,10 +12,9 @@ import { useVenueForm } from "../../Hooks/useVenueForm";
 import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
-import apiErrorHandler, {
-  ApiErrorType,
-} from "../../../service/Utils/apiErrorhandler";
+import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
 import ErrorMessage from "../../ErrorMessage";
+import { AxiosError } from "axios";
 
 // Validation schema
 const schema = yup.object({
@@ -108,8 +107,7 @@ const CreateVenueForm: React.FC = () => {
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const [forbidden, setForbidden] = useState(false);
+  console.log(user);
 
   useEffect(() => {
     if (venueId) {
@@ -173,6 +171,20 @@ const CreateVenueForm: React.FC = () => {
     );
   }
 
+  if (!user?.venueManager) {
+    console.log(user, "from before check");
+    return (
+      <div>
+        <MessageWithRedirect
+          message="You must be a venue manager to create a venue. Upgrade your profile now!"
+          redirectTo={`/profiles/${user?.name}`}
+          buttonText="Upgrade Profile"
+          autoRedirect={false}
+        />
+      </div>
+    );
+  }
+
   const onSubmit = async (data: VenueCreate) => {
     try {
       const response = await createVenue(data, token);
@@ -185,44 +197,18 @@ const CreateVenueForm: React.FC = () => {
         }, 2000);
       }
     } catch (error) {
-      console.error("Raw error:", error);
       const apiError = apiErrorHandler(error);
       console.log("Processed API error:", apiError);
 
-      if (apiError.type === ApiErrorType.ForbiddenError) {
-        setErrorMessage(apiError.message);
-        setForbidden(true);
-      } else {
-        setErrorMessage(apiError.message);
+      if (error instanceof AxiosError) {
+        console.log("Full Axios Error:", error);
+        console.log("Response Data:", error.response?.data);
       }
+
+      setErrorMessage(apiError.message);
     }
   };
 
-  if (forbidden && user) {
-    return (
-      <div>
-        <MessageWithRedirect
-          message="You must be a venue manager to create a venue. Upgrade your profile now!"
-          redirectTo={`/profile/${user.name}/bookings`}
-          buttonText="Upgrade Profile"
-          autoRedirect={false}
-        />
-      </div>
-    );
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <div>
-        <MessageWithRedirect
-          message="You must be logged in to create or update a venue."
-          redirectTo="/login"
-          buttonText="Go to Login"
-          autoRedirect={false}
-        />
-      </div>
-    );
-  }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
