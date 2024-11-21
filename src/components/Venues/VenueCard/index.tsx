@@ -22,7 +22,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const [showMessage, setShowMessage] = useState(false);
 
   const user = getUser();
-  const token = user?.accessToken || "";
+  const token = user && "accessToken" in user ? user.accessToken : "";
 
   const { loading, data, deleteVenue } = useDeleteVenue(token || "");
 

@@ -171,20 +171,6 @@ const CreateVenueForm: React.FC = () => {
     );
   }
 
-  if (!user?.venueManager) {
-    console.log(user, "from before check");
-    return (
-      <div>
-        <MessageWithRedirect
-          message="You must be a venue manager to create a venue. Upgrade your profile now!"
-          redirectTo={`/profiles/${user?.name}`}
-          buttonText="Upgrade Profile"
-          autoRedirect={false}
-        />
-      </div>
-    );
-  }
-
   const onSubmit = async (data: VenueCreate) => {
     try {
       const response = await createVenue(data, token);

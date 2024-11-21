@@ -51,10 +51,14 @@ function SingleVenueCard() {
     fetchVenue();
   }, [id]);
 
-  const token = localStorage.getItem("accessToken");
-
   const handleBook = () => {
-    if (venue && selectedFromDate && selectedToDate && token) {
+    if (
+      venue &&
+      selectedFromDate &&
+      selectedToDate &&
+      user &&
+      "accessToken" in user
+    ) {
       const bookingData = {
         venueId: venue.id,
         dateFrom: selectedFromDate,
@@ -62,7 +66,7 @@ function SingleVenueCard() {
         guests,
       };
 
-      createBooking(bookingData, token)
+      createBooking(bookingData, user.accessToken)
         .then(() => {
           setShowMessage(true);
           setTimeout(() => {

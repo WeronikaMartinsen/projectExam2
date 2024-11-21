@@ -47,16 +47,16 @@ function LoginForm() {
     try {
       const response: LoginResponse = await loginUser(loginData);
       console.log("API Response:", response);
+
       const accessToken = response.accessToken;
+      console.log(accessToken);
 
       if (!accessToken) {
         console.error("Login failed: No access token found in response.");
         setErrorMessage("Login failed. Please try again.");
         return;
       }
-
       login(response);
-      localStorage.setItem("accessToken", accessToken);
       setShowMessage(true);
       setTimeout(() => {
         navigate("/");

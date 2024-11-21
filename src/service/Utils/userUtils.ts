@@ -1,32 +1,27 @@
-import { RegisterUserData } from "../ApiCalls/Interfaces/userData";
 import { LoginResponse } from "../ApiCalls/Interfaces/loginResponse";
-
-const USER_KEY = "user";
-const ACCESS_TOKEN_KEY = "accessToken";
+import { RegisterUserData } from "../ApiCalls/Interfaces/userData";
+import { useAuthStore } from "../Store/authStore";
 
 export const setUser = (user: RegisterUserData | LoginResponse) => {
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
-
-  if ("accessToken" in user) {
-    localStorage.setItem(ACCESS_TOKEN_KEY, user.accessToken);
-  }
+  const store = useAuthStore.getState();
+  store.setUser(user);
 };
 
 export const getUser = () => {
-  const userData = localStorage.getItem(USER_KEY);
-  return userData ? JSON.parse(userData) : null;
+  const store = useAuthStore.getState();
+  const user = store.user;
+  if (user && "accessToken" in user) {
+    return user;
+  }
+  return null;
 };
 
 export const deleteUser = () => {
-  localStorage.removeItem(USER_KEY);
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  const store = useAuthStore.getState();
+  store.clearUser();
 };
 
 export const isLoggedIn = () => {
-  const user = getUser();
-  if (!user || !user.accessToken) return false;
-
-  const tokenPayload = JSON.parse(atob(user.accessToken.split(".")[1]));
-  const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
-  return !isTokenExpired;
+  const store = useAuthStore.getState();
+  return store.isTokenValid();
 };

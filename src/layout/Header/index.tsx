@@ -37,6 +37,12 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    // Check if the context is updating as expected
+    console.log("User:", user);
+    console.log("Is Logged In:", isLoggedIn);
+  }, [user, isLoggedIn]);
+
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setMobileMenuOpen(false);
