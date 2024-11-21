@@ -95,9 +95,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative flex flex-col md:flex-row bg-tertiary border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
+    <li className="relative flex flex-col md:flex-row bg-tertiary h- border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
-      <div className="w-full md:w-1/2 h-56 md:h-auto overflow-hidden cursor-pointer rounded">
+      <div className="w-full md:w-80 h-36 md:h-auto overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
@@ -126,11 +126,11 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
             <div className="flex justify-end">
               <div className="relative z-50">
                 <button
-                  className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded shadow-md hover:bg-accent-dark transition z-50"
+                  className="p-2 border-gray shadow text-sm border rounded flex justify-center gap-2 items-center hover:shadow-md"
                   onClick={handleToggleDropdown}
                 >
                   <MdEdit className="text-lg" />
-                  <span>Update</span>
+                  <span>Update Venue</span>
                 </button>
                 {isDropdownOpen && (
                   <div
@@ -141,7 +141,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
                       className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                       onClick={handleEdit}
                     >
-                      Edit Venue
+                      Update Venue
                     </button>
                     <button
                       className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"

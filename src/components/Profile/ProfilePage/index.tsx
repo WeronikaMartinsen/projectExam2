@@ -38,6 +38,7 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showVenues, setShowVenues] = useState(true);
 
   const accessToken = user?.accessToken;
 
@@ -194,10 +195,10 @@ function ProfilePage() {
               {profile.name === user?.name && (
                 <div className="ml-auto mr-2">
                   <button
-                    className="p-2 border-primary border rounded flex justify-center gap-2 items-center"
+                    className="p-2 border-gray shadow text-sm border rounded flex justify-center gap-2 items-center hover:shadow-md"
                     onClick={handleOpenModal}
                   >
-                    Edit
+                    Update Profile
                     <MdEdit />
                   </button>
                   <ProfileUpdateModal
@@ -223,64 +224,89 @@ function ProfilePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 justify-center">
-          <div className="max-w-9xl w-full mt-6">
-            <h3 className="text-md text-center w-full bg-primary p-3 text-white rounded">
-              Venues
-            </h3>
-            <ul className="space-y-8 mt-4">
-              {venues.length > 0 ? (
-                venues.map((venue) => (
-                  <VenueCard key={venue.id} venue={venue} />
-                ))
-              ) : (
+        <div className="flex justify-center items-center mt-6">
+          {/* Toggle Button */}
+          <button
+            className={`p-2 mx-2 ${
+              showVenues ? "bg-primary" : "bg-secondary"
+            } text-white rounded`}
+            onClick={() => setShowVenues(true)}
+          >
+            Venues
+          </button>
+          <button
+            className={`p-2 mx-2 ${
+              !showVenues ? "bg-primary" : "bg-secondary"
+            } text-white rounded`}
+            onClick={() => setShowVenues(false)}
+          >
+            Bookings
+          </button>
+        </div>
+
+        <div className="max-w-5xl w-full flex justify-center items-center">
+          {/* Conditional Rendering based on Toggle */}
+          {showVenues ? (
+            <div className="max-w-9xl w-full mt-6">
+              <h3 className="text-md text-center w-full bg-primary p-3 text-white rounded">
+                Venues
+              </h3>
+              <ul className="space-y-8 mt-4">
+                {venues.length > 0 ? (
+                  venues.map((venue) => (
+                    <VenueCard key={venue.id} venue={venue} />
+                  ))
+                ) : (
+                  <MessageWithRedirect
+                    message="You don't have any venue yet. Create it now!"
+                    redirectTo="/venues"
+                    buttonText="Add venue"
+                    autoRedirect={false}
+                  />
+                )}
+              </ul>
+            </div>
+          ) : (
+            <div className="max-w-5xl w-full mt-6">
+              <h3 className="w-full bg-primary text-white text-center rounded p-3 h-12">
+                Bookings
+              </h3>
+              {upcomingBookings.length > 0 && (
+                <div className="flex flex-col gap-2 mt-4">
+                  {upcomingBookings.map((booking) => (
+                    <BookingCard
+                      key={booking.id}
+                      booking={booking}
+                      isPastBooking={false}
+                      daysLeft={daysUntilTravel(booking.dateFrom)}
+                    />
+                  ))}
+                </div>
+              )}
+              {pastBookings.length > 0 && (
+                <div className="mt-8 flex flex-col gap-2">
+                  <span className="text-lg text-gray-700 mt-4">
+                    Last Travel
+                  </span>
+                  {pastBookings.map((booking) => (
+                    <BookingCard
+                      key={booking.id}
+                      booking={booking}
+                      isPastBooking={true}
+                    />
+                  ))}
+                </div>
+              )}
+              {bookings.length === 0 && (
                 <MessageWithRedirect
-                  message="You don't have any venue yet. Create it now!"
-                  redirectTo="/venues"
-                  buttonText="Add venue"
+                  message="You don't have any bookings yet. Book now!"
+                  redirectTo="/"
+                  buttonText="Find venue"
                   autoRedirect={false}
                 />
               )}
-            </ul>
-          </div>
-
-          <div className="max-w-5xl w-full mt-6">
-            <h3 className="w-full bg-primary text-white text-center rounded p-3 h-12">
-              Bookings
-            </h3>
-            {upcomingBookings.length > 0 && (
-              <div className="flex flex-col gap-2 mt-4">
-                {upcomingBookings.map((booking) => (
-                  <BookingCard
-                    key={booking.id}
-                    booking={booking}
-                    isPastBooking={false}
-                    daysLeft={daysUntilTravel(booking.dateFrom)}
-                  />
-                ))}
-              </div>
-            )}
-            {pastBookings.length > 0 && (
-              <div className="mt-8 flex flex-col gap-2">
-                <span className="text-lg text-gray-700 mt-4">Last Travel</span>
-                {pastBookings.map((booking) => (
-                  <BookingCard
-                    key={booking.id}
-                    booking={booking}
-                    isPastBooking={true}
-                  />
-                ))}
-              </div>
-            )}
-            {bookings.length === 0 && (
-              <MessageWithRedirect
-                message="You don't have any bookings yet. Book now!"
-                redirectTo="/"
-                buttonText="Find venue"
-                autoRedirect={false}
-              />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
