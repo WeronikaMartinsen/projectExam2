@@ -37,11 +37,7 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    // Check if the context is updating as expected
-    console.log("User:", user);
-    console.log("Is Logged In:", isLoggedIn);
-  }, [user, isLoggedIn]);
+  useEffect(() => {}, [user, isLoggedIn]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -77,7 +73,7 @@ function Header() {
         <div className="flex lg:hidden">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded p-2.5 text-gray-700 hover:bg-gray-200"
+            className="-m-2.5 inline-flex font-bold items-center justify-center rounded p-2.5 text-primary hover:bg-gray-200"
           >
             <FiMenu className="h-6 w-6" />
           </button>

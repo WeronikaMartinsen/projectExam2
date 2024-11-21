@@ -19,6 +19,7 @@ import BookingCard from "../../Bookings/BookingCard";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 import { MdEdit } from "react-icons/md";
 import ProfileUpdateModal from "../../Modals/ProfileUpdateModal";
+import { useAuthStore } from "../../../service/Store/authStore";
 
 // Helper function to calculate the number of days until travel
 const daysUntilTravel = (travelDate: string) => {
@@ -39,6 +40,7 @@ function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showVenues, setShowVenues] = useState(true);
+  const updateUserInStore = useAuthStore((state) => state.updateUser);
 
   const accessToken = user?.accessToken;
 
@@ -83,10 +85,27 @@ function ProfilePage() {
       if (updatedProfileData.avatar === null) {
         updatedProfileData.avatar = undefined;
       }
+      if (updatedProfileData.banner === null) {
+        updatedProfileData.banner = undefined; // Reset to undefined
+      }
+      if (updatedProfileData.bio === null) {
+        updatedProfileData.bio = undefined; // Reset to undefined
+      }
+      if (updatedProfileData.venueManager === null) {
+        updatedProfileData.venueManager = undefined; // Reset to undefined
+      }
 
       setProfile(updatedProfileData);
+      // Update store user
+      updateUserInStore({
+        name: updatedProfileData.name,
+        bio: updatedProfileData.bio ?? "",
+        avatar: updatedProfileData.avatar,
+        venueManager: updatedProfileData.venueManager,
+      });
 
       await updateProfile(name, updatedProfileData, accessToken);
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
     } finally {
@@ -181,7 +200,7 @@ function ProfilePage() {
     <div className="container w-full">
       <div className="flex flex-col justify-center items-center">
         {profile && (
-          <div className="container max-w-7xl shadow-lg">
+          <div className="container max-w-7xl shadow-lg bg-tertiary">
             <div
               className="w-full h-48 bg-cover bg-center"
               style={{ backgroundImage: `url(${profile.banner?.url || ""})` }}
