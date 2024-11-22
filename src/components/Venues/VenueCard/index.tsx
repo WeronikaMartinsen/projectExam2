@@ -95,9 +95,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative flex flex-col md:flex-row border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
+    <li className="relative flex flex-col shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
-      <div className="w-full md:w-80 h-36 md:h-auto overflow-hidden cursor-pointer rounded">
+      <div className="w-full md:w-80 h-26 overflow-hidden cursor-pointer rounded">
         <img
           key={venue.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
@@ -108,7 +108,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       </div>
 
       {/* Venue Details */}
-      <div className="flex flex-col flex-1 p-4">
+      <div className="flex flex-col flex-1 p-2 pl-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col items-center gap-2">
             <IoLocation className="text-primary" />
@@ -156,19 +156,21 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           )}
         </div>
 
-        <h4 className="text-2xl font-bold text-gray-900">{venue.name}</h4>
-        <Rating rating={venue.rating} />
+        <div className="flex gap-2">
+          <h4 className="text-2xl font-bold text-gray-900">{venue.name}</h4>
+          <Rating rating={venue.rating} />
+        </div>
         <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
 
         {/* Action Button */}
-        <div className="mt-6 flex flex-col justify-end items-center gap-4">
+        <div className="mt-6 flex flex-col justify-end items-end gap-2 pr-4 pb-4">
           <div className="flex justify-end text-end gap-2">
             <p className="text-md font-semibold text-end">{venue.price} NOK</p>
             <p className="text-xs mt-1">per night</p>
           </div>
           <button
             onClick={handleNavigateToDetail}
-            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300 mt-4 w-56"
+            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300 w-56"
           >
             View Details
           </button>

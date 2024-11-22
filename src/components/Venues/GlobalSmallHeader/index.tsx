@@ -6,7 +6,7 @@ function GlobalSmallHeader() {
     <>
       <section className="bg-secondary h-21 w-full">
         <div className="flex justify-center align-middle items-center">
-          <span className="text-lack font-semibold text-center text-xs p-4">
+          <span className="text-white bg-black font-semibold text-center text-xs p-2 rounded">
             BLACK WEEK STARTS! Up til 50% rabat!
           </span>
           <Link

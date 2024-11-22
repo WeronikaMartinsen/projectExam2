@@ -18,7 +18,7 @@ interface VenueMetaProps {
 }
 
 const VenueMeta: React.FC<VenueMetaProps> = ({ meta, maxGuests }) => (
-  <div className="w-full max-w-2lg grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 mt-6 text-sm">
+  <div className="w-full max-w-2lg grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 text-sm">
     {meta.breakfast && (
       <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
         <MdFreeBreakfast
