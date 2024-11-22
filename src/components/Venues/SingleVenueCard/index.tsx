@@ -94,19 +94,18 @@ function SingleVenueCard() {
       </div>
     );
 
-  if (error) return <div>Error: {error}</div>;
-  if (!venue) return <div>Venue not found</div>;
+  if (error) return <div className="mt-10 text-danger">Error: {error}</div>;
+  if (!venue) return <div className="mt-10 text-danger">Venue not found</div>;
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city}, ${venue.location.country}`
   )}`;
-
   return (
-    <div className="container max-w-5xl mx-auto bg-tertiary p-6 rounded-lg shadow-md w-full">
+    <div className="container max-w-5xl mx-auto bg-white p-4 rounded-xl shadow-lg w-full">
       {/* Full-width image */}
-      <div className="w-full h-64 overflow-hidden mb-6">
+      <div className="w-full h-64 overflow-hidden rounded mb-6">
         <img
-          className="w-full h-full object-cover rounded"
+          className="w-full h-full object-cover"
           src={venue.media[0]?.url}
           alt={venue.media[0]?.alt || venue.name}
         />
@@ -114,57 +113,63 @@ function SingleVenueCard() {
 
       {/* Venue Header */}
       <div className="mb-6">
-        <h2 className="text-3xl font-semibold mb-4 text-gray-800">
-          {venue.name}
-        </h2>
-        <div className="flex items-center gap-2 mb-4">
-          <Rating rating={venue.rating} />
+        <div className="flex flex-wrap justify-between items-center mb-4">
+          <h2 className="text-3xl font-bold text-gray-800">{venue.name}</h2>
+          <div className="flex items-center gap-2">
+            <Rating rating={venue.rating} />
+          </div>
         </div>
+
         <div className="flex items-center gap-2 text-gray-600">
-          <IoLocation className="text-primary text-lg" />
+          <IoLocation className="text-primary text-xl" />
           <a
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline"
+            className="hover:underline text-gray-700"
           >
-            {venue.location.city} {venue.location.country}
+            {venue.location.city}, {venue.location.country}
           </a>
         </div>
       </div>
 
       {/* Venue Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <p className="text-gray-600">{venue.description}</p>
-          <div className="mt-4">
-            <span className="text-md font-semibold">Price:</span>{" "}
-            <span className="text-md text-primary">{venue.price} NOK</span>
-          </div>
-          <div className="mt-2">
-            <span className="text-md font-semibold">Bookings:</span>{" "}
-            <span>{venue._count.bookings}</span>
-          </div>
+      <div className="mb-6 space-y-4">
+        <p className="text-gray-700 leading-6">{venue.description}</p>
 
-          {/* Features */}
-          <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
+        <div className="flex flex-wrap justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+          <div>
+            <span className="font-medium text-gray-600">Price:</span>{" "}
+            <span className="text-lg font-semibold text-primary">
+              {venue.price} NOK
+            </span>
+          </div>
+          <div>
+            <span className="font-medium text-gray-600">Bookings:</span>{" "}
+            <span className="font-semibold text-gray-800">
+              {venue._count.bookings}
+            </span>
+          </div>
         </div>
 
-        {/* Calendar Section */}
-        <div className="flex flex-col align-top">
-          <span className="text-md font-semibold text-center mb-4">
+        {/* Features */}
+        <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
+      </div>
+
+      {/* Calendar Section */}
+      <div className="mb-6">
+        <div className="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+          <span className="text-lg font-semibold text-gray-800 mb-4 block">
             Available Dates
           </span>
-          <div className="flex justify-center items-center w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-            <div className="w-full flex justify-center">
-              <Calender
-                bookings={bookings}
-                onDateRangeSelect={(fromDate: string, toDate: string) => {
-                  setSelectedFromDate(fromDate);
-                  setSelectedToDate(toDate);
-                }}
-              />
-            </div>
+          <div className="w-full flex justify-center">
+            <Calender
+              bookings={bookings}
+              onDateRangeSelect={(fromDate, toDate) => {
+                setSelectedFromDate(fromDate);
+                setSelectedToDate(toDate);
+              }}
+            />
           </div>
         </div>
       </div>
@@ -172,18 +177,25 @@ function SingleVenueCard() {
       {/* Booking Form */}
       <div className="mt-6">
         {user ? (
-          <BookingForm
-            venue={venue}
-            selectedFromDate={selectedFromDate || ""}
-            selectedToDate={selectedToDate || ""}
-            setSelectedFromDate={setSelectedFromDate}
-            setSelectedToDate={setSelectedToDate}
-            guests={guests}
-            setGuests={setGuests}
-            handleBook={handleBook}
-          />
+          <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+            <BookingForm
+              venue={venue}
+              selectedFromDate={selectedFromDate || ""}
+              selectedToDate={selectedToDate || ""}
+              setSelectedFromDate={setSelectedFromDate}
+              setSelectedToDate={setSelectedToDate}
+              guests={guests}
+              setGuests={setGuests}
+              handleBook={handleBook}
+            />
+          </div>
         ) : (
-          <div></div>
+          <MessageWithRedirect
+            message="You must be logged in to book this venue!"
+            redirectTo="/login"
+            buttonText="Login now"
+            autoRedirect={false}
+          />
         )}
       </div>
 
@@ -197,24 +209,23 @@ function SingleVenueCard() {
       )}
 
       {/* Contact Owner */}
-      {user ? (
+      {user && (
         <div className="mt-8">
-          <span className="text-md font-semibold mb-4">Contact the host:</span>
-          <VenueOwner owner={venue.owner} />
+          <span className="text-lg font-semibold text-gray-800 block mb-4">
+            Contact the host:
+          </span>
+          <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+            <VenueOwner owner={venue.owner} />
+          </div>
         </div>
-      ) : (
-        <MessageWithRedirect
-          message="You must be logged in to book this venue!"
-          redirectTo="/login"
-          buttonText="Login now"
-          autoRedirect={false}
-        />
       )}
 
       {/* Booked Dates */}
       {user && (
         <div className="mt-6">
-          <BookedDates bookings={bookings} />
+          <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+            <BookedDates bookings={bookings} />
+          </div>
         </div>
       )}
     </div>

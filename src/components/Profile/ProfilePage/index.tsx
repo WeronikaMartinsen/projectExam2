@@ -200,7 +200,7 @@ function ProfilePage() {
     <div className="container w-full">
       <div className="flex flex-col justify-center items-center">
         {profile && (
-          <div className="container max-w-7xl shadow-lg bg-tertiary">
+          <div className="container max-w-7xl shadow-lg">
             <div
               className="w-full h-48 bg-cover bg-center"
               style={{ backgroundImage: `url(${profile.banner?.url || ""})` }}

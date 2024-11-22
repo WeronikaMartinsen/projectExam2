@@ -95,7 +95,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative flex flex-col md:flex-row bg-tertiary h- border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
+    <li className="relative flex flex-col md:flex-row border border-light rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
       <div className="w-full md:w-80 h-36 md:h-auto overflow-hidden cursor-pointer rounded">
         <img
@@ -108,7 +108,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       </div>
 
       {/* Venue Details */}
-      <div className="flex flex-col flex-1 p-8">
+      <div className="flex flex-col flex-1 p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col items-center gap-2">
             <IoLocation className="text-primary" />
@@ -161,14 +161,14 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
         <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
 
         {/* Action Button */}
-        <div className="mt-6 flex flex-col justify-end gap-4">
-          <div className="flex justify-end gap-1">
+        <div className="mt-6 flex flex-col justify-end items-center gap-4">
+          <div className="flex justify-end text-end gap-2">
             <p className="text-md font-semibold text-end">{venue.price} NOK</p>
-            <p>per night</p>
+            <p className="text-xs mt-1">per night</p>
           </div>
           <button
             onClick={handleNavigateToDetail}
-            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300 mt-4"
+            className="bg-accent px-6 py-2 rounded font-semibold hover:bg-accent-dark transition duration-300 mt-4 w-56"
           >
             View Details
           </button>

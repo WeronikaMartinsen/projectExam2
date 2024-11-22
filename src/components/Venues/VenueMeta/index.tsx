@@ -18,35 +18,55 @@ interface VenueMetaProps {
 }
 
 const VenueMeta: React.FC<VenueMetaProps> = ({ meta, maxGuests }) => (
-  <div className="w-full grid grid-cols-2 gap-2 mt-4 text-sm justify-between align-middle items-center">
+  <div className="w-full max-w-2lg grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 mt-6 text-sm">
     {meta.breakfast && (
-      <div className="flex items-center">
-        <MdFreeBreakfast title="Breakfast included" />
-        <span className="ml-1 text-sm leading-6">Breakfast</span>
+      <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
+        <MdFreeBreakfast
+          title="Breakfast included"
+          className="text-primary text-xl"
+          aria-label="Breakfast included"
+        />
+        <span className="leading-6">Breakfast</span>
       </div>
     )}
     {meta.wifi && (
-      <div className="flex items-center">
-        <MdWifi title="Wi-Fi available" />
-        <span className="ml-1 text-sm leading-6">Wi-Fi</span>
+      <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
+        <MdWifi
+          title="Wi-Fi available"
+          className="text-primary text-xl"
+          aria-label="Wi-Fi available"
+        />
+        <span className="leading-6">Wi-Fi</span>
       </div>
     )}
     {meta.parking && (
-      <div className="flex items-center">
-        <MdDirectionsCar title="Parking available" />
-        <span className="ml-1 text-sm leading-6">Parking</span>
+      <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
+        <MdDirectionsCar
+          title="Parking available"
+          className="text-primary text-xl"
+          aria-label="Parking available"
+        />
+        <span className="leading-6">Parking</span>
       </div>
     )}
     {meta.pets && (
-      <div className="flex items-center">
-        <MdPets title="Pets allowed" />
-        <span className="ml-1 text-sm leading-6">Pets</span>
+      <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
+        <MdPets
+          title="Pets allowed"
+          className="text-primary text-xl"
+          aria-label="Pets allowed"
+        />
+        <span className="leading-6">Pets</span>
       </div>
     )}
     {maxGuests && (
-      <div className="flex items-center">
-        <MdPerson title="Max guests" />
-        <span className="ml-1 text-sm leading-6">{maxGuests}</span>
+      <div className="flex items-center space-x-2 p-2 hover:bg-gray-200 transition">
+        <MdPerson
+          title="Max guests"
+          className="text-primary text-xl"
+          aria-label={`Maximum guests: ${maxGuests}`}
+        />
+        <span className="leading-6">{maxGuests} Guests</span>
       </div>
     )}
   </div>
