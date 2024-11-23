@@ -12,7 +12,10 @@ interface FilterSidebarProps {
   onFilterChange: (newFilters: Filters) => void;
 }
 
-const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
+const Filtering: React.FC<FilterSidebarProps> = ({
+  filters,
+  onFilterChange,
+}) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     onFilterChange({ ...filters, [name]: checked });
@@ -20,7 +23,7 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
 
   return (
     <div className="flex">
-      {/* Sidebar Drawer */}
+      {/* Filtering Drawer */}
       <div className="flex justify-center items-center">
         <div className="flex flex-wrap gap-4 sm:gap-6 justify-center items-center align-middle">
           {/* Filter options */}
@@ -70,4 +73,4 @@ const Sidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {
   );
 };
 
-export default Sidebar;
+export default Filtering;

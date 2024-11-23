@@ -14,7 +14,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
 import ErrorMessage from "../../ErrorMessage";
-import { AxiosError } from "axios";
 
 // Validation schema
 const schema = yup.object({
@@ -107,7 +106,6 @@ const CreateVenueForm: React.FC = () => {
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  console.log(user);
 
   useEffect(() => {
     if (venueId) {
@@ -195,13 +193,6 @@ const CreateVenueForm: React.FC = () => {
       }
     } catch (error) {
       const apiError = apiErrorHandler(error);
-      console.log("Processed API error:", apiError);
-
-      if (error instanceof AxiosError) {
-        console.log("Full Axios Error:", error);
-        console.log("Response Data:", error.response?.data);
-      }
-
       setErrorMessage(apiError.message);
     }
   };

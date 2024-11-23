@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 
-interface SuccessMessageProps {
+interface ErrorMessageProps {
   message: string;
   duration: number;
   onClose: () => void;
 }
 
-const SuccessMessage: React.FC<SuccessMessageProps> = ({
+const ErrorMessage: React.FC<ErrorMessageProps> = ({
   message,
   duration,
   onClose,
@@ -20,10 +20,10 @@ const SuccessMessage: React.FC<SuccessMessageProps> = ({
   }, [duration, onClose]);
 
   return (
-    <div className="fixed top-4 right-4 z-50 bg-success text-white p-4 rounded-lg shadow-lg">
+    <div className="fixed top-4 right-4 z-50 bg-danger text-white p-4 rounded-lg shadow-lg">
       {message}
     </div>
   );
 };
 
-export default SuccessMessage;
+export default ErrorMessage;

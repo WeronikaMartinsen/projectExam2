@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useVenues } from "../../Hooks/useVenues";
 import VenueCard from "../VenueCard";
 import SearchVenues from "../../Search/SearchVenues";
-import Sidebar from "../../../layout/Sidebar";
+import Filtering from "../../Filtering";
 import { useNavigate } from "react-router-dom";
 
 const VenuesList: React.FC = () => {
@@ -36,7 +36,7 @@ const VenuesList: React.FC = () => {
     return matchesSearch && matchesFilters;
   });
 
-  // Handle filter changes from Sidebar
+  // Handle filter changes from Filtering
   const handleFilterChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
   };
@@ -58,9 +58,9 @@ const VenuesList: React.FC = () => {
             handleSearch(filteredVenues[0]?.name || "");
           }}
         />
-        {/* Sidebar for Filters */}
-        <div className="flex w-full justify-center bg-tertiary border-b-2 border-accent shadow">
-          <Sidebar filters={filters} onFilterChange={handleFilterChange} />
+        {/* Filtering for Filters */}
+        <div className="flex w-full p-3 justify-center bg-tertiary shadow">
+          <Filtering filters={filters} onFilterChange={handleFilterChange} />
         </div>
 
         {/* Venue List */}

@@ -10,10 +10,9 @@ export enum ApiErrorType {
 export default function apiErrorHandler(error: unknown) {
   // Handling Axios error
   if (error instanceof AxiosError) {
-    const status = error.response?.status; // May be undefined
+    const status = error.response?.status;
     const responseData = error.response?.data;
 
-    // Ensure `status` is defined before making comparisons
     if (status !== undefined) {
       if (status === 403) {
         const errorMessage =
@@ -43,8 +42,6 @@ export default function apiErrorHandler(error: unknown) {
         };
       }
     }
-
-    // Fallback for Axios errors without status or known handling
     return {
       type: ApiErrorType.UnknownError,
       message:
@@ -54,7 +51,6 @@ export default function apiErrorHandler(error: unknown) {
     };
   }
 
-  // Handling fetch errors
   if (error instanceof Error && "message" in error) {
     if (error.message.includes("Failed to fetch")) {
       return {
@@ -64,7 +60,6 @@ export default function apiErrorHandler(error: unknown) {
     }
   }
 
-  // Fallback for unknown errors
   return {
     type: ApiErrorType.UnknownError,
     message: "An unexpected error occurred. Please try again.",

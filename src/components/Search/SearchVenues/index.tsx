@@ -98,7 +98,10 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
   return (
     <section className="bg-secondary h-21 w-full flex justify-center items-center">
       <div className="max-w-5xl w-full relative">
-        <div className="flex items-center gap-4 p-4 w-full">
+        <div className="flex flex-col items-center gap-4 p-4 w-full">
+          <span className="text-white text-start font-xl">
+            Ready for days off? Find you dream place!
+          </span>
           <input
             ref={inputRef}
             type="text"
@@ -108,7 +111,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
             placeholder="Search venues..."
             className="border rounded p-3 w-full text-sm bg-white text-dark shadow-md focus:outline-none focus:ring-2 focus:ring-accent-dark transition-all duration-300 ease-in-out pl-4 pr-10"
           />
-          <span className="absolute top-1/2 right-8 transform -translate-y-1/2 text-gray-500">
+          <span className="absolute top-20 right-8 transform -translate-y-1/2 text-gray-500">
             <FiSearch />
           </span>
         </div>
