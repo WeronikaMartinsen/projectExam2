@@ -195,7 +195,8 @@ function ProfilePage() {
   const pastBookings = sortedBookings.filter(
     (booking) => new Date(booking.dateFrom) < new Date()
   );
-
+  console.log(user?.name);
+  console.log(profile?.name);
   return (
     <div className="container w-full">
       <div className="flex flex-col justify-center items-center">
@@ -275,13 +276,19 @@ function ProfilePage() {
                   venues.map((venue) => (
                     <VenueCard key={venue.id} venue={venue} />
                   ))
-                ) : (
+                ) : profile?.name === user?.name ? (
+                  // This message appears only when you're viewing your own profile
                   <MessageWithRedirect
-                    message="You don't have any venue yet. Create it now!"
+                    message="You don't have any venues yet. Create one now!"
                     redirectTo="/venues"
                     buttonText="Add venue"
                     autoRedirect={false}
                   />
+                ) : (
+                  // This message appears when you're viewing someone else's profile
+                  <p className="text-center text-gray-600">
+                    This user hasn't created any venues yet.
+                  </p>
                 )}
               </ul>
             </div>
@@ -316,14 +323,21 @@ function ProfilePage() {
                   ))}
                 </div>
               )}
-              {bookings.length === 0 && (
-                <MessageWithRedirect
-                  message="You don't have any bookings yet. Book now!"
-                  redirectTo="/"
-                  buttonText="Find venue"
-                  autoRedirect={false}
-                />
-              )}
+              {bookings.length === 0 &&
+                (profile?.name === user?.name ? (
+                  // Show this message only when you're viewing your own profile
+                  <MessageWithRedirect
+                    message="You don't have any bookings yet. Book now!"
+                    redirectTo="/"
+                    buttonText="Find venue"
+                    autoRedirect={false}
+                  />
+                ) : (
+                  // Neutral message for other profiles
+                  <p className="text-center text-gray-600">
+                    This user hasn't made any bookings yet.
+                  </p>
+                ))}
             </div>
           )}
         </div>

@@ -94,7 +94,7 @@ function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50 focus:bg-secondary focus:text-white active:text-white focus:ring-2 focus:ring-secondary"
+                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50"
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />

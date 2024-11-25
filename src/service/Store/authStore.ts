@@ -24,7 +24,6 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isLoggedIn: false,
       setUser: (user) => {
-        console.log("Setting user:", user);
         const loggedIn = isLoginResponse(user) && !!user.accessToken;
         set({
           user,
@@ -42,13 +41,11 @@ export const useAuthStore = create<AuthState>()(
       },
       isTokenValid: () => {
         const user = get().user;
-        console.log("Checking token validity for user:", user);
         if (isLoginResponse(user) && user.accessToken) {
           try {
             const tokenPayload = JSON.parse(
               atob(user.accessToken.split(".")[1])
             );
-            console.log("Token payload:", tokenPayload);
             return tokenPayload.exp * 1000 > Date.now();
           } catch {
             return false;
