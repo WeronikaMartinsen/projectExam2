@@ -1,5 +1,6 @@
 import "../../styles/index.css";
 import { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import Avatar from "../../components/Profile/Avatar";
 import { useAuth } from "../../context/useAuth";
 import {
@@ -64,10 +65,10 @@ function Header() {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex flex-row lg:flex-1 gap-1 cursor-pointer">
-          <Link to="/" className="flex items-center">
+          <NavLink to="/" className="flex items-center">
             <IoSunnyOutline className="text-accent h-8 w-8" />
-            <span className="text-2xl text-secondary font-bold">holidaze</span>
-          </Link>
+            <span className="text-2xl text-secondary font-bold">Holidaze</span>
+          </NavLink>
         </div>
 
         <div className="flex lg:hidden">
@@ -91,67 +92,75 @@ function Header() {
             <PopoverPanel className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded bg-white shadow-lg ring-1 ring-gray-900/5 transition">
               <div className="p-4">
                 {products.map((item) => (
-                  <Link
+                  <NavLink
                     key={item.name}
                     to={item.href}
-                    className="group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50"
+                    className={({ isActive }) =>
+                      `group relative flex items-center gap-x-6 rounded-md px-4 py-2 text-sm leading-6 hover:bg-gray-50 ${
+                        isActive
+                          ? "bg-gray-200 text-secondary"
+                          : "text-gray-900"
+                      }`
+                    }
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
-                      <item.icon className="h-6 w-6 text-gray-600 group-hover:text-secondary" />
+                      <item.icon
+                        className={`h-6 w-6  "text-secondary" : "text-gray-600"
+                        }`}
+                      />
                     </div>
                     <div>
-                      <span className="block font-semibold text-gray-900">
-                        {item.name}
-                      </span>
+                      <span className="block font-semibold">{item.name}</span>
                       <p className="mt-1 text-gray-600">{item.description}</p>
                     </div>
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
             </PopoverPanel>
           </Popover>
 
-          {isLoggedIn && user ? (
-            <Link
-              to={`/profiles/${user.name}/bookings`}
-              className="text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded"
-            >
-              My Bookings
-            </Link>
-          ) : (
-            <div className="flex items-center">
-              <span className="text-sm text-center leading-6 text-gray-900">
-                My Bookings
-              </span>
-            </div>
-          )}
+          <NavLink
+            to={isLoggedIn && user ? `/profiles/${user.name}/bookings` : "#"}
+            className={({ isActive }) =>
+              `text-sm font-semibold leading-6 p-2 rounded ${
+                isActive ? "bg-accent" : "text-gray-900 hover:bg-tertiary"
+              }`
+            }
+          >
+            My Bookings
+          </NavLink>
 
-          <Link
+          <NavLink
             to="/about"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:bg-tertiary active:bg-tertiary focus:bg-tertiary p-2 rounded"
+            className={({ isActive }) =>
+              `text-sm font-semibold leading-6 p-2 rounded ${
+                isActive ? "bg-accent" : "text-gray-900 hover:bg-tertiary"
+              }`
+            }
           >
             About
-          </Link>
+          </NavLink>
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {isLoggedIn && user ? (
             <Avatar />
           ) : (
-            <Link
+            <NavLink
               to="/login"
-              className="text-md hover:text-secondary active:text-white"
+              className={({ isActive }) =>
+                `text-md ${
+                  isActive ? "text-secondary" : "hover:text-secondary"
+                }`
+              }
             >
               Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
+            </NavLink>
           )}
         </div>
       </nav>
 
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-25 z-10"></div>
-      )}
-
+      {/* Mobile Menu Dialog */}
       <Dialog
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
@@ -162,26 +171,25 @@ function Header() {
           className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-xs sm:ring-1 sm:ring-gray-900/10"
         >
           <div className="flex flex-col space-y-6 justify-center items-center">
+            {/* Logo and Close Button */}
             <div className="w-full flex items-center justify-between mb-6">
-              {/* Left-aligned logo */}
               <div className="flex items-center">
                 <Link to="/">
                   <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
                 </Link>
-                <span className="text-2xl font-bold text-blue-800 ml-2">
-                  holidaze
+                <span className="text-2xl font-bold text-blue-700 ml-2">
+                  Holidaze
                 </span>
               </div>
-
-              {/* Right-aligned close button */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-gray-700 hover:text-red-600 focus:outline-none"
+                className="text-gray-700 hover:text-danger focus:outline-none"
               >
                 ✕
               </button>
             </div>
 
+            {/* Mobile Navigation Links */}
             <Disclosure as="div" className="space-y-4">
               <DisclosureButton className="flex items-center justify-between text-md font-semibold text-gray-900 hover:bg-gray-100 focus:bg-gray-200 p-3 rounded">
                 Venues
@@ -189,61 +197,54 @@ function Header() {
               </DisclosureButton>
               <DisclosurePanel className="space-y-3 text-center">
                 {products.map((item) => (
-                  <Link
+                  <NavLink
                     key={item.name}
                     to={item.href}
-                    className="block text-md font-medium text-gray-700 hover:bg-gray-100 p-2 rounded"
+                    className={({ isActive }) =>
+                      `block text-md font-medium p-2 rounded ${
+                        isActive ? "bg-accent" : "text-gray-700 hover:bg-accent"
+                      }`
+                    }
                   >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 ))}
               </DisclosurePanel>
             </Disclosure>
 
-            {isLoggedIn && user ? (
-              <Link
-                to={`/profiles/${user.name}/bookings`}
-                className="block text-md font-medium text-gray-900 hover:bg-gray-100 p-3 rounded"
-              >
-                My Bookings
-              </Link>
-            ) : (
-              <span className="block text-md text-gray-400 p-3 rounded cursor-not-allowed">
-                My Bookings
-              </span>
-            )}
+            <NavLink
+              to={isLoggedIn && user ? `/profiles/${user.name}/bookings` : "#"}
+              className={({ isActive }) =>
+                `block text-md font-medium p-3 rounded ${
+                  isActive ? "bg-accent" : "text-gray-400 cursor-not-allowed"
+                }`
+              }
+            >
+              My Bookings
+            </NavLink>
 
-            {isLoggedIn && user ? (
-              <Link
-                to={`/`}
-                className="block font-semibold text-md text-gray-900 hover:bg-gray-100 p-3 rounded"
-              >
-                Book now
-              </Link>
-            ) : (
-              <span className="block text-md text-gray-400 p-3 rounded cursor-not-allowed">
-                Book now
-              </span>
-            )}
-
-            <Link
+            <NavLink
               to="/about"
-              className="block text-md font-medium text-gray-900 hover:bg-gray-100 p-3 rounded"
+              className={({ isActive }) =>
+                `block text-md font-medium p-3 rounded ${
+                  isActive ? "bg-accent" : "text-gray-900 hover:bg-gray-100"
+                }`
+              }
             >
               About
-            </Link>
+            </NavLink>
 
             {isLoggedIn && user ? (
               <div className="mt-4">
                 <Avatar />
               </div>
             ) : (
-              <Link
+              <NavLink
                 to="/login"
                 className="text-md font-medium text-blue-700 hover:text-blue-800 mt-4 block"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
-              </Link>
+              </NavLink>
             )}
           </div>
         </DialogPanel>

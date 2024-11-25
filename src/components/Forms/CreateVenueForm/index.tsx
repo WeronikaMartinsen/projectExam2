@@ -13,7 +13,8 @@ import { VenueCreate } from "../../../service/ApiCalls/Interfaces/venue";
 import { useNavigate, useParams } from "react-router-dom";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
-import ErrorMessage from "../../ErrorMessage";
+import SuccessMessage from "../../UserMessages/SuccessMessage";
+import ErrorMessage from "../../UserMessages/ErrorMessage";
 
 // Validation schema
 const schema = yup.object({
@@ -23,19 +24,19 @@ const schema = yup.object({
     .number()
     .required("Price is required.")
     .positive("Price must be positive.")
-    .typeError("Price must be a valid number."), // This handles type errors like NaN
+    .typeError("Price must be a valid number."),
   maxGuests: yup
     .number()
     .required("Maximum guests is required.")
     .min(1, "Must be at least 1.")
     .max(5, "Cannot exceed 5 guests.")
-    .typeError("Maximum guests must be a valid number."), // This handles NaN errors
+    .typeError("Maximum guests must be a valid number."),
   rating: yup
     .number()
     .nullable()
     .min(0, "Rating must be between 0 and 5.")
     .max(5, "Rating must be between 0 and 5.")
-    .typeError("Rating must be a valid number."), // Handles NaN errors
+    .typeError("Rating must be a valid number."),
   media: yup
     .array()
     .of(
@@ -102,9 +103,7 @@ const CreateVenueForm: React.FC = () => {
     name: "media",
   });
 
-  const [successMessageState, setSuccessMessageState] = useState<string | null>(
-    null
-  );
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -126,7 +125,7 @@ const CreateVenueForm: React.FC = () => {
           setValue("name", name);
           setValue("description", description);
           setValue("price", price);
-          setValue("maxGuests", maxGuests ?? 1); // Ensure default is 1
+          setValue("maxGuests", maxGuests ?? 1);
           setValue("rating", rating ?? 0);
           setValue("media", media || [{ url: "", alt: "" }]);
           setValue(
@@ -182,13 +181,28 @@ const CreateVenueForm: React.FC = () => {
   }
   const onSubmit = async (data: VenueCreate) => {
     try {
-      const response = await createVenue(data, token);
-      const id = response.data.id;
+      let response;
+      let redirectId;
 
-      if (id) {
-        setSuccessMessageState("Venue saved successfully!");
+      if (venueId) {
+        // Update venue and use the existing venueId for redirection
+        response = await updateVenue(venueId, data, token);
+        redirectId = venueId;
+      } else {
+        // Create venue and use the new ID from the API response for redirection
+        response = await createVenue(data, token);
+        redirectId = response.data.id;
+      }
+
+      if (redirectId) {
+        setSuccessMessage(
+          venueId
+            ? "Venue updated successfully!"
+            : "Venue created successfully!"
+        );
+
         setTimeout(() => {
-          navigate(`/venue/${id}`);
+          navigate(`/venue/${redirectId}`);
         }, 2000);
       }
     } catch (error) {
@@ -367,10 +381,20 @@ const CreateVenueForm: React.FC = () => {
         {loading ? "Saving..." : venueId ? "Update Venue" : "Create Venue"}
       </button>
 
-      {errorMessage && <ErrorMessage message={errorMessage} />}
-
-      {successMessageState && (
-        <p className="text-green-500 text-xs mt-2">{successMessageState}</p>
+      {/* Success or Error Messages */}
+      {successMessage && (
+        <SuccessMessage
+          message={successMessage}
+          duration={2000}
+          onClose={() => setSuccessMessage(null)}
+        />
+      )}
+      {errorMessage && (
+        <ErrorMessage
+          message={errorMessage}
+          duration={4000}
+          onClose={() => setErrorMessage(null)}
+        />
       )}
     </form>
   );

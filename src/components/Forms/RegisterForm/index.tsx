@@ -6,7 +6,9 @@ import { RegisterUserData } from "../../../service/ApiCalls/Interfaces/userData"
 import { useNavigate } from "react-router-dom";
 import "../../../styles/index.css";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+import ErrorMessage from "../../UserMessages/ErrorMessage";
 import { useState } from "react";
+import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
 
 // Validation schema
 const schema = yup
@@ -66,8 +68,9 @@ function RegisterForm() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
-  const [showMessage, setShowMessage] = useState(false);
-  const navigate = useNavigate(); // Hook to navigate
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const onSubmit = async (formData: FormData) => {
     const data: RegisterUserData = {
@@ -94,22 +97,19 @@ function RegisterForm() {
       const response = await registerUser(data);
       if (response.data) {
         reset();
-        setShowMessage(true);
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000); // Adjust delay if needed
+        setSuccessMessage("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 2000);
       } else {
-        console.error("Failed to register user:", response.message);
-        alert("Failed to register user. Please try again.");
+        setErrorMessage("Failed to register user. Please try again.");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
-      alert("An unexpected error occurred. Please try again later.");
+      const apiError = apiErrorHandler(error);
+      setErrorMessage(apiError.message || "An unexpected error occurred.");
     }
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8">
+    <div className="w-full flex flex-col justify-center items-center sm:px-6 lg:px-8 max-w-5xl">
       <h1 className="mt-4 mb-6 text-3xl text-center">Register</h1>
 
       {/* Role Selection */}
@@ -228,12 +228,19 @@ function RegisterForm() {
         </div>
       </form>
 
-      {/* Success or Error Message */}
-      {showMessage && (
+      {/* Success or Error Messages */}
+      {successMessage && (
         <SuccessMessage
-          message={`You are successfully register now! Please log in to continue.`}
+          message={successMessage}
           duration={2000}
-          onClose={() => setShowMessage(false)}
+          onClose={() => setSuccessMessage(null)}
+        />
+      )}
+      {errorMessage && (
+        <ErrorMessage
+          message={errorMessage}
+          duration={4000}
+          onClose={() => setErrorMessage(null)}
         />
       )}
     </div>
