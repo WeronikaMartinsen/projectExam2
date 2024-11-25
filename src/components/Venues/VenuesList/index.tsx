@@ -59,7 +59,7 @@ const VenuesList: React.FC = () => {
           }}
         />
         {/* Filtering for Filters */}
-        <div className="flex w-full p-3 justify-center bg-tertiary shadow">
+        <div className="flex w-full p-3 justify-center shadow">
           <Filtering filters={filters} onFilterChange={handleFilterChange} />
         </div>
 
@@ -104,7 +104,7 @@ const VenuesList: React.FC = () => {
           )}
 
           {/* Error Message */}
-          {error && <div className="text-red-500">Error: {error}</div>}
+          {error && <div className="text-danger">Error: {error}</div>}
         </div>
       </div>
     </div>

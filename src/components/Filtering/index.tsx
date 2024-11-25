@@ -22,52 +22,29 @@ const Filtering: React.FC<FilterSidebarProps> = ({
   };
 
   return (
-    <div className="flex">
-      {/* Filtering Drawer */}
-      <div className="flex justify-center items-center">
-        <div className="flex flex-wrap gap-4 sm:gap-6 justify-center items-center align-middle">
-          {/* Filter options */}
-          <label className="flex items-center gap-2 sm:gap-4 sm:p-3 transition duration-200 text-sm">
+    <div className="p-2 max-w-5xl w-full mx-auto">
+      <h2 className="text-md text-gray-700 mb-4">Filter Options</h2>
+      <div className="flex flex-wrap justify-around">
+        {[
+          { name: "wifi", label: "Wi-Fi" },
+          { name: "breakfast", label: "Breakfast" },
+          { name: "parking", label: "Parking" },
+          { name: "pets", label: "Pets" },
+        ].map(({ name, label }) => (
+          <label
+            key={name}
+            className="flex items-center justify-around gap-2 px-4 py-2 bg-gray-50 rounded hover:bg-gray-200 transition cursor-pointer"
+          >
+            <span className="text-gray-800">{label}</span>
             <input
               type="checkbox"
-              name="wifi"
-              checked={filters.wifi}
+              name={name}
+              checked={filters[name as keyof Filters]}
               onChange={handleCheckboxChange}
-              className="w-5 h-5 accent-blue-600"
+              className="w-4 h-4 accent-blue-600 rounded"
             />
-            Wi-Fi
           </label>
-          <label className="flex items-center gap-2 sm:gap-4 sm:p-3 transition duration-200 text-sm">
-            <input
-              type="checkbox"
-              name="breakfast"
-              checked={filters.breakfast}
-              onChange={handleCheckboxChange}
-              className="w-5 h-5 accent-blue-600"
-            />
-            Breakfast
-          </label>
-          <label className="flex items-center gap-2 sm:gap-4 sm:p-3 transition duration-200 text-sm">
-            <input
-              type="checkbox"
-              name="parking"
-              checked={filters.parking}
-              onChange={handleCheckboxChange}
-              className="w-5 h-5 accent-blue-600"
-            />
-            Parking
-          </label>
-          <label className="flex items-center gap-2 sm:gap-4 sm:p-3 transition duration-200 text-sm">
-            <input
-              type="checkbox"
-              name="pets"
-              checked={filters.pets}
-              onChange={handleCheckboxChange}
-              className="w-5 h-5 accent-blue-600"
-            />
-            Pets
-          </label>
-        </div>
+        ))}
       </div>
     </div>
   );

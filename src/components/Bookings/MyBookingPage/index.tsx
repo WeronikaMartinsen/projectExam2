@@ -69,7 +69,7 @@ const MyBookingsPage: React.FC = () => {
       {/* Past Booking Section */}
       {pastBookings.length > 0 && (
         <div className="mt-8 flex flex-col gap-2">
-          <h3 className="text-lg font-semibold">Last Travel</h3>
+          <h3 className="text-lg">Last Travel</h3>
           {pastBookings.map((booking: BookingWithDetails) => (
             <BookingCard
               key={booking.id}
