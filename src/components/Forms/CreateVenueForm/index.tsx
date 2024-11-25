@@ -185,11 +185,9 @@ const CreateVenueForm: React.FC = () => {
       let redirectId;
 
       if (venueId) {
-        // Update venue and use the existing venueId for redirection
         response = await updateVenue(venueId, data, token);
         redirectId = venueId;
       } else {
-        // Create venue and use the new ID from the API response for redirection
         response = await createVenue(data, token);
         redirectId = response.data.id;
       }
