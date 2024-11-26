@@ -38,8 +38,6 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {}, [user, isLoggedIn]);
-
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setMobileMenuOpen(false);
@@ -105,8 +103,7 @@ function Header() {
                   >
                     <div className="flex h-11 w-11 flex-none items-center justify-center rounded bg-gray-50 group-hover:bg-white">
                       <item.icon
-                        className={`h-6 w-6  "text-secondary" : "text-gray-600"
-                        }`}
+                        className={`h-6 w-6 text-gray-600 group-hover:text-secondary`}
                       />
                     </div>
                     <div>
@@ -123,7 +120,11 @@ function Header() {
             to={isLoggedIn && user ? `/profiles/${user.name}/bookings` : "#"}
             className={({ isActive }) =>
               `text-sm font-semibold leading-6 p-2 rounded ${
-                isActive ? "bg-accent" : "text-gray-900 hover:bg-tertiary"
+                isLoggedIn && user
+                  ? isActive
+                    ? "bg-accent"
+                    : "text-gray-900 hover:bg-tertiary"
+                  : "text-gray-400 cursor-not-allowed"
               }`
             }
           >
@@ -148,11 +149,7 @@ function Header() {
           ) : (
             <NavLink
               to="/login"
-              className={({ isActive }) =>
-                `text-md ${
-                  isActive ? "text-secondary" : "hover:text-secondary"
-                }`
-              }
+              className="text-md bg-primary text-white font-semibold py-2 px-4 rounded hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </NavLink>
@@ -171,7 +168,6 @@ function Header() {
           className="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-xs sm:ring-1 sm:ring-gray-900/10"
         >
           <div className="flex flex-col space-y-6 justify-center items-center">
-            {/* Logo and Close Button */}
             <div className="w-full flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <Link to="/">
@@ -189,9 +185,8 @@ function Header() {
               </button>
             </div>
 
-            {/* Mobile Navigation Links */}
             <Disclosure as="div" className="space-y-4">
-              <DisclosureButton className="flex items-center justify-between text-md font-semibold text-gray-900 hover:bg-gray-100 focus:bg-gray-200 p-3 rounded">
+              <DisclosureButton className="flex items-center justify-between text-lg font-semibold text-gray-900 hover:bg-gray-100 focus:bg-gray-200 p-3 rounded">
                 Venues
                 <FiChevronDown className="h-5 w-5 transition-transform group-data-[open]:rotate-180" />
               </DisclosureButton>
@@ -201,7 +196,7 @@ function Header() {
                     key={item.name}
                     to={item.href}
                     className={({ isActive }) =>
-                      `block text-md font-medium p-2 rounded ${
+                      `block text-lg font-medium p-2 rounded ${
                         isActive ? "bg-accent" : "text-gray-700 hover:bg-accent"
                       }`
                     }
@@ -214,11 +209,11 @@ function Header() {
 
             <NavLink
               to={isLoggedIn && user ? `/profiles/${user.name}/bookings` : "#"}
-              className={({ isActive }) =>
-                `block text-md font-medium p-3 rounded ${
-                  isActive ? "bg-accent" : "text-gray-400 cursor-not-allowed"
-                }`
-              }
+              className={`block text-lg font-medium p-3 rounded ${
+                isLoggedIn && user
+                  ? "text-gray-900 hover:bg-gray-100"
+                  : "text-gray-400 cursor-not-allowed"
+              }`}
             >
               My Bookings
             </NavLink>
@@ -226,7 +221,7 @@ function Header() {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `block text-md font-medium p-3 rounded ${
+                `block text-lg font-medium p-3 rounded ${
                   isActive ? "bg-accent" : "text-gray-900 hover:bg-gray-100"
                 }`
               }
@@ -241,7 +236,7 @@ function Header() {
             ) : (
               <NavLink
                 to="/login"
-                className="text-md font-medium text-blue-700 hover:text-blue-800 mt-4 block"
+                className="text-lg font-semibold bg-blue-700 text-white py-3 px-5 rounded hover:shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary mt-4 block"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </NavLink>
