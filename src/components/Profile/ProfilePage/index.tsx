@@ -195,8 +195,7 @@ function ProfilePage() {
   const pastBookings = sortedBookings.filter(
     (booking) => new Date(booking.dateFrom) < new Date()
   );
-  console.log(user?.name);
-  console.log(profile?.name);
+
   return (
     <div className="container w-full">
       <div className="flex flex-col justify-center items-center">

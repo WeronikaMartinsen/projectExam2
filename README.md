@@ -1,102 +1,137 @@
 # Holidaze Accommodation Booking App
 
-A modern front-end application for Holidaze, an accommodation booking platform. This app enables customers to explore and book accommodations, while venue managers can manage their listings and bookings. Built with React, TypeScript, and Tailwind CSS.
+![Holidaze Banner](path-to-your-banner-image.jpg)
+
+A modern front-end application for Holidaze, an accommodation booking platform. This app enables customers to explore and book accommodations, while venue managers can manage their listings and bookings. Built with **React**, **TypeScript**, and **Tailwind CSS**.
+
+---
 
 ## Table of Contents
 
 - [Features](#features)
+  - [Customer-Facing Features](#customer-facing-features)
+  - [Admin-Facing Features (Venue Manager)](#admin-facing-features-venue-manager)
+  - [Shared Features](#shared-features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
-- [API Documentation](#api-documentation)
 - [User Stories](#user-stories)
 - [Project Structure](#project-structure)
+- [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
 
+---
+
 ## Features
 
-### Customer-Facing
-- View a list of available venues
-- Search for a specific venue
-- View details of a selected venue
-- View availability on a calendar
-- Register as a customer using a valid email (ending in `@stud.noroff.no`)
-- Create bookings at selected venues
-- View upcoming bookings
+### Customer-Facing Features
 
-### Admin-Facing (Venue Manager)
-- Register as a venue manager with a valid `@stud.noroff.no` email
-- Create, update, and delete venues
-- View bookings made at their venues
+- 🏘️ **Explore Venues**: View a list of available venues.
+- 🔍 **Search Functionality**: Search for specific venues dynamically.
+- 📅 **View Details**: View detailed information and availability of selected venues, including a calendar.
+- 🛒 **Book Venues**: Register and book a venue with ease.
+- 📝 **Manage Bookings**: View upcoming bookings in a personal dashboard.
+
+### Admin-Facing Features (Venue Manager)
+
+- 🏗️ **Venue Management**: Create, update, and delete venues.
+- 📖 **Booking Overview**: View bookings made for venues they manage.
+- 🔐 **Secure Access**: Only registered managers can access management features.
 
 ### Shared Features
-- User authentication (login, logout)
-- Update user avatar
+
+- 🔑 **User Authentication**: Register, login, and logout securely.
+- 🖼️ **Customizable Avatars**: Update your avatar for personalization.
+
+---
 
 ## Tech Stack
 
 - **Framework**: [React](https://reactjs.org/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Routing**: [React Router](https://reactrouter.com/)
+
+---
 
 ## Getting Started
 
-To set up and run this project locally:
+### Clone the Repository
 
-1. **Clone the repository**
-   ```bash
-   git clone git@github.com:WeronikaMartinsen/projectExam2.git
-   cd projectExam2
+```bash
+git clone git@github.com:WeronikaMartinsen/projectExam2.git
+cd projectExam2
+```
 
-2. **Install dependencies**
- ```bash
-   npm install
-   
-3. **Set up environment variables, see Environment Variables below for details**
+### Install Dependencies
 
+```bash
+npm install
+```
 
-4. **Run the development server**
- ```bash
-   npm run dev
+### Set Up Environment Variables
 
-5. **Open your browser at http://localhost:3000 to view the app.**   
+REACT_APP_API_URL=<Your_API_URL>
+REACT_APP_GOOGLE_MAPS_API_KEY=<Your_Google_Maps_API_Key>
 
+### Run the Development Server
 
+```bash
+npm run dev
+```
+
+### Open your browser and navigate to http://localhost:3000 to view the application.
 
 ## User Stories
 
 ### Customer-Facing
 
-- A user may view a list of venues
-- A user may search for a specific venue
-- A user may view a specific venue page by ID
-- A user may view a calendar with available dates for a venue
-- A user with a `stud.noroff.no` email may register as a customer
-- A registered customer may create a booking at a venue
-- A registered customer may view their upcoming bookings
+- As a user, I can view a list of venues.
+- As a user, I can search for a specific venue.
+- As a user, I can view details of a venue, including its availability on a calendar.
+- As a user with a `@stud.noroff.no` email, I can register as a customer.
+- As a registered customer, I can book a venue.
+- As a registered customer, I can view my upcoming bookings.
 
 ### Admin-Facing (Venue Manager)
 
-- A user with a `stud.noroff.no` email may register as a venue manager
-- A registered venue manager may create, update, and delete a venue
-- A registered venue manager may view bookings for a venue they manage
+- As a user with a `@stud.noroff.no` email, I can register as a venue manager.
+- As a registered venue manager, I can create, update, and delete venues.
+- As a registered venue manager, I can view bookings made for my venues.
 
 ### General
 
-- A registered user may log in
-- A registered user may update their avatar
-- A registered user may log out
+- As a registered user, I can log in and out securely.
+- As a registered user, I can update my avatar.
 
 ## Contributing
 
-Contributions are welcome! To contribute:
+Contributions are welcome! Here's how you can help:
 
-1. Fork the repository.
-2. Create a new branch with your feature or bugfix.
-3. Commit your changes and push them to your fork.
-4. Open a pull request with a description of your changes.
+1. **Fork the repository**.
 
-## License
+2. **Create a new branch** for your feature or bugfix:
 
-This project is distributed under the MIT License. See the `LICENSE` file for more information.
+```bash
+   git checkout -b feature-name
+```
+
+3. **Commit your changes and push them to your fork:**
+
+```bash
+git commit -m "Description of feature/bugfix"
+git push origin feature-name
+
+```
+
+## Live Demo
+
+Check out the live application: [Holidaze Accommodation Booking App](https://holidaze-martinsen.netlify.app/)
+
+## Contact
+
+For any questions or feedback, feel free to reach out:
+
+- **Email**: [your-email@example.com](weronika.martinsen@gmail.com)

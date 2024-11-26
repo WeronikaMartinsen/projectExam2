@@ -11,7 +11,7 @@ function AboutContent() {
   return (
     <div className="p-8 bg-gray-50 text-primary max-w-7xl mx-auto w-full rounded-lg shadow-md">
       {/* Main Heading */}
-      <h1 className="text-5xl font-extrabold mb-8 text-center text-primary">
+      <h1 className="text-3xl font-extrabold mb-8 text-center text-primary">
         About <span className="text-accent">Holidaze</span>
       </h1>
 
@@ -35,7 +35,7 @@ function AboutContent() {
 
       {/* For Guests */}
       <section className="bg-white p-6 rounded-lg shadow-sm mb-12">
-        <h2 className="text-3xl font-bold mb-4 text-accent">For Our Guests</h2>
+        <h2 className="text-xl font-bold mb-4 text-accent">For Our Guests</h2>
         <p className="text-gray-700 leading-relaxed mb-4">
           Booking your next vacation should be exciting, not overwhelming. Our
           platform ensures a smooth and hassle-free experience, helping you find
