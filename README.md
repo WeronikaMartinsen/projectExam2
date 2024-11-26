@@ -1,7 +1,5 @@
 # Holidaze Accommodation Booking App
 
-![Holidaze Banner](path-to-your-banner-image.jpg)
-
 A modern front-end application for Holidaze, an accommodation booking platform. This app enables customers to explore and book accommodations, while venue managers can manage their listings and bookings. Built with **React**, **TypeScript**, and **Tailwind CSS**.
 
 ---
@@ -134,4 +132,4 @@ Check out the live application: [Holidaze Accommodation Booking App](https://hol
 
 For any questions or feedback, feel free to reach out:
 
-- **Email**: [your-email@example.com](weronika.martinsen@gmail.com)
+- **Email**: [weronika.martinsen@gmail.com](weronika.martinsen@gmail.com)
