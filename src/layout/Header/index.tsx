@@ -1,6 +1,6 @@
-import "../../styles/index.css";
-import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Profile/Avatar";
 import { useAuth } from "../../context/useAuth";
 import {
@@ -16,7 +16,6 @@ import {
 } from "@headlessui/react";
 import { FiMenu, FiPlus, FiChevronDown, FiList } from "react-icons/fi";
 import { IoSunnyOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -37,6 +36,7 @@ function Header() {
   const { user, isLoggedIn } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation(); // To track the current URL
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -55,6 +55,15 @@ function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [mobileMenuOpen]);
+
+  const handleLinkClick = (href: string) => {
+    // Close the mobile menu
+    setMobileMenuOpen(false);
+    if (location.pathname === href) {
+      // Force page reload if on the same page
+      window.location.reload();
+    }
+  };
 
   return (
     <header className="bg-white">
@@ -170,12 +179,13 @@ function Header() {
           <div className="flex flex-col space-y-6 justify-center items-center">
             <div className="w-full flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <Link to="/">
+                <NavLink to="/" className="flex items-center">
                   <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
-                </Link>
-                <span className="text-2xl font-bold text-blue-700 ml-2">
-                  Holidaze
-                </span>
+
+                  <span className="text-2xl font-bold text-blue-700">
+                    Holidaze
+                  </span>
+                </NavLink>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
@@ -195,6 +205,7 @@ function Header() {
                   <NavLink
                     key={item.name}
                     to={item.href}
+                    onClick={() => handleLinkClick(item.href)} // Handle the link click
                     className={({ isActive }) =>
                       `block text-lg font-medium p-2 rounded ${
                         isActive ? "bg-accent" : "text-gray-700 hover:bg-accent"
@@ -209,6 +220,9 @@ function Header() {
 
             <NavLink
               to={isLoggedIn && user ? `/profiles/${user.name}/bookings` : "#"}
+              onClick={() =>
+                isLoggedIn && user ? setMobileMenuOpen(false) : null
+              }
               className={`block text-lg font-medium p-3 rounded ${
                 isLoggedIn && user
                   ? "text-gray-900 hover:bg-gray-100"
@@ -220,6 +234,7 @@ function Header() {
 
             <NavLink
               to="/about"
+              onClick={() => handleLinkClick("/about")}
               className={({ isActive }) =>
                 `block text-lg font-medium p-3 rounded ${
                   isActive ? "bg-accent" : "text-gray-900 hover:bg-gray-100"
