@@ -158,7 +158,7 @@ function Header() {
           ) : (
             <NavLink
               to="/login"
-              className="text-md bg-primary text-white font-semibold py-2 px-4 rounded hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
+              className="text-sm bg-primary text-white font-semibold py-2 px-4 rounded hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </NavLink>
@@ -179,9 +179,12 @@ function Header() {
           <div className="flex flex-col space-y-6 justify-center items-center">
             <div className="w-full flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <NavLink to="/" className="flex items-center">
+                <NavLink
+                  to="/"
+                  onClick={() => handleLinkClick("/")}
+                  className="flex items-center"
+                >
                   <IoSunnyOutline className="text-yellow-700 h-8 w-8" />
-
                   <span className="text-2xl font-bold text-blue-700">
                     Holidaze
                   </span>
@@ -251,7 +254,7 @@ function Header() {
             ) : (
               <NavLink
                 to="/login"
-                className="text-lg font-semibold bg-blue-700 text-white py-3 px-5 rounded hover:shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary mt-4 block"
+                className="text-md font-semibold bg-blue-700 text-white py-3 px-5 rounded hover:shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary mt-4 block"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </NavLink>

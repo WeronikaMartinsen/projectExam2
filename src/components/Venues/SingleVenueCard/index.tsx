@@ -102,143 +102,147 @@ function SingleVenueCard() {
   )}`;
 
   return (
-    <div className="container max-w-5xl mx-auto bg-white p-4 rounded-xl shadow-lg w-full">
-      {/* Full-width image */}
-      <div className="w-full h-64 overflow-hidden rounded mb-6">
-        <img
-          className="w-full h-full object-cover"
-          src={venue.media[0]?.url}
-          alt={venue.media[0]?.alt || venue.name}
-        />
-      </div>
+    <div className="flex justify-center w-full max-w-5xl">
+      <div className="mx-auto bg-white rounded shadow-lg w-full">
+        {/* Full-width image */}
+        <div className="w-full h-48 sm:h-80 md:h-96 lg:h-[400px] overflow-hidden rounded mb-6">
+          <img
+            className="w-full h-full object-cover"
+            src={venue.media[0]?.url}
+            alt={venue.media[0]?.alt || venue.name}
+          />
+        </div>
 
-      {/* Venue Header */}
-      <div className="mb-6">
-        <div className="flex flex-wrap justify-between items-center mb-4">
-          <h2 className="text-3xl font-bold text-gray-800">{venue.name}</h2>
-          <div className="flex items-center gap-2">
-            <Rating rating={venue.rating} />
+        {/* Venue Header */}
+        <div className="mb-6">
+          <div className="flex flex-wrap justify-between items-center mb-4">
+            <h2 className="text-3xl font-bold text-gray-800 pl-6">
+              {venue.name}
+            </h2>
+            <div className="flex items-center gap-2">
+              <Rating rating={venue.rating} />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-gray-600 pl-6">
+            <IoLocation className="text-primary text-xl" />
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-gray-700"
+            >
+              {venue.location.city} {venue.location.country}
+            </a>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-gray-600">
-          <IoLocation className="text-primary text-xl" />
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline text-gray-700"
-          >
-            {venue.location.city}, {venue.location.country}
-          </a>
+        {/* Venue Info */}
+        <div className="mb-6 space-y-4">
+          <p className="text-gray-700 leading-6 p-6">{venue.description}</p>
+
+          <div className="flex flex-wrap justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+            <div>
+              <span className="font-medium text-gray-600">Price:</span>{" "}
+              <span className="text-lg font-semibold text-primary">
+                {venue.price} NOK
+              </span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Bookings:</span>{" "}
+              <span className="font-semibold text-gray-800">
+                {venue._count.bookings}
+              </span>
+            </div>
+          </div>
+
+          {/* Features */}
+          <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
         </div>
-      </div>
 
-      {/* Venue Info */}
-      <div className="mb-6 space-y-4">
-        <p className="text-gray-700 leading-6 p-2">{venue.description}</p>
-
-        <div className="flex flex-wrap justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
-          <div>
-            <span className="font-medium text-gray-600">Price:</span>{" "}
-            <span className="text-lg font-semibold text-primary">
-              {venue.price} NOK
+        {/* Calendar Section */}
+        <div className="mb-6">
+          <div className="bg-gray-50 p-4 rounded shadow-sm text-center">
+            <span className="text-lg font-semibold text-gray-800 mb-4 block">
+              Available Dates
             </span>
-          </div>
-          <div>
-            <span className="font-medium text-gray-600">Bookings:</span>{" "}
-            <span className="font-semibold text-gray-800">
-              {venue._count.bookings}
-            </span>
-          </div>
-        </div>
-
-        {/* Features */}
-        <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
-      </div>
-
-      {/* Calendar Section */}
-      <div className="mb-6">
-        <div className="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
-          <span className="text-lg font-semibold text-gray-800 mb-4 block">
-            Available Dates
-          </span>
-          <div className="w-full flex justify-center">
-            <Calender
-              bookings={bookings}
-              onDateRangeSelect={(fromDate, toDate) => {
-                setSelectedFromDate(fromDate);
-                setSelectedToDate(toDate);
-              }}
-            />
+            <div className="w-full flex justify-center">
+              <Calender
+                bookings={bookings}
+                onDateRangeSelect={(fromDate, toDate) => {
+                  setSelectedFromDate(fromDate);
+                  setSelectedToDate(toDate);
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Booking Form */}
-      <div className="mt-6">
-        {user ? (
-          <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-            <BookingForm
-              venue={venue}
-              selectedFromDate={selectedFromDate || ""}
-              selectedToDate={selectedToDate || ""}
-              setSelectedFromDate={setSelectedFromDate}
-              setSelectedToDate={setSelectedToDate}
-              guests={guests}
-              setGuests={setGuests}
-              handleBook={handleBook}
-              bookings={bookings}
+        {/* Booking Form */}
+        <div className="mt-6">
+          {user ? (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <BookingForm
+                venue={venue}
+                selectedFromDate={selectedFromDate || ""}
+                selectedToDate={selectedToDate || ""}
+                setSelectedFromDate={setSelectedFromDate}
+                setSelectedToDate={setSelectedToDate}
+                guests={guests}
+                setGuests={setGuests}
+                handleBook={handleBook}
+                bookings={bookings}
+              />
+            </div>
+          ) : (
+            <MessageWithRedirect
+              message="You must be logged in to book this venue!"
+              redirectTo="/login"
+              buttonText="Login now"
+              autoRedirect={false}
             />
-          </div>
-        ) : (
-          <MessageWithRedirect
-            message="You must be logged in to book this venue!"
-            redirectTo="/login"
-            buttonText="Login now"
-            autoRedirect={false}
+          )}
+        </div>
+
+        {/* Success Message */}
+        {showMessage && (
+          <SuccessMessage
+            message="Your booking was successful!"
+            duration={2000}
+            onClose={() => setShowMessage(false)}
           />
         )}
+
+        {/* Contact Owner */}
+        {user && (
+          <div className="mt-8">
+            <span className="text-lg font-semibold text-gray-800 block mb-4">
+              Contact the host:
+            </span>
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+              <VenueOwner owner={venue.owner} />
+            </div>
+          </div>
+        )}
+
+        {/* Booked Dates */}
+        {bookings.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-md font-semibold text-gray-800 mb-4 ml-6">
+              Bookings for this venue:
+            </h3>
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
+              {bookings.map((booking) => (
+                <BookingCard
+                  key={booking.id}
+                  booking={booking}
+                  isPastBooking={new Date(booking.dateTo) < new Date()}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Success Message */}
-      {showMessage && (
-        <SuccessMessage
-          message="Your booking was successful!"
-          duration={2000}
-          onClose={() => setShowMessage(false)}
-        />
-      )}
-
-      {/* Contact Owner */}
-      {user && (
-        <div className="mt-8">
-          <span className="text-lg font-semibold text-gray-800 block mb-4">
-            Contact the host:
-          </span>
-          <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <VenueOwner owner={venue.owner} />
-          </div>
-        </div>
-      )}
-
-      {/* Booked Dates */}
-      {bookings.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Booked Dates
-          </h3>
-          <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
-            {bookings.map((booking) => (
-              <BookingCard
-                key={booking.id}
-                booking={booking}
-                isPastBooking={new Date(booking.dateTo) < new Date()}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

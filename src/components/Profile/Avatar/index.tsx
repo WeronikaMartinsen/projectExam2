@@ -18,14 +18,13 @@ function Avatar() {
 
   const handleEnterProfilePage = () => {
     navigate(`/profiles/${user?.name}`);
+    window.location.reload();
   };
 
   const handleLogout = () => {
-    setTimeout(() => {
-      logout();
-      window.location.reload(); // Refresh the page after logout
-    }, 2000); // Delay to allow message to show before page reload
-
+    logout();
+    window.location.reload();
+    navigate(`/`);
     setShowMessage(true);
   };
 
@@ -64,7 +63,7 @@ function Avatar() {
             <img
               src={avatarUrl}
               alt="User Avatar"
-              className="w-10 h-10 rounded-full shadow-2xl"
+              className="w-14 h-14 rounded-full shadow"
             />
           </button>
           {dropdownOpen && (
