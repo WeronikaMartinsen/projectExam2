@@ -80,9 +80,7 @@ export const updateVenue = async (
     }
 
     const result = await response.json();
-
-    // Return the response in the ApiResponse<Venue> format
-    return { data: result }; // Assuming the API returns the updated venue data
+    return { data: result };
   } catch (error) {
     throw new Error(apiErrorHandler(error).message);
   }
@@ -198,7 +196,7 @@ export const getBookingByProfile = async (
 ): Promise<BookingWithDetails[]> => {
   try {
     const response = await apiRequest<null, BookingWithDetails[]>(
-      `/holidaze/profiles/${name}/bookings`,
+      `/holidaze/profiles/${name}/bookings?_venue=true&_customer=true`,
       "GET",
       undefined,
       token

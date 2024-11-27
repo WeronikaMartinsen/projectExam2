@@ -13,8 +13,8 @@ import { getUser } from "../../../service/Utils/userUtils";
 import { createBooking } from "../../../service/apiRequests";
 import MessageWithRedirect from "../../UserMessages/MessageWithRedirect";
 import BookingForm from "../../Forms/BookingForm";
-import BookedDates from "../../Bookings/BookedDates";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+import BookingCard from "../../Bookings/BookingCard";
 
 function SingleVenueCard() {
   const { id } = useParams<{ id: string }>();
@@ -100,6 +100,7 @@ function SingleVenueCard() {
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venue.location.city}, ${venue.location.country}`
   )}`;
+
   return (
     <div className="container max-w-5xl mx-auto bg-white p-4 rounded-xl shadow-lg w-full">
       {/* Full-width image */}
@@ -135,7 +136,7 @@ function SingleVenueCard() {
 
       {/* Venue Info */}
       <div className="mb-6 space-y-4">
-        <p className="text-gray-700 leading-6">{venue.description}</p>
+        <p className="text-gray-700 leading-6 p-2">{venue.description}</p>
 
         <div className="flex flex-wrap justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
           <div>
@@ -222,10 +223,19 @@ function SingleVenueCard() {
       )}
 
       {/* Booked Dates */}
-      {user && (
+      {bookings.length > 0 && (
         <div className="mt-6">
-          <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <BookedDates bookings={bookings} />
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Booked Dates
+          </h3>
+          <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
+            {bookings.map((booking) => (
+              <BookingCard
+                key={booking.id}
+                booking={booking}
+                isPastBooking={new Date(booking.dateTo) < new Date()}
+              />
+            ))}
           </div>
         </div>
       )}

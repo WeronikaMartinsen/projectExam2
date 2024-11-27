@@ -30,7 +30,7 @@ const MyBookingsPage: React.FC = () => {
 
   if (upcomingBookings.length === 0 && pastBookings.length === 0) {
     return (
-      <div className="container max-w-2xl p-4 text-center text-gray-500">
+      <div className="container max-w-2xl p-4 text-center text-gray-500 mt-10">
         You have no bookings yet.
       </div>
     );

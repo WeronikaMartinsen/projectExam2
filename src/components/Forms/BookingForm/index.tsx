@@ -65,53 +65,80 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   const [showMessage, setShowMessage] = useState(false);
 
+  // Prevent booking from the same day
+  const handleDateChange = (date: Date | null, type: "from" | "to") => {
+    if (!date) return;
+
+    const newDate = date.toISOString().split("T")[0];
+
+    if (type === "from") {
+      setSelectedFromDate(newDate);
+      // Ensure 'To Date' is always at least 1 day after 'From Date'
+      if (new Date(newDate) >= new Date(selectedToDate)) {
+        setSelectedToDate(
+          addDays(new Date(newDate), 1).toISOString().split("T")[0]
+        );
+      }
+    } else if (type === "to") {
+      // Prevent selecting a 'To Date' that's the same as 'From Date'
+      if (new Date(newDate) <= new Date(selectedFromDate)) {
+        setSelectedToDate(
+          addDays(new Date(selectedFromDate), 1).toISOString().split("T")[0]
+        );
+      } else {
+        setSelectedToDate(newDate);
+      }
+    }
+  };
+
   return (
     <div className="mt-6 w-full max-w-2xl mx-auto bg-white shadow-md p-6 rounded-lg">
       <h3 className="text-xl font-semibold mb-6 text-center text-gray-800">
         Book this venue now
       </h3>
       <form className="flex flex-col gap-4">
-        {/* From Date */}
-        <div>
-          <label className="text-sm font-medium text-gray-600 mb-2 block">
-            From
-          </label>
-          <DatePicker
-            selected={selectedFromDate ? new Date(selectedFromDate) : null}
-            onChange={(date: Date | null) =>
-              date
-                ? setSelectedFromDate(date.toISOString().split("T")[0])
-                : null
-            }
-            minDate={today}
-            filterDate={(date) => !isDateDisabled(date)}
-            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
-            placeholderText="Select a start date"
-          />
-        </div>
+        <div className="flex justify-between flex-wrap">
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-2 block">
+              From
+            </label>
+            <DatePicker
+              selected={selectedFromDate ? new Date(selectedFromDate) : null}
+              onChange={(date: Date | null) =>
+                date && handleDateChange(date, "from")
+              }
+              minDate={today}
+              filterDate={(date) => !isDateDisabled(date)}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
+              placeholderText="Select a start date"
+            />
+          </div>
 
-        {/* To Date */}
-        <div>
-          <label className="text-sm font-medium text-gray-600 mb-2 block">
-            To
-          </label>
-          <DatePicker
-            selected={selectedToDate ? new Date(selectedToDate) : null}
-            onChange={(date: Date | null) =>
-              date ? setSelectedToDate(date.toISOString().split("T")[0]) : null
-            }
-            minDate={
-              selectedFromDate ? addDays(new Date(selectedFromDate), 1) : today
-            }
-            filterDate={(date) =>
-              selectedFromDate
-                ? !isDateDisabled(date) &&
-                  new Date(date) > new Date(selectedFromDate)
-                : !isDateDisabled(date)
-            }
-            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
-            placeholderText="Select an end date"
-          />
+          {/* To Date */}
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-2 block">
+              To
+            </label>
+            <DatePicker
+              selected={selectedToDate ? new Date(selectedToDate) : null}
+              onChange={(date: Date | null) =>
+                date && handleDateChange(date, "to")
+              }
+              minDate={
+                selectedFromDate
+                  ? addDays(new Date(selectedFromDate), 1)
+                  : today
+              }
+              filterDate={(date) =>
+                selectedFromDate
+                  ? !isDateDisabled(date) &&
+                    new Date(date) > new Date(selectedFromDate)
+                  : !isDateDisabled(date)
+              }
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
+              placeholderText="Select an end date"
+            />
+          </div>
         </div>
 
         {/* Number of Guests */}
