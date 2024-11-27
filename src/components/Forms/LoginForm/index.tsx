@@ -11,6 +11,7 @@ import "../../../styles/index.css";
 import { useAuth } from "../../../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+import ErrorMessage from "../../ErrorMessage";
 
 // Validation schema
 const schema = yup
@@ -46,22 +47,29 @@ function LoginForm() {
   const onSubmit = async (loginData: LoginRequest) => {
     try {
       const response: LoginResponse = await loginUser(loginData);
-
       const accessToken = response.accessToken;
-
       if (!accessToken) {
-        console.error("Login failed: No access token found in response.");
         setErrorMessage("Login failed. Please try again.");
         return;
       }
+
       login(response);
       setShowMessage(true);
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (error) {
-      console.error("Login error:", error);
-      setErrorMessage("An error occurred while logging in. Please try again.");
+      if (error instanceof Error) {
+        if (error.message.includes("Network Error")) {
+          setErrorMessage("Network error, please try again later.");
+        } else if (error.message.includes("401")) {
+          setErrorMessage("Incorrect email or password. Please try again.");
+        } else {
+          setErrorMessage("An unexpected error occurred.");
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
     }
   };
 
@@ -122,7 +130,11 @@ function LoginForm() {
         />
       )}
       {errorMessage && (
-        <div className="text-red-500 text-center mt-4">{errorMessage}</div>
+        <ErrorMessage
+          message={errorMessage}
+          duration={4000}
+          onClose={() => setErrorMessage(null)}
+        />
       )}
     </div>
   );

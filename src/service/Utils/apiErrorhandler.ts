@@ -1,67 +1,69 @@
 import { AxiosError } from "axios";
 
 export enum ApiErrorType {
-  ForbiddenError = "FORBIDDEN",
-  NotFoundError = "NOT_FOUND",
-  ValidationError = "VALIDATION_ERROR",
-  UnknownError = "UNKNOWN",
+  ValidationError = "Validation Error",
+  NotFoundError = "Not Found Error",
+  ServerError = "Server Error",
+  UnknownError = "Unknown Error",
 }
 
 export default function apiErrorHandler(error: unknown) {
-  // Handling Axios error
   if (error instanceof AxiosError) {
     const status = error.response?.status;
     const responseData = error.response?.data;
 
-    if (status !== undefined) {
-      if (status === 403) {
-        const errorMessage =
-          responseData?.errors?.[0]?.message ||
-          "Access denied. You do not have the required permissions.";
-        return {
-          type: ApiErrorType.ForbiddenError,
-          message: errorMessage,
-        };
-      }
+    
+    console.log(responseData); // Debugging log to inspect the error response
+    console.log(status); // Debugging log to inspect the status code
 
-      if (status === 404) {
-        return {
-          type: ApiErrorType.NotFoundError,
-          message: "Resource not found.",
-        };
-      }
-
-      if (status >= 400 && status < 500) {
-        const errorMessage =
-          responseData?.errors?.[0]?.message ||
-          responseData?.message ||
-          "Validation error occurred.";
-        return {
-          type: ApiErrorType.ValidationError,
-          message: errorMessage,
-        };
-      }
+    // Handle Validation Errors (400 with specific error messages)
+    if (
+      status === 400 &&
+      responseData?.errors &&
+      responseData.errors[0]?.message
+    ) {
+      // Directly extract the message
+      const firstMessage = responseData.errors[0].message;
+      return {
+        type: ApiErrorType.ValidationError,
+        message: firstMessage, // Return only the message, not the full object
+      };
     }
+
+    // Handle Not Found Errors (404)
+    if (status === 404) {
+      return {
+        type: ApiErrorType.NotFoundError,
+        message: "Resource not found.",
+      };
+    }
+
+    // Handle Server Errors (500)
+    if (status === 500) {
+      return {
+        type: ApiErrorType.ServerError,
+        message: "Internal server error.",
+      };
+    }
+
+    // Fallback for other errors (like 401, 403, etc.)
     return {
       type: ApiErrorType.UnknownError,
-      message:
-        responseData?.errors?.[0]?.message ||
-        responseData?.message ||
-        "An unexpected error occurred. Please try again.",
+      message: responseData?.statusText || "Unknown error occurred.",
     };
   }
 
-  if (error instanceof Error && "message" in error) {
-    if (error.message.includes("Failed to fetch")) {
-      return {
-        type: ApiErrorType.UnknownError,
-        message: "Network error. Please check your connection.",
-      };
-    }
+  // Handle non-Axios errors (e.g., network errors or other exceptions)
+  if (error instanceof Error) {
+    return {
+      type: ApiErrorType.UnknownError,
+      message: error.message,
+    };
   }
 
+  // Fallback for unknown errors
   return {
     type: ApiErrorType.UnknownError,
-    message: "An unexpected error occurred. Please try again.",
+    message: "An unexpected error occurred.",
   };
 }

@@ -8,7 +8,6 @@ import "../../../styles/index.css";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
 import ErrorMessage from "../../UserMessages/ErrorMessage";
 import { useState } from "react";
-import apiErrorHandler from "../../../service/Utils/apiErrorhandler";
 
 // Validation schema
 const schema = yup
@@ -68,6 +67,7 @@ function RegisterForm() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -95,16 +95,28 @@ function RegisterForm() {
 
     try {
       const response = await registerUser(data);
-      if (response.data) {
+
+      // Check for server success or failure based on the response
+      if (response?.data) {
         reset();
         setSuccessMessage("Registration successful! Redirecting to login...");
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        setErrorMessage("Failed to register user. Please try again.");
+        setErrorMessage("Registration failed. Please try again later.");
       }
     } catch (error) {
-      const apiError = apiErrorHandler(error);
-      setErrorMessage(apiError.message || "An unexpected error occurred.");
+      if (error instanceof Error) {
+
+        if (error.message.includes("Network Error")) {
+          setErrorMessage("Network error, please try again later.");
+        } else if (error.message.includes("400")) {
+          setErrorMessage("Profile already exist.");
+        } else {
+          setErrorMessage("An unexpected error occurred.");
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
     }
   };
 
