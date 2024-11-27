@@ -21,11 +21,12 @@ function Avatar() {
   };
 
   const handleLogout = () => {
-    setShowMessage(true);
     setTimeout(() => {
       logout();
-      navigate("/");
-    }, 2000);
+      window.location.reload(); // Refresh the page after logout
+    }, 2000); // Delay to allow message to show before page reload
+
+    setShowMessage(true);
   };
 
   useEffect(() => {

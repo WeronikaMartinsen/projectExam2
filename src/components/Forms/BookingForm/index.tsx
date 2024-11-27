@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays, parseISO, isSameDay, isBefore } from "date-fns";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+import ErrorMessage from "../../ErrorMessage";
 
 interface Booking {
   dateFrom: string;
@@ -38,7 +39,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
   const minGuests = 1;
   const today = new Date();
 
-  // Parse and flatten booked date ranges
   const bookedDates = bookings.flatMap((booking) => {
     const start = parseISO(booking.dateFrom);
     const end = parseISO(booking.dateTo);
@@ -48,7 +48,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
     );
   });
 
-  // Disable unavailable dates
   const isDateDisabled = (date: Date) => {
     return (
       isBefore(date, today) ||
@@ -64,8 +63,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   const [showMessage, setShowMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Prevent booking from the same day
   const handleDateChange = (date: Date | null, type: "from" | "to") => {
     if (!date) return;
 
@@ -73,7 +72,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
     if (type === "from") {
       setSelectedFromDate(newDate);
-      // Ensure 'To Date' is always at least 1 day after 'From Date'
       if (new Date(newDate) >= new Date(selectedToDate)) {
         setSelectedToDate(
           addDays(new Date(newDate), 1).toISOString().split("T")[0]
@@ -90,6 +88,41 @@ const BookingForm: React.FC<BookingFormProps> = ({
       }
     }
   };
+
+  // Validate form before enabling the "Book Now" button
+  const isFormValid = () => {
+    return (
+      selectedFromDate &&
+      selectedToDate &&
+      new Date(selectedFromDate) < new Date(selectedToDate) &&
+      guests >= minGuests &&
+      guests <= maxGuests &&
+      !bookedDates.some((bookedDate) =>
+        isSameDay(bookedDate, new Date(selectedFromDate))
+      ) &&
+      !bookedDates.some((bookedDate) =>
+        isSameDay(bookedDate, new Date(selectedToDate))
+      )
+    );
+  };
+
+  const handleSubmit = () => {
+    if (!isFormValid()) {
+      setErrorMessage("Please select valid dates and guests.");
+      return;
+    }
+
+    handleBook();
+    setShowMessage(true);
+  };
+
+  useEffect(() => {
+    if (showMessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
+    }
+  }, [showMessage]);
 
   return (
     <div className="mt-6 w-full max-w-2xl mx-auto bg-white shadow-md p-6 rounded-lg">
@@ -162,12 +195,27 @@ const BookingForm: React.FC<BookingFormProps> = ({
         {/* Submit Button */}
         <button
           type="button"
-          className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-          onClick={handleBook}
+          disabled={!isFormValid()}
+          onClick={handleSubmit}
+          className={`w-full py-3 font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+            isFormValid()
+              ? "bg-primary text-white hover:bg-primary-dark"
+              : "bg-gray-300 text-gray-700 cursor-not-allowed"
+          }`}
         >
           Book Now
         </button>
       </form>
+
+      {/* Error Message */}
+      {errorMessage && (
+        <ErrorMessage
+          message={errorMessage}
+          onClose={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      )}
 
       {/* Success Message */}
       {showMessage && (
