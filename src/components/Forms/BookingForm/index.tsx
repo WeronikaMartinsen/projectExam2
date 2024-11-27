@@ -1,10 +1,19 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { addDays, parseISO, isSameDay, isBefore } from "date-fns";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+
+interface Booking {
+  dateFrom: string;
+  dateTo: string;
+}
 
 interface BookingFormProps {
   venue: {
     maxGuests: number;
   };
+  bookings: Booking[];
   selectedFromDate: string;
   selectedToDate: string;
   setSelectedFromDate: (date: string) => void;
@@ -16,6 +25,7 @@ interface BookingFormProps {
 
 const BookingForm: React.FC<BookingFormProps> = ({
   venue,
+  bookings,
   selectedFromDate,
   selectedToDate,
   setSelectedFromDate,
@@ -26,7 +36,25 @@ const BookingForm: React.FC<BookingFormProps> = ({
 }) => {
   const maxGuests = venue.maxGuests || 1;
   const minGuests = 1;
-  const [showMessage, setShowMessage] = useState(false);
+  const today = new Date();
+
+  // Parse and flatten booked date ranges
+  const bookedDates = bookings.flatMap((booking) => {
+    const start = parseISO(booking.dateFrom);
+    const end = parseISO(booking.dateTo);
+    return Array.from(
+      { length: (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1 },
+      (_, i) => addDays(start, i)
+    );
+  });
+
+  // Disable unavailable dates
+  const isDateDisabled = (date: Date) => {
+    return (
+      isBefore(date, today) ||
+      bookedDates.some((bookedDate) => isSameDay(bookedDate, date))
+    );
+  };
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newGuests = parseInt(e.target.value);
@@ -34,6 +62,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
     if (newGuests > maxGuests) newGuests = maxGuests;
     setGuests(newGuests);
   };
+
+  const [showMessage, setShowMessage] = useState(false);
 
   return (
     <div className="mt-6 w-full max-w-2xl mx-auto bg-white shadow-md p-6 rounded-lg">
@@ -46,11 +76,17 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <label className="text-sm font-medium text-gray-600 mb-2 block">
             From
           </label>
-          <input
-            type="date"
-            value={selectedFromDate || ""}
-            onChange={(e) => setSelectedFromDate(e.target.value)}
+          <DatePicker
+            selected={selectedFromDate ? new Date(selectedFromDate) : null}
+            onChange={(date: Date | null) =>
+              date
+                ? setSelectedFromDate(date.toISOString().split("T")[0])
+                : null
+            }
+            minDate={today}
+            filterDate={(date) => !isDateDisabled(date)}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
+            placeholderText="Select a start date"
           />
         </div>
 
@@ -59,11 +95,22 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <label className="text-sm font-medium text-gray-600 mb-2 block">
             To
           </label>
-          <input
-            type="date"
-            value={selectedToDate || ""}
-            onChange={(e) => setSelectedToDate(e.target.value)}
+          <DatePicker
+            selected={selectedToDate ? new Date(selectedToDate) : null}
+            onChange={(date: Date | null) =>
+              date ? setSelectedToDate(date.toISOString().split("T")[0]) : null
+            }
+            minDate={
+              selectedFromDate ? addDays(new Date(selectedFromDate), 1) : today
+            }
+            filterDate={(date) =>
+              selectedFromDate
+                ? !isDateDisabled(date) &&
+                  new Date(date) > new Date(selectedFromDate)
+                : !isDateDisabled(date)
+            }
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700"
+            placeholderText="Select an end date"
           />
         </div>
 
@@ -94,7 +141,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
           Book Now
         </button>
       </form>
-      {/* Success or Error Message */}
+
+      {/* Success Message */}
       {showMessage && (
         <SuccessMessage
           message="Congratulations! You have successfully booked this venue!"

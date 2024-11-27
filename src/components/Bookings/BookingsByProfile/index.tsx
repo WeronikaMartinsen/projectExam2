@@ -1,10 +1,10 @@
-import "../../../styles/index.css";
+// import "../../../styles/index.css";
 
-function BookingByProfile() {
+// function BookingByProfile() {
 
-  return (
-<div></div>
-  );
-}
+//   return (
+// <div></div>
+//   );
+// }
 
-export default BookingByProfile;
+// export default BookingByProfile;

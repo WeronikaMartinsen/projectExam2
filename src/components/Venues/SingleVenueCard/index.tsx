@@ -187,6 +187,7 @@ function SingleVenueCard() {
               guests={guests}
               setGuests={setGuests}
               handleBook={handleBook}
+              bookings={bookings}
             />
           </div>
         ) : (
