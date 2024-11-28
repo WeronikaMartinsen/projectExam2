@@ -12,48 +12,36 @@ export default function apiErrorHandler(error: unknown) {
     const status = error.response?.status;
     const responseData = error.response?.data;
 
-    
-    console.log(responseData); // Debugging log to inspect the error response
-    console.log(status); // Debugging log to inspect the status code
-
-    // Handle Validation Errors (400 with specific error messages)
     if (
       status === 400 &&
       responseData?.errors &&
       responseData.errors[0]?.message
     ) {
-      // Directly extract the message
       const firstMessage = responseData.errors[0].message;
       return {
         type: ApiErrorType.ValidationError,
-        message: firstMessage, // Return only the message, not the full object
+        message: firstMessage,
       };
     }
 
-    // Handle Not Found Errors (404)
     if (status === 404) {
       return {
         type: ApiErrorType.NotFoundError,
         message: "Resource not found.",
       };
     }
-
-    // Handle Server Errors (500)
     if (status === 500) {
       return {
         type: ApiErrorType.ServerError,
         message: "Internal server error.",
       };
     }
-
-    // Fallback for other errors (like 401, 403, etc.)
     return {
       type: ApiErrorType.UnknownError,
       message: responseData?.statusText || "Unknown error occurred.",
     };
   }
 
-  // Handle non-Axios errors (e.g., network errors or other exceptions)
   if (error instanceof Error) {
     return {
       type: ApiErrorType.UnknownError,
@@ -61,7 +49,6 @@ export default function apiErrorHandler(error: unknown) {
     };
   }
 
-  // Fallback for unknown errors
   return {
     type: ApiErrorType.UnknownError,
     message: "An unexpected error occurred.",

@@ -95,9 +95,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative h-72 flex flex-col shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
+    <li className="relative flex flex-col justify-center shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
-      <div className="w-full md:w-80 h-full overflow-hidden cursor-pointer">
+      <div className="w-full h-72 md:w-80 overflow-hidden cursor-pointer">
         <img
           key={venue.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"

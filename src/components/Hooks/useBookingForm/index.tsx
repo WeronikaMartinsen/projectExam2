@@ -1,27 +1,7 @@
 import { useState } from "react";
 import { ApiResponse } from "../../../service/ApiCalls/baseApiCallPost";
 import { Booking } from "../../../service/ApiCalls/Interfaces/bookings";
-import { apiRequest } from "../../../service/ApiCalls/baseApiCallPost";
 
-// This function makes the API request
-export const createBooking = async (
-  bookingData: {
-    dateFrom: string;
-    dateTo: string;
-    guests: number;
-    venueId: string;
-  },
-  token: string
-): Promise<ApiResponse<Booking>> => {
-  return await apiRequest<typeof bookingData, Booking>(
-    "/holidaze/bookings",
-    "POST",
-    bookingData,
-    token
-  );
-};
-
-// Custom hook for booking form logic
 export const useBookingForm = (
   createBooking: (
     bookingData: {

@@ -111,9 +111,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       setErrorMessage("Please select valid dates and guests.");
       return;
     }
-
     handleBook();
-    setShowMessage(true);
   };
 
   useEffect(() => {

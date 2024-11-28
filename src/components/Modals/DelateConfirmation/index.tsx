@@ -4,7 +4,7 @@ interface DeleteConfirmationModalProps {
   open: boolean;
   venueId: string;
   handleClose: () => void;
-  handleDelete: (venueId: string) => void; // Function to handle the deletion
+  handleDelete: (venueId: string) => void;
 }
 
 const DeleteConfirmation: React.FC<DeleteConfirmationModalProps> = ({
@@ -15,7 +15,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationModalProps> = ({
 }) => {
   const confirmDelete = () => {
     handleDelete(venueId);
-    handleClose(); // Close the modal after confirmation
+    handleClose();
   };
 
   return (

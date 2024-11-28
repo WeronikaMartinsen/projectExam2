@@ -11,7 +11,6 @@ export async function loginUser(
       "POST",
       loginData
     );
-
     return response.data;
   } catch (error) {
     console.error("Login failed:", error);

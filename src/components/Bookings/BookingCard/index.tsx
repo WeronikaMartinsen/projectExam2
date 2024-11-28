@@ -1,3 +1,9 @@
+interface BookingCardProps {
+  booking: BookingWithDetails;
+  isPastBooking: boolean;
+  daysLeft?: number;
+}
+
 import { Link } from "react-router-dom";
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
 
@@ -13,12 +19,12 @@ const BookingCard: React.FC<BookingCardProps> = ({
 }) => {
   return (
     <div
-      className={`grid grid-cols-1 md:grid-cols-3 gap-4 border border-primary rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4 ${
+      className={`grid grid-cols-1 md:grid-cols-3 gap-4 border border-primary rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4 max-h-64 ${
         isPastBooking ? "bg-gray-100" : ""
       }`}
     >
       {/* Venue Image */}
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden h-full">
         <img
           key={booking.venue?.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"

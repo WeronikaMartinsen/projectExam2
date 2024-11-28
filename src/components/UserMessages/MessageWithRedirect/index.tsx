@@ -18,7 +18,7 @@ const MessageWithRedirect: React.FC<MessageWithRedirectProps> = ({
   delay = 2000,
 }) => {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState<number>(delay / 1000); // Countdown in seconds
+  const [countdown, setCountdown] = useState<number>(delay / 1000);
 
   useEffect(() => {
     if (autoRedirect) {

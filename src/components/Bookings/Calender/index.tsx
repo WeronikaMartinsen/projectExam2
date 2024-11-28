@@ -17,7 +17,6 @@ interface CalenderProps {
 const Calender: React.FC<CalenderProps> = ({ bookings }) => {
   const today = new Date();
 
-  // Convert booking dates to Date objects
   const bookedDates = bookings.flatMap((booking) => {
     const start = new Date(booking.dateFrom);
     const end = new Date(booking.dateTo);
@@ -27,19 +26,16 @@ const Calender: React.FC<CalenderProps> = ({ bookings }) => {
     );
   });
 
-  // State for selected dates
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     null,
     null,
   ]);
 
-  // Check if selected dates are available
   const areDatesAvailable = (start: Date | null, end: Date | null) => {
     if (!start || !end) return true;
     return !bookedDates.some((date) => date >= start && date <= end);
   };
 
-  // Disable past dates and booked dates
   const tileDisabled = ({ date }: { date: Date }) => {
     return (
       isBefore(date, today) ||
@@ -49,7 +45,6 @@ const Calender: React.FC<CalenderProps> = ({ bookings }) => {
     );
   };
 
-  // Handle date change
   const handleDateChange = (value: Date | [Date | null, Date | null]) => {
     if (Array.isArray(value)) {
       const [start, end] = value;

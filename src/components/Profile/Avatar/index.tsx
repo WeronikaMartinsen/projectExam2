@@ -4,7 +4,7 @@ import { useAuth } from "../../Hooks/useAuth";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
 
 function Avatar() {
-  const { user, isLoggedIn, logout } = useAuth(); // Use the Auth context
+  const { user, isLoggedIn, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate();

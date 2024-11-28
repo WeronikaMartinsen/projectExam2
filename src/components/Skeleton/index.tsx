@@ -6,8 +6,8 @@ interface LoadingSkeletonProps {
   width?: string | number;
   height?: string | number;
   variant?: string;
-  type?: "list" | "card" | "search" | "button"; // Add type prop
-  count?: number; // Number of skeletons to render (useful for lists)
+  type?: "list" | "card" | "search" | "button";
+  count?: number;
 }
 
 const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
@@ -15,10 +15,9 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   height,
   variant,
   type,
-  count = 1, // Default to 1 skeleton
+  count = 1,
 }) => {
   if (type === "list") {
-    // Render skeletons for a list
     return (
       <ul className="space-y-4">
         {Array.from({ length: count }).map((_, index) => (
@@ -29,9 +28,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
       </ul>
     );
   }
-
   if (type === "card") {
-    // Render a card-like skeleton
     return (
       <div className="flex flex-col space-y-4 p-4 border rounded shadow-sm">
         <Skeleton width="100%" height="200px" />
@@ -42,16 +39,12 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   }
 
   if (type === "search") {
-    // Render a skeleton for a search bar
     return <Skeleton width="100%" height="50px" />;
   }
 
   if (type === "button") {
-    // Render a skeleton for a button
     return <Skeleton width="150px" height="40px" />;
   }
-
-  // Default skeleton (custom dimensions)
   return (
     <span className={`skeleton ${variant}`} style={{ width, height }}>
       <Skeleton width={width} height={height} count={count} />

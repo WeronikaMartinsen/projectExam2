@@ -12,7 +12,7 @@ import { getVenues } from "../../../service/apiRequests";
 interface SearchVenuesProps {
   initialVenues: Venue[];
   onVenueSelect: (id: string) => void;
-  onSearch?: (venues: Venue[]) => void; // Optional prop for parent notification
+  onSearch?: (venues: Venue[]) => void;
 }
 
 const SearchVenues: React.FC<SearchVenuesProps> = ({
@@ -36,7 +36,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
     if (!searchQuery) {
       setDropdownOpen(false);
       setVenues([]);
-      onSearch?.(initialVenues); // Notify parent (if needed)
+      onSearch?.(initialVenues);
       return;
     }
 
@@ -45,12 +45,19 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
 
     try {
       const results = await getVenues(1, 100, searchQuery);
-      const filtered = results.filter((venue) =>
-        venue.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+      const filtered = results.filter(
+        (venue) =>
+          venue.location.city
+            ?.toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
+          venue.location.country
+            ?.toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
+          venue.name.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
       setVenues(filtered);
-      onSearch?.(filtered); // Notify parent (if needed)
+      onSearch?.(filtered);
     } catch (error) {
       console.error("Error fetching venues:", error);
       setVenues([]);
@@ -105,7 +112,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
             value={query}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            placeholder="Search venues..."
+            placeholder="Search venues name, location..."
             className="border rounded p-3 w-full text-sm bg-white text-dark shadow-md focus:outline-none focus:ring-2 focus:ring-accent-dark transition-all duration-300 ease-in-out pl-4 pr-10"
           />
           <span className="absolute top-10 right-8 transform -translate-y-1/2 text-gray-500">

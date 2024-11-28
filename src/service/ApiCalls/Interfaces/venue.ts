@@ -64,12 +64,12 @@ export interface Venue {
   updated: string;
   meta: Meta;
   location: Location;
-  owner: Owner; // Optional based on query parameters
-  bookings?: Booking[]; // Optional based on query parameters
+  owner: Owner;
+  bookings?: Booking[];
 }
 
 export interface VenueResponse {
-  data: Venue[]; // Array of Venue objects
+  data: Venue[];
   meta: {
     isFirstPage: boolean;
     isLastPage: boolean;
@@ -80,14 +80,14 @@ export interface VenueResponse {
 }
 
 export interface VenueCreate {
-  name: string; // Required
-  description: string; // Required
-  media?: Media[]; // Optional
-  price: number; // Required
-  maxGuests: number; // Required
-  rating?: number | null; // Optional (default: 0)
-  meta?: Meta; // Optional
-  location?: Location | null; // Allow undefined or null
+  name: string;
+  description: string;
+  media?: Media[];
+  price: number;
+  maxGuests: number;
+  rating?: number | null;
+  meta?: Meta;
+  location?: Location | null;
 }
 
 export interface VenueUpdate {

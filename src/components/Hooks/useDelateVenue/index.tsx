@@ -1,23 +1,23 @@
 import { useState } from "react";
 import { deleteVenue } from "../../../service/apiRequests";
-import { ApiResponse } from "../../../service/ApiCalls/baseApiCallPost"; // Import the correct ApiResponse type
+import { ApiResponse } from "../../../service/ApiCalls/baseApiCallPost";
 
 interface UseDeleteVenueResult {
   loading: boolean;
-  data: string | null; // Success message or null
-  error: string | null; // Error message or null
+  data: string | null;
+  error: string | null;
   deleteVenue: (venueId: string) => Promise<void>;
 }
 
 export const useDeleteVenue = (token: string): UseDeleteVenueResult => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string | null>(null); // For success messages
-  const [error, setError] = useState<string | null>(null); // For error messages
+  const [data, setData] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const deleteVenueHandler = async (venueId: string) => {
     setLoading(true);
-    setError(null); // Clear previous errors
-    setData(null); // Clear previous success messages
+    setError(null);
+    setData(null);
 
     if (!token) {
       setError("Token is missing or invalid.");
@@ -27,15 +27,13 @@ export const useDeleteVenue = (token: string): UseDeleteVenueResult => {
 
     try {
       const response: ApiResponse<null> = await deleteVenue(venueId, token);
-
-      // Check if the response data is null to confirm success
       if (response.data === null) {
-        setData("Venue deleted successfully."); // Set success message
+        setData("Venue deleted successfully.");
       } else {
-        setError("Failed to delete the venue."); // Handle failure
+        setError("Failed to delete the venue.");
       }
     } catch (err) {
-      setError("An error occurred while deleting the venue."); // Handle unexpected errors
+      setError("An error occurred while deleting the venue.");
       console.error(err);
     } finally {
       setLoading(false);

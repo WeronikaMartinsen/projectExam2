@@ -1,6 +1,5 @@
 import { BookingWithDetails } from "../../../service/ApiCalls/Interfaces/bookings";
 
-// Helper function to sort bookings by date
 export const sortBookingsByDate = (bookings: BookingWithDetails[]) => {
   return [...bookings].sort((a, b) => {
     const dateA = new Date(a.dateFrom).getTime();
@@ -9,7 +8,6 @@ export const sortBookingsByDate = (bookings: BookingWithDetails[]) => {
   });
 };
 
-// Helper function to separate bookings into past and upcoming
 export const separateBookings = (bookings: BookingWithDetails[]) => {
   const upcomingBookings = bookings.filter(
     (booking) => new Date(booking.dateFrom) >= new Date()

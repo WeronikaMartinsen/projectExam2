@@ -32,7 +32,7 @@ const Filtering: React.FC<FilterSidebarProps> = ({
         ].map(({ name, label }) => (
           <label
             key={name}
-            className="flex items-center justify-around gap-2 px-4 py-2 hover:bg-gray-200 transition cursor-pointer"
+            className="flex items-center justify-around gap-2 px-4 py-2 transition cursor-pointer"
           >
             <span className="text-white font-semibold">{label}</span>
             <input

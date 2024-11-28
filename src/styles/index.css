@@ -8,24 +8,23 @@
   min-width: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  --color-primary: #242d40; /* Primary color */
-  --color-secondary: #0468bf; /* Secondary color */
-  --color-tertiary: #fffae9; /* Tertiary color */
+  --color-primary: #242d40; 
+  --color-secondary: #0468bf; 
+  --color-tertiary: #fffae9; 
 
-  /* Accent Colors */
-  --color-accent: #f2bf27; /* Accent color */
-  --color-success: #088c29; /* Success (green) */
-  --color-warning: #ffc107; /* Warning (yellow) */
-  --color-danger: #dc3545; /* Danger (red) */
-  --color-info: #0dcaf0; /* Info (light blue) */
+  --color-accent: #f2bf27;
+  --color-success: #088c29; 
+  --color-warning: #ffc107; 
+  --color-danger: #dc3545;
+  --color-info: #0dcaf0; 
 
   /* Neutral Colors */
-  --color-light: #f2f2f2; /* Light gray */
-  --color-dark: #212529; /* Dark gray/black */
+  --color-light: #f2f2f2; 
+  --color-dark: #212529; 
 
   /* Text Colors */
-  --color-text-light: #f2f2f2; /* Light text (white) */
-  --color-text-dark: #343a40; /* Dark text */
+  --color-text-light: #f2f2f2; 
+  --color-text-dark: #343a40; 
 }
 html,
 body {

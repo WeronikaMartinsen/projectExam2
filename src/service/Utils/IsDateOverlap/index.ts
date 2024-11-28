@@ -12,9 +12,9 @@ export const isDateOverlap = (
     const selectedEnd = new Date(selectedTo).getTime();
 
     return (
-      (selectedStart >= bookingStart && selectedStart <= bookingEnd) || // Starts during an existing booking
-      (selectedEnd >= bookingStart && selectedEnd <= bookingEnd) || // Ends during an existing booking
-      (selectedStart <= bookingStart && selectedEnd >= bookingEnd) // Completely overlaps an existing booking
+      (selectedStart >= bookingStart && selectedStart <= bookingEnd) ||
+      (selectedEnd >= bookingStart && selectedEnd <= bookingEnd) ||
+      (selectedStart <= bookingStart && selectedEnd >= bookingEnd)
     );
   });
 };

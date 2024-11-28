@@ -10,7 +10,7 @@ export const useVenues = (initialLimit = 15) => {
   const [hasMore, setHasMore] = useState(true);
 
   const fetchVenues = useCallback(async () => {
-    if (!hasMore) return; // Prevent fetching when there's no more data
+    if (!hasMore) return;
 
     setLoading(true);
     setError(null);
@@ -18,10 +18,9 @@ export const useVenues = (initialLimit = 15) => {
     try {
       const newVenues = await getVenues(page, initialLimit);
       if (newVenues.length < initialLimit) {
-        setHasMore(false); // No more pages to fetch
+        setHasMore(false);
       }
 
-      // Ensure no duplicates are added
       setVenues((prevVenues) => {
         const existingIds = new Set(prevVenues.map((venue) => venue.id));
         const uniqueVenues = newVenues.filter(

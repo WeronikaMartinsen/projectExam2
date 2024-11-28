@@ -16,32 +16,26 @@ const VenuesList: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
   const handleVenueSelect = (id: string) => navigate(`/venue/${id}`);
 
-  // Filtered Venues Logic
   const filteredVenues = venues.filter(({ name, location, meta }) => {
-    // Match search query
     const matchesSearch = [name, location?.city, location?.country]
       .join(" ")
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
 
-    // Match active filters
     const matchesFilters = Object.entries(filters).every(([key, value]) => {
-      if (!value) return true; // Skip inactive filters
-      return meta?.[key as keyof typeof filters] === true; // Match meta field
+      if (!value) return true;
+      return meta?.[key as keyof typeof filters] === true;
     });
 
     return matchesSearch && matchesFilters;
   });
 
-  // Handle filter changes from Filtering
   const handleFilterChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
   };
 
-  // Handle search queries
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
