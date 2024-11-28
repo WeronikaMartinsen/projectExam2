@@ -63,7 +63,7 @@ function Avatar() {
             <img
               src={avatarUrl}
               alt="User Avatar"
-              className="w-14 h-14 rounded-full shadow"
+              className="w-10 h-10 rounded-full shadow-2xl"
             />
           </button>
           {dropdownOpen && (

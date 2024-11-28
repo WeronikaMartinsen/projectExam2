@@ -3,7 +3,7 @@ import "../../../styles/index.css";
 
 function GlobalSmallHeader() {
   return (
-    <section className="bg-gradient-to-r from-primary via-secondary to-accent h-16 sm:h-20 w-full flex justify-center">
+    <section className="bg-gradient-to-r from-primary via-secondary to-accent h-21 sm:h-20 w-full flex justify-center">
       <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-2 sm:px-8 sm:py-4 max-w-5xl w-full">
         {/* Logo or App Name */}
         <div className="text-white font-bold text-lg sm:text-xl">

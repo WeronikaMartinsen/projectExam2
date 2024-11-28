@@ -9,7 +9,7 @@ import {
 
 function AboutContent() {
   return (
-    <div className="p-8 bg-gray-50 text-primary max-w-7xl mx-auto w-full rounded-lg shadow-md">
+    <div className="p-8 bg-gray-50 text-primary max-w-5xl mx-auto w-full rounded-lg shadow-md">
       {/* Main Heading */}
       <h1 className="text-3xl font-extrabold mb-8 text-center text-primary">
         About <span className="text-accent">Holidaze</span>
@@ -115,16 +115,17 @@ function AboutContent() {
           </li>
         </ul>
       </section>
-
-      <CallToAction
-        title="Join Us"
-        message="Whether you're a traveler seeking your next great escape or a host ready to share your property, Holidaze is here to support you. Experience the future of accommodation booking today."
-        buttonText="Get Started Now"
-        onButtonClick={() => (window.location.href = "/signup")}
-        backgroundColor="bg-accent"
-        textColor="text-white"
-        buttonStyle="bg-white text-accent"
-      />
+      <div className="flex justify-center">
+        <CallToAction
+          title="Join Us"
+          message="Whether you're a traveler seeking your next great escape or a host ready to share your property, Holidaze is here to support you. Experience the future of accommodation booking today."
+          buttonText="Get Started Now"
+          onButtonClick={() => (window.location.href = "/")}
+          backgroundColor="bg-accent"
+          textColor="text-white"
+          buttonStyle="px-3 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        />
+      </div>
     </div>
   );
 }

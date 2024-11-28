@@ -21,7 +21,7 @@ const MyBookingsPage: React.FC = () => {
   if (error) {
     return (
       <div className="container max-w-2xl p-4">
-        <div className="text-center text-red-500">{error}</div>
+        <div className="text-center text-danger">{error}</div>
       </div>
     );
   }
@@ -37,9 +37,10 @@ const MyBookingsPage: React.FC = () => {
   }
 
   return (
-    <div className="container max-w-2xl p-4">
-      <h1 className="text-2xl mb-4">My Bookings</h1>
-
+    <div className="container max-w-5xl p-4">
+      <h1 className="text-3xl font-extrabold mb-8 text-center text-primary">
+        My <span className="text-accent">Bookings</span>
+      </h1>
       {/* Upcoming Booking Section */}
       {upcomingBookings.length > 0 && (
         <>

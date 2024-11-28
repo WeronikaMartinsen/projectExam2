@@ -212,10 +212,11 @@ const CreateVenueForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg space-y-4"
+      className="max-w-2xl w-full p-6 bg-white shadow-lg rounded space-y-4"
     >
-      <h1 className="text-center text-3xl">
-        {venueId ? "Update" : "Create"} a venue
+      <h1 className="text-3xl font-extrabold mb-8 text-center text-primary">
+        {venueId ? "Update" : "Create"}{" "}
+        <span className="text-accent"> a venue</span>
       </h1>
 
       <div className="mb-4">
@@ -322,12 +323,12 @@ const CreateVenueForm: React.FC = () => {
         />
         <input
           {...register("location.continent")}
-          className="w-full p-3 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 rounded-md mb-6"
           placeholder="Continent"
         />
       </div>
 
-      <div className="mb-4 mt-4">
+      <div className="mb-4 mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* WiFi */}
           <label className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition">
@@ -371,13 +372,15 @@ const CreateVenueForm: React.FC = () => {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-primary text-white py-2 rounded mt-4"
-        disabled={loading}
-      >
-        {loading ? "Saving..." : venueId ? "Update Venue" : "Create Venue"}
-      </button>
+      <div>
+        <button
+          type="submit"
+          className="w-full bg-primary text-white py-2 rounded mt-6"
+          disabled={loading}
+        >
+          {loading ? "Saving..." : venueId ? "Update Venue" : "Create Venue"}
+        </button>
+      </div>
 
       {/* Success or Error Messages */}
       {successMessage && (

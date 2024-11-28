@@ -119,7 +119,7 @@ function SingleVenueCard() {
             <h2 className="text-3xl font-bold text-gray-800 pl-6">
               {venue.name}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pr-6">
               <Rating rating={venue.rating} />
             </div>
           </div>
@@ -132,13 +132,14 @@ function SingleVenueCard() {
               rel="noopener noreferrer"
               className="hover:underline text-gray-700"
             >
-              {venue.location.city} {venue.location.country}
+              {venue.location.address} {venue.location.city}
+              {venue.location.country} {venue.location.continent}
             </a>
           </div>
         </div>
 
         {/* Venue Info */}
-        <div className="mb-6 space-y-4">
+        <div className="flex flex-col justify-center mb-6 space-y-4">
           <p className="text-gray-700 leading-6 p-6">{venue.description}</p>
 
           <div className="flex flex-wrap justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
@@ -216,7 +217,7 @@ function SingleVenueCard() {
         {/* Contact Owner */}
         {user && (
           <div className="mt-8">
-            <span className="text-lg font-semibold text-gray-800 block mb-4">
+            <span className="text-lg font-semibold text-gray-800 block mb-4 pl-6">
               Contact the host:
             </span>
             <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
@@ -232,13 +233,16 @@ function SingleVenueCard() {
               Bookings for this venue:
             </h3>
             <div className="bg-gray-50 p-4 rounded-lg shadow-sm space-y-4">
-              {bookings.map((booking) => (
-                <BookingCard
-                  key={booking.id}
-                  booking={booking}
-                  isPastBooking={new Date(booking.dateTo) < new Date()}
-                />
-              ))}
+              {bookings.map((booking) => {
+                const bookingWithVenue = { ...booking, venue };
+                return (
+                  <BookingCard
+                    key={booking.id}
+                    booking={bookingWithVenue}
+                    isPastBooking={new Date(booking.dateTo) < new Date()}
+                  />
+                );
+              })}
             </div>
           </div>
         )}

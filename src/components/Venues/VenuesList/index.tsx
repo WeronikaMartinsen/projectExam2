@@ -59,7 +59,7 @@ const VenuesList: React.FC = () => {
           }}
         />
         {/* Filtering for Filters */}
-        <div className="flex w-full p-3 justify-center shadow">
+        <div className="bg-gradient-to-r from-primary via-secondary to-accent flex w-full p-3 justify-center shadow">
           <Filtering filters={filters} onFilterChange={handleFilterChange} />
         </div>
 

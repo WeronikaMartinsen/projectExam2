@@ -96,7 +96,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
   }, []);
 
   return (
-    <section className="bg-secondary h-21 w-full flex justify-center items-center">
+    <section className="bg-gradient-to-r from-primary via-secondary to-accent h-21 w-full flex justify-center items-center">
       <div className="max-w-5xl w-full relative">
         <div className="flex flex-col items-center gap-4 p-4 w-full">
           <input

@@ -95,9 +95,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   return (
-    <li className="relative flex flex-col shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
+    <li className="relative h-72 flex flex-col shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
-      <div className="w-full md:w-80 h-26 overflow-hidden cursor-pointer rounded">
+      <div className="w-full md:w-80 h-full overflow-hidden cursor-pointer">
         <img
           key={venue.id}
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
@@ -110,7 +110,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
       {/* Venue Details */}
       <div className="flex flex-col flex-1 p-2 pl-6">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2">
             <IoLocation className="text-primary" />
             <a
               href={googleMapsUrl}

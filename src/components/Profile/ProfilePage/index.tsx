@@ -161,7 +161,7 @@ function ProfilePage() {
             </div>
 
             {/* Bookings Section Skeleton */}
-            <div className="max-w-5xl w-full mt-6">
+            <div className="max-w-7xl w-full mt-6">
               <LoadingSkeleton width="100%" height={48} />
               <div className="space-y-4 mt-4">
                 {/* Booking Card Skeletons */}

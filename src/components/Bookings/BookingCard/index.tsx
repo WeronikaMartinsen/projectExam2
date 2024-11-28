@@ -34,9 +34,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
       <div className="col-span-1 md:col-span-2 flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-center">
-            <h1 className="text-md font-semibold text-gray-800">
-              Booking ID: #{booking.id}
-            </h1>
             <p className="text-sm text-gray-500">
               Booked: {new Date(booking.created).toLocaleDateString()}
             </p>

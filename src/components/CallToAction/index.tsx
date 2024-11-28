@@ -17,7 +17,7 @@ const CallToAction: React.FC<CallToActionProps> = ({
   onButtonClick,
   backgroundColor = "bg-accent",
   textColor = "text-primary",
-  buttonStyle = "bg-white text-accent",
+  buttonStyle = "w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
 }) => {
   return (
     <section
@@ -27,10 +27,7 @@ const CallToAction: React.FC<CallToActionProps> = ({
       <p className={`text-md leading-relaxed mb-6 p-4 ${textColor}`}>
         {message}
       </p>
-      <button
-        onClick={onButtonClick}
-        className={`${buttonStyle} font-bold py-3 px-6 rounded shadow-md hover:bg-gray-100 transition`}
-      >
+      <button onClick={onButtonClick} className={`${buttonStyle}`}>
         {buttonText}
       </button>
     </section>
