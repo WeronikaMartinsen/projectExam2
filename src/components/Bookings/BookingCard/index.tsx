@@ -19,7 +19,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 }) => {
   return (
     <div
-      className={`grid grid-cols-1 md:grid-cols-3 gap-4 border border-primary rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4 max-h-64 ${
+      className={`grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 border border-primary rounded-lg shadow-sm hover:shadow-md transition-transform transform p-4 ${
         isPastBooking ? "bg-gray-100" : ""
       }`}
     >
@@ -64,7 +64,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         {booking.venue && (
           <div className="mt-4 flex justify-between items-center">
             <h4 className="text-md font-semibold text-gray-800">
-              Venue: {booking.venue.name}
+              {booking.venue.name}
             </h4>
             <Link
               to={`/venue/${booking.venue.id}`}
@@ -72,7 +72,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
                 isPastBooking
                   ? "bg-primary text-white hover:bg-primary-dark"
                   : "bg-primary text-white hover:bg-primary-dark"
-              } py-2 px-4 text-sm font-semibold rounded-lg transition-colors`}
+              } py-2 px-4 text-sm text-center font-semibold rounded-lg transition-colors`}
             >
               View Venue
             </Link>

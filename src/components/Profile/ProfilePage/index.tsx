@@ -26,7 +26,7 @@ const daysUntilTravel = (travelDate: string) => {
   const travelDateObj = new Date(travelDate);
   const currentDate = new Date();
   const timeDiff = travelDateObj.getTime() - currentDate.getTime();
-  const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert ms to days
+  const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
   return daysLeft;
 };
 
@@ -86,17 +86,16 @@ function ProfilePage() {
         updatedProfileData.avatar = undefined;
       }
       if (updatedProfileData.banner === null) {
-        updatedProfileData.banner = undefined; // Reset to undefined
+        updatedProfileData.banner = undefined;
       }
       if (updatedProfileData.bio === null) {
-        updatedProfileData.bio = undefined; // Reset to undefined
+        updatedProfileData.bio = undefined;
       }
       if (updatedProfileData.venueManager === null) {
-        updatedProfileData.venueManager = undefined; // Reset to undefined
+        updatedProfileData.venueManager = undefined;
       }
 
       setProfile(updatedProfileData);
-      // Update store user
       updateUserInStore({
         name: updatedProfileData.name,
         bio: updatedProfileData.bio ?? "",
@@ -276,7 +275,6 @@ function ProfilePage() {
                     <VenueCard key={venue.id} venue={venue} />
                   ))
                 ) : profile?.name === user?.name ? (
-                  // This message appears only when you're viewing your own profile
                   <MessageWithRedirect
                     message="You don't have any venues yet. Create one now!"
                     redirectTo="/venues"
@@ -284,8 +282,7 @@ function ProfilePage() {
                     autoRedirect={false}
                   />
                 ) : (
-                  // This message appears when you're viewing someone else's profile
-                  <p className="text-center text-gray-600">
+                  <p className="text-center mt-6 text-gray-600">
                     This user hasn't created any venues yet.
                   </p>
                 )}
@@ -324,7 +321,6 @@ function ProfilePage() {
               )}
               {bookings.length === 0 &&
                 (profile?.name === user?.name ? (
-                  // Show this message only when you're viewing your own profile
                   <MessageWithRedirect
                     message="You don't have any bookings yet. Book now!"
                     redirectTo="/"
@@ -332,8 +328,7 @@ function ProfilePage() {
                     autoRedirect={false}
                   />
                 ) : (
-                  // Neutral message for other profiles
-                  <p className="text-center text-gray-600">
+                  <p className="text-center mt-6 text-gray-600">
                     This user hasn't made any bookings yet.
                   </p>
                 ))}
