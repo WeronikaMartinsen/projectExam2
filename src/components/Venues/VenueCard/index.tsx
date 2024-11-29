@@ -9,6 +9,7 @@ import DeleteConfirmationModal from "../../Modals/DelateConfirmation";
 import VenueMeta from "../VenueMeta";
 import { MdEdit } from "react-icons/md";
 import SuccessMessage from "../../UserMessages/SuccessMessage";
+import BookedDates from "../../Bookings/BookedDates";
 
 interface VenueCardProps {
   venue: Venue;
@@ -19,6 +20,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [venueToDelete, setVenueToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [showBookedDates, setShowBookedDates] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
   const user = getUser();
@@ -94,6 +96,10 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
     };
   }, []);
 
+  const toggleBookedDates = () => {
+    setShowBookedDates((prev) => !prev); // Toggle the visibility of bookings
+  };
+
   return (
     <li className="relative flex flex-col justify-center shadow-md md:flex-row border border-tertiary rounded overflow-hidden transition-transform transform hover:shadow-lg">
       {/* Image Section */}
@@ -106,7 +112,6 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           onClick={handleNavigateToDetail}
         />
       </div>
-
       {/* Venue Details */}
       <div className="flex flex-col flex-1 p-2 pl-6">
         <div className="flex items-center justify-between mb-4">
@@ -174,7 +179,24 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           >
             View Details
           </button>
+          {/* Toggle BookedDates Button */}
+          {user && venue.owner?.name === user.name && (
+            <button
+              onClick={toggleBookedDates}
+              className="bg-primary text-white px-4 py-2 rounded font-semibold hover:bg-primary-dark transition duration-300 w-56 mt-2"
+            >
+              {showBookedDates ? "Hide Booked Dates" : "Show Booked Dates"}
+            </button>
+          )}
         </div>
+        {/* Booked Dates */}
+        {showBookedDates && venue.bookings && venue.bookings.length > 0 && (
+          <div className="mt-6">
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+              <BookedDates bookings={venue.bookings || []} venue={venue} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}
