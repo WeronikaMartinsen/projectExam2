@@ -157,7 +157,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
         </div>
 
         <div className="flex gap-2">
-          <h4 className="text-2xl font-bold text-gray-900">{venue.name}</h4>
+          <h4 className="text-lg font-bold text-gray-900">{venue.name}</h4>
           <Rating rating={venue.rating} />
         </div>
         <VenueMeta meta={venue.meta} maxGuests={venue.maxGuests} />
