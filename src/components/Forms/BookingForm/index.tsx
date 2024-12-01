@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays, parseISO, isSameDay, isBefore } from "date-fns";
@@ -47,13 +47,39 @@ const BookingForm: React.FC<BookingFormProps> = ({
       (_, i) => addDays(start, i)
     );
   });
+  const isDateDisabled = useCallback(
+    (date: Date) => {
+      const today = new Date();
+      return (
+        isBefore(date, today) ||
+        bookedDates.some((bookedDate) => isSameDay(bookedDate, date))
+      );
+    },
+    [bookedDates]
+  );
 
-  const isDateDisabled = (date: Date) => {
-    return (
-      isBefore(date, today) ||
-      bookedDates.some((bookedDate) => isSameDay(bookedDate, date))
-    );
-  };
+  const findFirstAvailableDate = useCallback(() => {
+    let firstAvailableDate = new Date();
+    while (isDateDisabled(firstAvailableDate)) {
+      firstAvailableDate = addDays(firstAvailableDate, 1);
+    }
+    return firstAvailableDate.toISOString().split("T")[0];
+  }, [isDateDisabled]);
+
+  useEffect(() => {
+    if (!selectedFromDate) {
+      const firstAvailableDate = findFirstAvailableDate();
+      setSelectedFromDate(firstAvailableDate);
+      setSelectedToDate(
+        addDays(new Date(firstAvailableDate), 1).toISOString().split("T")[0]
+      );
+    }
+  }, [
+    selectedFromDate,
+    setSelectedFromDate,
+    setSelectedToDate,
+    findFirstAvailableDate,
+  ]);
 
   const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newGuests = parseInt(e.target.value);
@@ -78,7 +104,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
         );
       }
     } else if (type === "to") {
-      // Prevent selecting a 'To Date' that's the same as 'From Date'
       if (new Date(newDate) <= new Date(selectedFromDate)) {
         setSelectedToDate(
           addDays(new Date(selectedFromDate), 1).toISOString().split("T")[0]
@@ -89,7 +114,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
     }
   };
 
-  // Validate form before enabling the "Book Now" button
   const isFormValid = () => {
     return (
       selectedFromDate &&
@@ -112,6 +136,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       return;
     }
     handleBook();
+    setShowMessage(true);
   };
 
   useEffect(() => {
@@ -129,6 +154,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       </h3>
       <form className="flex flex-col gap-4">
         <div className="flex justify-between flex-wrap">
+          {/* From Date */}
           <div>
             <label className="text-sm font-medium text-gray-600 mb-2 block">
               From
@@ -209,9 +235,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       {errorMessage && (
         <ErrorMessage
           message={errorMessage}
-          onClose={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onClose={() => setErrorMessage(null)}
         />
       )}
 

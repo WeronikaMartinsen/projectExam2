@@ -307,7 +307,7 @@ function ProfilePage() {
               )}
               {pastBookings.length > 0 && (
                 <div className="mt-8 flex flex-col gap-2">
-                  <span className="text-lg text-gray-700 mt-4">
+                  <span className="text-lg text-gray-700 mt-4 pl-6">
                     Last Travel
                   </span>
                   {pastBookings.map((booking) => (

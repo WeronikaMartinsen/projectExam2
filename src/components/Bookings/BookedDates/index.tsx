@@ -61,7 +61,7 @@ const BookedDates: React.FC<BookedDatesProps> = ({ bookings, venue }) => {
                     <span className="text-sm font-semibold text-gray-800 block mb-2">
                       Contact the host:
                     </span>
-                    <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <div>
                       <VenueOwner owner={venue.owner} />
                     </div>
                   </div>

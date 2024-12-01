@@ -12,7 +12,7 @@ import { getVenues } from "../../../service/apiRequests";
 interface SearchVenuesProps {
   initialVenues: Venue[];
   onVenueSelect: (id: string) => void;
-  onSearch?: (venues: Venue[]) => void;
+  onSearch: (venues: Venue[]) => void;
 }
 
 const SearchVenues: React.FC<SearchVenuesProps> = ({
@@ -21,12 +21,14 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
   onSearch,
 }) => {
   const [query, setQuery] = useState("");
-  const [venues, setVenues] = useState<Venue[]>([]);
+  const [venues, setVenues] = useState<Venue[]>(initialVenues);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const searchQuery = event.target.value.trim();
@@ -36,7 +38,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
     if (!searchQuery) {
       setDropdownOpen(false);
       setVenues([]);
-      onSearch?.(initialVenues);
+      onSearch(initialVenues);
       return;
     }
 
@@ -44,7 +46,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
     setLoading(true);
 
     try {
-      const results = await getVenues(1, 100, searchQuery);
+      const results = await getVenues();
       const filtered = results.filter(
         (venue) =>
           venue.location.city
@@ -57,9 +59,10 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
       );
 
       setVenues(filtered);
-      onSearch?.(filtered);
+      onSearch(filtered);
     } catch (error) {
       console.error("Error fetching venues:", error);
+      setErrorMessage("Failed to fetch venues. Please try again later.");
       setVenues([]);
     } finally {
       setLoading(false);
@@ -87,12 +90,15 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
   };
 
   useEffect(() => {
+    if (!isDropdownOpen) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setDropdownOpen(false);
+        setHighlightedIndex(-1);
       }
     };
 
@@ -100,7 +106,7 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isDropdownOpen]);
 
   return (
     <section className="bg-gradient-to-r from-primary via-secondary to-accent h-21 w-full flex justify-center items-center">
@@ -148,6 +154,10 @@ const SearchVenues: React.FC<SearchVenuesProps> = ({
               <div className="p-4 text-gray-500">No venues found.</div>
             )}
           </div>
+        )}
+
+        {errorMessage && (
+          <div className="text-red-500 mt-2 text-sm">{errorMessage}</div>
         )}
       </div>
     </section>

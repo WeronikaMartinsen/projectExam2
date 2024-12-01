@@ -2,32 +2,19 @@ import { useState, useEffect, useCallback } from "react";
 import { getVenues } from "../../../service/apiRequests";
 import { Venue } from "../../../service/ApiCalls/Interfaces/venue";
 
-export const useVenues = (initialLimit = 15) => {
+export const useVenues = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
 
   const fetchVenues = useCallback(async () => {
-    if (!hasMore) return;
-
     setLoading(true);
     setError(null);
 
     try {
-      const newVenues = await getVenues(page, initialLimit);
-      if (newVenues.length < initialLimit) {
-        setHasMore(false);
-      }
-
-      setVenues((prevVenues) => {
-        const existingIds = new Set(prevVenues.map((venue) => venue.id));
-        const uniqueVenues = newVenues.filter(
-          (venue) => !existingIds.has(venue.id)
-        );
-        return [...prevVenues, ...uniqueVenues];
-      });
+      const allVenues = await getVenues();
+      setVenues(allVenues);
+      console.log(allVenues);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Error fetching venues"
@@ -35,15 +22,11 @@ export const useVenues = (initialLimit = 15) => {
     } finally {
       setLoading(false);
     }
-  }, [page, initialLimit, hasMore]);
+  }, []);
 
   useEffect(() => {
     fetchVenues();
   }, [fetchVenues]);
 
-  const loadMore = useCallback(() => {
-    if (hasMore) setPage((prevPage) => prevPage + 1);
-  }, [hasMore]);
-
-  return { venues, loading, error, hasMore, loadMore };
+  return { venues, loading, error };
 };
