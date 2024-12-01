@@ -97,7 +97,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
   }, []);
 
   const toggleBookedDates = () => {
-    setShowBookedDates((prev) => !prev); // Toggle the visibility of bookings
+    setShowBookedDates((prev) => !prev);
   };
 
   return (
@@ -190,13 +190,19 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue }) => {
           )}
         </div>
         {/* Booked Dates */}
-        {showBookedDates && venue.bookings && venue.bookings.length > 0 && (
-          <div className="mt-6">
-            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-              <BookedDates bookings={venue.bookings || []} venue={venue} />
+        {showBookedDates && venue.bookings ? (
+          venue.bookings.length > 0 ? (
+            <div className="mt-6">
+              <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                <BookedDates bookings={venue.bookings || []} venue={venue} />
+              </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-gray-500 mt-4">
+              No bookings yet for this venue.
+            </div>
+          )
+        ) : null}
       </div>
 
       {/* Delete Confirmation Modal */}

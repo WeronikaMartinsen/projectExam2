@@ -6,7 +6,7 @@ interface VenueOwnerProps {
 }
 
 function VenueOwner({ owner }: VenueOwnerProps) {
-  if (!owner) return null; // If no owner, don't render
+  if (!owner) return null;
 
   return (
     <section className="relative h-16 w-full max-w-sm rounded overflow-hidden">
