@@ -247,7 +247,7 @@ const CreateVenueForm: React.FC = () => {
           className="w-full p-3 border border-gray-300 rounded-md"
           placeholder="Price"
           min="1"
-          max="100000"
+          max="10000"
         />
         <p className="text-danger text-xs">{errors.price?.message}</p>
       </div>
