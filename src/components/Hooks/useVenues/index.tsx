@@ -14,7 +14,6 @@ export const useVenues = () => {
     try {
       const allVenues = await getVenues();
       setVenues(allVenues);
-      console.log(allVenues);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Error fetching venues"

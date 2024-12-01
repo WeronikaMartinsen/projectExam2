@@ -121,8 +121,8 @@ function AboutContent() {
           message="Whether you're a traveler seeking your next great escape or a host ready to share your property, Holidaze is here to support you. Experience the future of accommodation booking today."
           buttonText="Get Started Now"
           onButtonClick={() => (window.location.href = "/")}
-          backgroundColor="bg-accent"
-          textColor="text-white"
+          backgroundColor="bg-tertiary"
+          textColor="text-primary"
           buttonStyle="px-3 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         />
       </div>

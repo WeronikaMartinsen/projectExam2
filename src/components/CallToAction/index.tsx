@@ -15,7 +15,7 @@ const CallToAction: React.FC<CallToActionProps> = ({
   message,
   buttonText,
   onButtonClick,
-  backgroundColor = "bg-accent",
+  backgroundColor = "bg-tertiary",
   textColor = "text-primary",
   buttonStyle = "w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
 }) => {

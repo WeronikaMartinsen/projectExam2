@@ -84,12 +84,14 @@ const VenuesList: React.FC = () => {
           )}
 
           {filteredAndSortedVenues.length > visibleCount && !loading && (
-            <button
-              className="flex justify-center p-3 bg-secondary rounded shadow hover:bg-accent-dark"
-              onClick={handleShowMore}
-            >
-              Show More
-            </button>
+            <div className="flex justify-center mt-10">
+              <button
+                className="p-3 bg-secondary text-white rounded shadow hover:bg-accent-dark"
+                onClick={handleShowMore}
+              >
+                Show More
+              </button>
+            </div>
           )}
 
           {!loading && filteredAndSortedVenues.length === 0 && (

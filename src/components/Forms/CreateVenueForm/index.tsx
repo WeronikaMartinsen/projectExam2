@@ -212,7 +212,7 @@ const CreateVenueForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-2xl w-full p-6 bg-white shadow-lg rounded space-y-4"
+      className="max-w-3xl w-full p-6 bg-white shadow-lg rounded space-y-4"
     >
       <h1 className="text-3xl font-extrabold mb-8 text-center text-primary">
         {venueId ? "Update" : "Create"}{" "}
