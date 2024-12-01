@@ -8,23 +8,23 @@
   min-width: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  --color-primary: #242d40; 
-  --color-secondary: #0468bf; 
-  --color-tertiary: #fffae9; 
+  --color-primary: #242d40;
+  --color-secondary: #0468bf;
+  --color-tertiary: #fffae9;
 
   --color-accent: #f2bf27;
-  --color-success: #088c29; 
-  --color-warning: #ffc107; 
+  --color-success: #088c29;
+  --color-warning: #ffc107;
   --color-danger: #dc3545;
-  --color-info: #0dcaf0; 
+  --color-info: #0dcaf0;
 
   /* Neutral Colors */
-  --color-light: #f2f2f2; 
-  --color-dark: #212529; 
+  --color-light: #f2f2f2;
+  --color-dark: #212529;
 
   /* Text Colors */
-  --color-text-light: #f2f2f2; 
-  --color-text-dark: #343a40; 
+  --color-text-light: #f2f2f2;
+  --color-text-dark: #343a40;
 }
 html,
 body {
@@ -37,6 +37,8 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
   font-family: "Poppins", sans-serif;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 main {

@@ -23,7 +23,6 @@ function Avatar() {
 
   const handleLogout = () => {
     logout();
-    window.location.reload();
     navigate(`/`);
     setShowMessage(true);
   };

@@ -19,7 +19,7 @@ import { IoSunnyOutline } from "react-icons/io5";
 
 const products = [
   {
-    name: "All Venues",
+    name: "Venue List",
     description: "Show all venues",
     href: "/",
     icon: FiList,
@@ -192,7 +192,7 @@ function Header() {
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-gray-700 hover:text-danger focus:outline-none"
+                className="text-gray-700 hover:text-danger focus:outline-none text-lg font-semibold"
               >
                 ✕
               </button>
@@ -201,14 +201,14 @@ function Header() {
             <Disclosure as="div" className="space-y-4">
               <DisclosureButton className="flex items-center justify-between text-lg font-semibold text-gray-900 hover:bg-gray-100 focus:bg-gray-200 p-3 rounded">
                 Venues
-                <FiChevronDown className="h-5 w-5 transition-transform group-data-[open]:rotate-180" />
+                <FiChevronDown className="pl-1 h-5 w-5 transition-transform group-data-[open]:rotate-180" />
               </DisclosureButton>
               <DisclosurePanel className="space-y-3 text-center">
                 {products.map((item) => (
                   <NavLink
                     key={item.name}
                     to={item.href}
-                    onClick={() => handleLinkClick(item.href)} // Handle the link click
+                    onClick={() => handleLinkClick(item.href)}
                     className={({ isActive }) =>
                       `block text-lg font-medium p-2 rounded ${
                         isActive ? "bg-accent" : "text-gray-700 hover:bg-accent"

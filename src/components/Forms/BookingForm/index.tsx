@@ -136,14 +136,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
       return;
     }
     handleBook();
-    setShowMessage(true);
   };
 
   useEffect(() => {
     if (showMessage) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setShowMessage(false);
       }, 2000);
+
+      return () => clearTimeout(timeout);
     }
   }, [showMessage]);
 
