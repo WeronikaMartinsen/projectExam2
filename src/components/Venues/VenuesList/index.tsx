@@ -19,7 +19,6 @@ const VenuesList: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set the initial list to show venues when the page loads
     setFilteredVenues(venues);
   }, [venues]);
 
@@ -27,23 +26,27 @@ const VenuesList: React.FC = () => {
 
   const handleFilterChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
-    setVisibleCount(15); // Reset visible count when filters change
+    setVisibleCount(15);
   };
 
   const handleSearch = (searchResults: Venue[]) => {
-    setFilteredVenues(searchResults); // Update the visible list to match the search results
-    setVisibleCount(15); // Reset the visible count
+    setFilteredVenues(searchResults);
+    setVisibleCount(15);
   };
 
   const handleShowMore = () => {
-    setVisibleCount((prev) => prev + 15); // Increment the visible count by 15
+    setVisibleCount((prev) => prev + 15);
   };
 
-  const filteredAndSortedVenues = filteredVenues.filter(({ meta }) =>
-    Object.entries(filters).every(([key, value]) =>
-      value ? meta?.[key as keyof typeof filters] === true : true
+  const filteredAndSortedVenues = filteredVenues
+    .filter(({ meta }) =>
+      Object.entries(filters).every(([key, value]) =>
+        value ? meta?.[key as keyof typeof filters] === true : true
+      )
     )
-  );
+    .sort(
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+    );
 
   return (
     <div className="w-full flex flex-col lg:flex-row">

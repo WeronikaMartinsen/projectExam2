@@ -5,10 +5,7 @@ import { baseUrl, apiKeyUrl } from "./ApiCalls/Endpoints";
 import { Profile } from "./ApiCalls/Interfaces/profile";
 import { Booking, BookingWithDetails } from "./ApiCalls/Interfaces/bookings";
 
-export const getVenues = async (): // page = 1,
-// limit = 15,
-// query = ""
-Promise<Venue[]> => {
+export const getVenues = async (): Promise<Venue[]> => {
   try {
     const headers = {
       "X-Noroff-API-Key": apiKeyUrl,
@@ -16,7 +13,7 @@ Promise<Venue[]> => {
     };
 
     const response = await fetch(
-      `${baseUrl}/holidaze/venues?_owner=true&_bookings=true`,
+      `${baseUrl}/holidaze/venues?_owner=true&_bookings=true&sort=created`,
       { method: "GET", headers }
     );
 
